@@ -1,0 +1,5 @@
+zmodule zsh-users/zsh-syntax-highlighting
+zmodule zsh-users/zsh-autosuggestions
+zmodule Ansimorph/oblong
+zmodule zimfw/utility
+
