@@ -43,7 +43,7 @@ util.nnoremap('<leader>qwj', '<c-w>j:q<cr>')
 util.nnoremap('<leader>fo', ':NERDTree<cr>')
 
 -- Telescope navigation
-util.nnoremap('<leader>ff', ':Telescope find_file<cr>')
+util.nnoremap('<leader>ff', ':Telescope find_files<cr>')
 util.nnoremap('<leader>fg', ':Telescope live_grep<cr>')
 util.nnoremap('<leader>fb', ':Telescope buffers<cr>')
 
