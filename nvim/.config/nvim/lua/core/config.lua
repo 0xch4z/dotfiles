@@ -27,6 +27,7 @@ util.opt('tabstop', 4)          -- default to 1 tab == 4 spaces
 util.opt('smartindent', true)   -- auto indent new lines
 
 -- NERDtree
+g.NERDTreeQuitOnOpen = 1
 g.NERDTreeShowHidden = 1
 g.NERDTreeIgnore = {
   '.*.swp',
