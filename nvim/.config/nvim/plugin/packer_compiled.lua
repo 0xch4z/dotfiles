@@ -164,6 +164,11 @@ _G.packer_plugins = {
     path = "/Users/char/.local/share/nvim/site/pack/packer/start/trouble.nvim",
     url = "https://github.com/folke/trouble.nvim"
   },
+  ["vim-commentary"] = {
+    loaded = true,
+    path = "/Users/char/.local/share/nvim/site/pack/packer/start/vim-commentary",
+    url = "https://github.com/tpope/vim-commentary"
+  },
   ["vim-startify"] = {
     loaded = true,
     path = "/Users/char/.local/share/nvim/site/pack/packer/start/vim-startify",
