@@ -57,3 +57,7 @@ util.nnoremap('<leader>wK', '<c-w>K') -- Move left
 util.nnoremap('<leader>wj', '<c-w>j') -- Down
 util.nnoremap('<leader>wJ', '<c-w>J') -- Move left
 
+--- Misc.
+
+-- Clear current highlight group
+util.nnoremap('<leader>nh', ':noh<cr>')

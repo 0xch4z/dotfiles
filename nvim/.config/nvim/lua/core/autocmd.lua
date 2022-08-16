@@ -18,4 +18,3 @@ autocmd('Filetype', {
   },
   command = 'setlocal shiftwidth=2 tabstop=2'
 })
-
