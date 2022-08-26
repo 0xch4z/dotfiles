@@ -104,6 +104,11 @@ _G.packer_plugins = {
     path = "/Users/char/.local/share/nvim/site/pack/packer/start/everblush",
     url = "https://github.com/Everblush/everblush.nvim"
   },
+  neoformat = {
+    loaded = true,
+    path = "/Users/char/.local/share/nvim/site/pack/packer/start/neoformat",
+    url = "https://github.com/sbdchd/neoformat"
+  },
   nerdtree = {
     loaded = true,
     path = "/Users/char/.local/share/nvim/site/pack/packer/start/nerdtree",

@@ -66,6 +66,9 @@ return packer.startup(function(use)
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
     requires = 'nvim-lua/plenary.nvim',
   }
+  -- format
+  use 'sbdchd/neoformat'
+
   -- misc
   use 'tpope/vim-commentary'
   use 'neoclide/npm.nvim'

@@ -16,5 +16,34 @@ autocmd('Filetype', {
     'liquid',
     'ejs',
   },
-  command = 'setlocal shiftwidth=2 tabstop=2'
+
+  command = 'setlocal shiftwidth=2 tabstop=2',
 })
+
+-- Set formatter for JavaScript-ish code
+augroup('jsishFmt', { clear = true })
+autocmd('Filetype', {
+  group = 'jsishFmt',
+  pattern = {
+    'javascript',
+    'typescript',
+  },
+
+  command = "setlocal formatprg=prettier",
+})
+
+-- Format code on save
+augroup('fmtOnSave', { clear = true })
+autocmd('BufWritePre', {
+  group = 'fmtOnSave',
+  pattern = {
+    -- JavaScript-ish
+    '*.js',
+    '*.ts',
+    '*.jsx',
+    '*.tsx',
+  },
+
+  command = 'Neoformat',
+})
+
