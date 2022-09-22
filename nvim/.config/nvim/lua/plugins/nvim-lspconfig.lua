@@ -96,7 +96,7 @@ local root_dir = function()
 end
 
 -- all language servers: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-local servers = { 'bashls', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls' }
+local servers = { 'bashls', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
 
 -- Call setup
 for _, lsp in ipairs(servers) do
