@@ -71,6 +71,7 @@ return packer.startup(function(use)
   use 'sbdchd/neoformat'
 
   -- misc
+  use 'ntpeters/vim-better-whitespace'
   use 'kyazdani42/nvim-web-devicons'
   use 'folke/trouble.nvim'
   use 'tpope/vim-commentary'
