@@ -21,17 +21,17 @@ autocmd('Filetype', {
   command = 'setlocal shiftwidth=2 tabstop=2',
 })
 
--- Set formatter for JavaScript-ish code
-augroup('jsishFmt', { clear = true })
-autocmd('Filetype', {
-  group = 'jsishFmt',
-  pattern = {
-    'javascript',
-    'typescript',
-  },
+--Set formatter for JavaScript-ish code
+-- augroup('jsishFmt', { clear = true })
+-- autocmd('Filetype', {
+--   group = 'jsishFmt',
+--   pattern = {
+--     'javascript',
+--     'typescript',
+--   },
 
-  command = "setlocal formatprg=prettier",
-})
+--   command = "setlocal formatprg=prettier",
+-- })
 
 -- Format code on save
 augroup('fmtOnSave', { clear = true })

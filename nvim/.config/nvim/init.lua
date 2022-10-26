@@ -12,4 +12,5 @@ require('plugins.nvim-cmp')
 require('plugins.nvim-treesitter')
 require('plugins.everblush')
 require('plugins.neoformat')
-
+require('plugins.null-ls')
+require('plugins.startify')

@@ -47,6 +47,7 @@ return packer.startup(function(use)
     'folke/trouble.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
   }
+  use 'jose-elias-alvarez/null-ls.nvim'
   -- Autocomplete
   use {
     'hrsh7th/nvim-cmp',
@@ -70,7 +71,10 @@ return packer.startup(function(use)
   use 'sbdchd/neoformat'
 
   -- misc
+  use 'kyazdani42/nvim-web-devicons'
+  use 'folke/trouble.nvim'
   use 'tpope/vim-commentary'
+  use 'nvim-lua/plenary.nvim'
   use 'neoclide/npm.nvim'
   use { 'Everblush/everblush.nvim', as = 'everblush' }
 

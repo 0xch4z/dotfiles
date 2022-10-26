@@ -61,3 +61,5 @@ util.nnoremap('<leader>wJ', '<c-w>J') -- Move left
 
 -- Clear current highlight group
 util.nnoremap('<leader>nh', ':noh<cr>')
+
+util.nnoremap('<leader>xx', ':TroubleToggle<cr>')
