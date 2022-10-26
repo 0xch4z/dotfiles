@@ -33,7 +33,7 @@ end
 return packer.startup(function(use)
   -- Packer
   use 'wbthomason/packer.nvim'
-  -- File explorer 
+  -- File explorer
   use 'preservim/nerdtree'
   -- Tag viewer
   use 'preservim/tagbar'
@@ -48,6 +48,7 @@ return packer.startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
   }
   use 'jose-elias-alvarez/null-ls.nvim'
+  use 'simrat39/symbols-outline.nvim'
   -- Autocomplete
   use {
     'hrsh7th/nvim-cmp',

@@ -62,4 +62,8 @@ util.nnoremap('<leader>wJ', '<c-w>J') -- Move left
 -- Clear current highlight group
 util.nnoremap('<leader>nh', ':noh<cr>')
 
+-- Open Trouble pane
 util.nnoremap('<leader>xx', ':TroubleToggle<cr>')
+
+-- Open Symbols outline pane
+util.nnoremap('<leader>ss', ':SymbolsOutline<cr>')
