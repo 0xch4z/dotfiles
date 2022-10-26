@@ -7,3 +7,6 @@ export ZSH_PLUGINS=$HOME/.zsh-plugins
 export EDITOR=vim
 
 export AWS_DEFAULT_REGION=us-east-1
+
+export PATH="$PATH:$HOME/bin"
+
