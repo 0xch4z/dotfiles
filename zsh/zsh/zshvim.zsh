@@ -1,1 +1,1 @@
-[ -d "$HOME/.zsh-plugins"] 
+[ -d "$HOME/.zsh-plugins"]

@@ -13,4 +13,3 @@ hooked-in/referenced by files in this repo. For instance, at the bottom of
 
 
 [stow]: https://www.gnu.org/software/stow/
-

@@ -5,4 +5,3 @@ alias -g nerd=nerdctl
 
 alias -g gh="cd $HOME"
 alias -g gw="cd $HOME/work"
-

@@ -6,4 +6,3 @@ ensure_plugin() {
 }
 
 ensure_plugin "https://github.com/kutsan/zsh-system-clipboard"
-
