@@ -9,4 +9,6 @@ export EDITOR=vim
 export AWS_DEFAULT_REGION=us-east-1
 
 export PATH="$PATH:$HOME/bin"
+source <(go env)
+export GOBIN="$GOPATH/bin"
 
