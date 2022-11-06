@@ -67,3 +67,7 @@ util.nnoremap('<leader>xx', ':TroubleToggle<cr>')
 
 -- Open Symbols outline pane
 util.nnoremap('<leader>ss', ':SymbolsOutline<cr>')
+
+-- Open up lazygit
+util.nnoremap('<leader>gg', ':LazyGit<cr>')
+

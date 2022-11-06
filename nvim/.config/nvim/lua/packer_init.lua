@@ -31,24 +31,31 @@ end
 
 -- Install plugins
 return packer.startup(function(use)
+  config = { max_jobs = 10 }
+
   -- Packer
   use 'wbthomason/packer.nvim'
+
   -- File explorer
   use 'preservim/nerdtree'
-  -- Tag viewer
-  use 'preservim/tagbar'
+
   -- Treesitter interface
   use 'nvim-treesitter/nvim-treesitter'
-  -- Color schemes
-  use 'navarasu/onedark.nvim'
+
   -- LSP
   use 'neovim/nvim-lspconfig'
+  use 'jose-elias-alvarez/null-ls.nvim'
+
+  -- Diagnostics
   use {
     'folke/trouble.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
   }
-  use 'jose-elias-alvarez/null-ls.nvim'
+
+  -- Observability
   use 'simrat39/symbols-outline.nvim'
+  use 'ntpeters/vim-better-whitespace'
+
   -- Autocomplete
   use {
     'hrsh7th/nvim-cmp',
@@ -61,26 +68,41 @@ return packer.startup(function(use)
       'saadparwaiz1/cmp_luasnip',
     },
   }
+
   -- Start screen
   use 'mhinz/vim-startify'
+
   -- Fuzzy finder
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
     requires = 'nvim-lua/plenary.nvim',
   }
-  -- format
+
+  -- Code formatting
   use 'sbdchd/neoformat'
 
-  -- misc
-  use 'ntpeters/vim-better-whitespace'
+  -- Visual stuff
   use 'kyazdani42/nvim-web-devicons'
-  use 'folke/trouble.nvim'
+  use({
+    'rose-pine/neovim',
+    as = 'rose-pine',
+    config = function()
+        vim.cmd('colorscheme rose-pine')
+    end
+  })
+
+  -- Utility
+  use({
+    "akinsho/toggleterm.nvim", tag = '*', config = function()
+      require("toggleterm").setup()
+    end
+  })
+
+  -- Misc.
   use 'tpope/vim-commentary'
   use 'nvim-lua/plenary.nvim'
-  use 'neoclide/npm.nvim'
-  use { 'Everblush/everblush.nvim', as = 'everblush' }
 
-  -- end of plugins
+  -- End of plugins
   if packer_bootstrap then
     require('packer').sync()
   end
