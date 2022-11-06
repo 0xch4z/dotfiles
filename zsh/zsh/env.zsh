@@ -2,7 +2,7 @@ export DOTFILES=$HOME/.dotfiles
 export LOCAL_DOTFILES=$HOME/.local.dotfiles
 
 # POSIX
-export EDITOR=vim
+export EDITOR=nvim
 
 # Zim
 export ZIM_HOME=$HOME/.zim
