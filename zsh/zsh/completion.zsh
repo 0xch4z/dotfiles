@@ -1,8 +1,9 @@
 fpath=($ASDF_DIR/completions $fpath)
 fpath=($HOME/zsh/completions $fpath)
-autoload -Uz compinit && compinit
 
-exists() {
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+exists(){
   $1 -v &> /dev/null
 }
 
@@ -15,3 +16,4 @@ fi
 setopt complete_aliases
 setopt completealiases
 
+complete -o nospace -C $(asdf which terraform) terraform

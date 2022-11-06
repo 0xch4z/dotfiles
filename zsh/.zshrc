@@ -10,8 +10,5 @@ source "$HOME/zsh/keybinds.zsh"
 # vim mode
 bindkey -v
 
+# hook for local overrides
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
-
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /Users/char/.asdf/installs/terraform/1.2.7/bin/terraform terraform
