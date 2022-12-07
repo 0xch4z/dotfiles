@@ -2,4 +2,4 @@
 export PATH="$PATH:$HOME/bin"
 
 # Go
-export PATH="$GOBIN:$PATH"
+export PATH="$GOPATH/bin:$PATH"
