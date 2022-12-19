@@ -1,0 +1,14 @@
+# Editors
+.idea
+.vscode
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate*
+.terraformrc
+terraform.rc
+
+# Misc.
+.cache
+.DS_Store
