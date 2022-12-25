@@ -1,0 +1,18 @@
+# interpreter for shell commands
+set shell sh
+set shellopts '-eu'
+
+# execute current file (must be executable)
+map x $$f
+map X !$f
+
+# show hidden files by default
+set hidden!
+
+# hide hides hidden files
+cmd hide set hidden!
+
+# custom keybinds
+map - hide
+map <esc> quit
+map q quit
