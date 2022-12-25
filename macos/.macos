@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -ex
+
+# inspo: https://mths.be/macos
+# This file sets macos system preferences for the machine
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
+# Ask for the administrator password upfront
+sudo -v
+
+##
+## UI/UX
+##
+
+# Enable font smoothing for non-apple displays
+defaults write NSGlobalDomain AppleFontSmoothing -int 2
+
+# Set highlight color to pink
+defaults write NSGlobalDomain AppleHighlightColor -string "1.000000 0.252792 1.000000 Other"
+
+# Disable quarentine for 3rd-party apps
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+# FIXME: this isn't working right now ):
+# Restart automatically if the computer freezes
+# sudo systemsetup -setrestartfreeze on
+
+# Disable smart quotes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+# Disable smart dashes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Increase window resize speed for Cocoa applications
+defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+
+# Automatically quit printer app once the print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
