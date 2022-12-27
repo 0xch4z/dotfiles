@@ -15,4 +15,5 @@ cmd hide set hidden!
 # custom keybinds
 map - hide
 map <esc> quit
-map q quit
+map q quitA
+map <enter> push l
