@@ -16,8 +16,8 @@ g.startify_bookmarks = {
 }
 
 g.startify_commands = {
-  {up = {"Update Plugins", ":PlugUpdate"}},
-  {ug = {"Upgrade Plugin Manager", ":PlugUpgrade"}},
+  {up = {"Update Plugins", ":Lazy update"}},
+  {ug = {"Debug Plugins", ":Lazy debug"}},
   {ts = {"Update Treesitter", "TSUpdate"}},
   {ch = {"Check Health", "checkhealth"}}
 }

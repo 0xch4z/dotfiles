@@ -40,7 +40,7 @@ util.nnoremap('<leader>qwj', '<c-w>j:q<cr>')
 -- Buffer navigation
 
 -- Open nerdtree buffer
-util.nnoremap('<leader>fo', ':NERDTreeToggle<cr>')
+util.nnoremap('<leader>fo', ':Lf<cr>')
 
 -- Telescope navigation
 util.nnoremap('<leader>ff', ':Telescope find_files<cr>')

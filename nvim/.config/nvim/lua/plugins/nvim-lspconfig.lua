@@ -1,11 +1,11 @@
 local lsp_status_ok, lspconfig = pcall(require, 'lspconfig')
 if not lsp_status_ok then
-  return
+  error("lspconfig is not available")
 end
 
 local cmp_status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if not cmp_status_ok then
-  return
+  error("cmp_nvim_lsp is not available")
 end
 
 -- See: `:help vim.diagnostic.config`
@@ -95,7 +95,7 @@ local root_dir = function()
 end
 
 -- all language servers: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-local servers = { 'bashls', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
+local servers = { 'bashls', 'ccls', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
 
 -- Call setup
 for _, lsp in ipairs(servers) do
