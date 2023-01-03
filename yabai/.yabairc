@@ -41,5 +41,6 @@ yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Archive Utility$" manage=off
 yabai -m rule --add app="^Logi Options$" manage=off
 yabai -m rule --add app="^Spotify$" manage=off
+yabai -m rule --add title='^launcher' manage=off sticky=on layer=above border=off
 
 echo "yabai configuration loaded.."
