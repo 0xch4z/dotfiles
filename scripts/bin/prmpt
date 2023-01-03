@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+while getopts "p:" arg; do
+  case $arg in
+    p) # Specify p value.
+      prompt="${OPTARG}"
+      ;;
+  esac
+done
+
+echo -n "$prompt"
+read -s password
+echo $password >> $OUTFILE

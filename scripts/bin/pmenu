@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+mode="get"
+copy=0
+while getopts ":opuc" o; do
+    case "${o}" in
+    o)
+        mode="code"
+        ;;
+    p)
+        mode="get"
+        ;;
+    u)
+        mode="username"
+        ;;
+    c)
+        copy=1
+        ;;
+    esac
+done
+
+tmp=$(mktemp /tmp/bw-list.XXXXXXXXX)
+echo "$(rbw ls)" > $tmp
+
+login=$(/Users/ckenney/bin/popup "\echo \$(cat "$tmp" | $HOME/bin/fzfy) >> \$OUTFILE")
+rm $tmp
+
+echo "run rbw $mode '$login'"
+val="$(rbw $mode "$login")"
+
+if [[ "$copy" -eq 1 ]]; then
+    echo "$val" | pbcopy
+    exit 0
+fi
+
+osascript << EOF > /dev/null
+tell application "System Events" to keystroke "${val}"
+EOF

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+
+SESSION=`security find-generic-password -s bit -a bw-session -w`
+
+if [[ -z "$SESSION" ]]; then
+    pw=`LINES=1 COLUMNS=40 popup "$(which prmpt) -p 'bitwarden pw: '"`
+    SESSION=`bw --nointeraction --raw unlock "$pw"`
+    security add-generic-password -s bit -a bw-session -w "$SESSION"
+fi
+
+
+if [[ $? -ne 0 ]]; then
+	echo "failed to authenticate"
+	exit 1
+fi
+
+BW_SESSION=$SESSION bw --nointeraction ${@}

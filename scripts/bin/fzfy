@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# This is a wrapper around a pretty version of fzf used for launching things
+
+/opt/homebrew/bin/fzf --prompt='🤔: ' --pointer='👉' --marker='🫴' "${@}"

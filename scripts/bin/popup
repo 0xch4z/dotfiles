@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# This script creates a floating window able encapsulating
+# a command line application. Useful TUI apps!
+
+keepalive=0
+while getopts "k:" arg; do
+  case $arg in
+    k)
+      keepalive=$OPTARG
+      shift; shift
+      ;;
+  esac
+done
+
+tmp=$(mktemp /tmp/popup.XXXXXX)
+
+/Applications/Alacritty.app/Contents/MacOS/alacritty \
+    -t "launcher" \
+    -o window.dimensions.lines="${LINES:-20}" \
+    -o window.dimensions.columns="${COLUMNS:-60}" \
+    -o window.decorations=none \
+    -e /usr/bin/env bash -c "export OUTFILE=$tmp; $HOME/bin/center-me; $@"
+
+if [[ "$keepalive" -ne 0 ]]; then
+    sleep $keepalive
+fi
+
+cat $tmp
+rm $tmp
