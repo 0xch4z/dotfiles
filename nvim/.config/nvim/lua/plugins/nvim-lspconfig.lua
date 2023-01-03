@@ -8,6 +8,13 @@ if not cmp_status_ok then
   error("cmp_nvim_lsp is not available")
 end
 
+local protocol = require('vim.lsp.protocol')
+local bo = vim.bo
+
+if (os.getenv("NVIM_DEBUG") == "1") then
+  vim.lsp.set_log_level("debug")
+end
+
 -- See: `:help vim.diagnostic.config`
 vim.diagnostic.config({
   update_in_insert = false,
@@ -20,11 +27,6 @@ vim.diagnostic.config({
     prefix = '',
 	},
 })
-
--- Show line diagnostics automatically in hover window
-vim.cmd([[
-  autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { focus = false })
-]])
 
 -- See: https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
 local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -50,17 +52,6 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 local on_attach = function(client, bufnr)
   local function bmap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function bset(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  -- Highlighting references
-  if client.resolved_capabilities.document_highlight then
-    vim.api.nvim_exec([[
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]], false)
-  end
 
   -- Enable completion triggered by <c-x><c-o>
   bset('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -95,17 +86,53 @@ local root_dir = function()
 end
 
 -- all language servers: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-local servers = { 'bashls', 'ccls', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
+-- local servers = { 'bashls', 'clangd', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
+local lsp_configs = {
+  bashls = {
+    ft = {'bash', 'sh'},
+  },
+  sourcekit = {
+    ft = {'swift'},
+  },
+  clangd = {
+    ft = {'c', 'cc', 'cpp', 'mm', 'm'},
+  },
+  gopls = {
+    ft = {'go', 'gowork', 'mod', 'sum'},
+  },
+  rust_analyzer = {
+    ft = {'rust'}
+  }
+}
 
--- Call setup
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+
+-- Describes whether the current buffer has initialized the LSP for it's
+-- Filetype.
+local current_buffer_started = false
+
+for lsp, config in pairs(lsp_configs) do
+  -- Setup the language server
+  require('lspconfig')[lsp].setup {
     on_attach = on_attach,
+    filetypes = config.ft,
     root_dir = root_dir,
     capabilities = capabilities,
     flags = {
       debounce_text_changes = 150,
     }
   }
-end
 
+  -- The LSP is lazy loaded until InsertEnter is emitted on a buffer. This
+  -- means that on first emit for a buffer, the proper LSP is not automatically
+  -- loaded via Filetype.
+  -- To remedy this, check if the lsp we're configuring should be turned on for
+  -- the current buffer.
+  if not current_buffer_started then
+    for _, ft in ipairs(config.ft) do
+      if ft == bo.filetype then
+        vim.cmd(':LspStart ' + ls + '<CR>')
+        current_buffer_started = true
+      end
+    end
+  end
+end

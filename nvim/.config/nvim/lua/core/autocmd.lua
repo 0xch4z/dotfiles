@@ -32,6 +32,16 @@ autocmd('Filetype', {
 
 --   command = "setlocal formatprg=prettier",
 -- })
+augroup('org', { clear = true })
+autocmd('Filetype', {
+  group = 'org',
+  pattern = {
+    '*.org',
+    '*.norg',
+  },
+
+  command = 'setlocal filetype=norg'
+})
 
 -- Format code on save
 augroup('fmtOnSave', { clear = true })

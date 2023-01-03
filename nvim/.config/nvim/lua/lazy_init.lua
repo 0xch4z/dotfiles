@@ -42,8 +42,11 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
+      'hrsh7th/cmp-nvim-lsp',  -- Comp. for LSP
+      'neovim/nvim-lspconfig', -- Needs lspconfig configured first
+      'hrsh7th/cmp-buffer',    -- Comp. for text in buffer
+      'L3MON4D3/LuaSnip',      -- Comp. for snippets
+      'onsails/lspkind.nvim'   -- Formatting for comp.
     },
     config = load('plugins.nvim-cmp'),
   },
@@ -104,5 +107,10 @@ require('lazy').setup({
   {
     'akinsho/toggleterm.nvim',
     lazy = true,
+  },
+  {
+    'nvim-neorg/neorg',
+    build = ':Neorg sync-parsers',
+    config = load('plugins.neorg'),
   },
 })
