@@ -22,7 +22,7 @@ alt - r : yabai -m space --rotate 90
 # toggle window fullscreen zoom
 alt - f : yabai -m window --toggle zoom-fullscreen
 
-# alt - s : yabai -m window --toggle 
+# alt - s : yabai -m window --toggle
 alt - s : yabai -m window --toggle sticky;\
           yabai -m window --toggle topmost;\
           yabai -m window --toggle pip
@@ -64,3 +64,29 @@ alt - tab : yabai -m space --focus recent
 # send window to monitor and follow focus
 shift + alt - n : yabai -m window --display next; yabai -m display --focus next
 shift + alt - p : yabai -m window --display previous; yabai -m display --focus previous
+
+# NB: For these two keybinds to be functional, you need
+# to bind them to something in system preferences > keyboard.
+# The reason for this is, skhd uses the public a11y API
+# and for obvious security reasons, any "password" field
+# on the system in the browser or otherwise will not emit
+# events that can be consumed by said public API.
+#
+# Setting a system-level keybind to something like spotlight
+# is a hack to sorta bypass this. I don't use spotlight
+# anyway so, in essence, when pressed, the AXUIElement
+# (password field) will remain in focus but spotlight (or
+# whatever) will be brought in focus, and then out of focus
+# again by "pmenu"/alacritty. When the process exits, the
+# previous window and element is brought back into focus so
+# keypresses can be automated.
+#
+# My system binds
+# CMD + shift + p:
+# "Spotlight" > "Show Spotlight Search"
+# CMD + shift + o:
+# "Launchpad" > "Show Launchpad"
+shift + cmd - p : /Users/ckenney/bin/pmenu -pc
+cmd - p : /Users/ckenney/bin/pmenu -p # I don't print lol
+cmd - o : /Users/ckenney/bin/pmenu -o
+cmd - space : /Users/ckenney/bin/ripdmenu
