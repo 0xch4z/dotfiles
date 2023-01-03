@@ -108,9 +108,4 @@ require('lazy').setup({
     'akinsho/toggleterm.nvim',
     lazy = true,
   },
-  {
-    'nvim-neorg/neorg',
-    build = ':Neorg sync-parsers',
-    config = load('plugins.neorg'),
-  },
 })
