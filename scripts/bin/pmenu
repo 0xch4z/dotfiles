@@ -19,6 +19,9 @@ while getopts ":opuc" o; do
     esac
 done
 
+# assert vault unlocked
+rbw unlock
+
 tmp=$(mktemp /tmp/bw-list.XXXXXXXXX)
 echo "$(rbw ls)" > $tmp
 
