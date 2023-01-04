@@ -3,6 +3,7 @@
 set -ex
 
 # inspo: https://mths.be/macos
+# ref: https://macos-defaults.com
 # This file sets macos system preferences for the machine
 
 # Close any open System Preferences panes, to prevent them from overriding
@@ -40,3 +41,12 @@ defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
+# Automatically hide the dock
+defaults write com.apple.dock "autohide" -bool "true" && killall Dock
+
+# Automatically hide the menu bar
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+
+# Disable Window animations
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
