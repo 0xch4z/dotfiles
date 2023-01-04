@@ -86,7 +86,7 @@ shift + alt - p : yabai -m window --display previous; yabai -m display --focus p
 # "Spotlight" > "Show Spotlight Search"
 # CMD + shift + o:
 # "Launchpad" > "Show Launchpad"
-shift + cmd - p : /Users/ckenney/bin/pmenu -pc
-cmd - p : /Users/ckenney/bin/pmenu -p # I don't print lol
-cmd - o : /Users/ckenney/bin/pmenu -o
-cmd - space : /Users/ckenney/bin/ripdmenu
+shift + cmd - p : $HOME/bin/pmenu -pc
+cmd - p : $HOME/bin/pmenu -p # I don't print lol
+cmd - o : $HOME/bin/pmenu -o
+cmd - space : $HOME/bin/ripdmenu
