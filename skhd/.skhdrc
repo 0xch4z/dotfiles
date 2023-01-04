@@ -52,7 +52,7 @@ shift + alt - 8 : yabai -m window --space 8; yabai -m space --focus 8
 shift + alt - 9 : yabai -m window --space 9; yabai -m space --focus 9
 
 
-# create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
+# create desktop, move window and follow focus
 shift + alt - n : yabai -m space --create && \
                    index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                    yabai -m window --space "${index}" && \
@@ -64,6 +64,9 @@ alt - tab : yabai -m space --focus recent
 # send window to monitor and follow focus
 shift + alt - n : yabai -m window --display next; yabai -m display --focus next
 shift + alt - p : yabai -m window --display previous; yabai -m display --focus previous
+
+# send focus to previous window
+alt - p : yabai -m window --focus prev
 
 # NB: For these two keybinds to be functional, you need
 # to bind them to something in system preferences > keyboard.
