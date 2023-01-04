@@ -1,4 +1,7 @@
+local util = require('core.util')
+
 -- init lazy.nvim
+
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -21,9 +24,12 @@ require('lazy').setup({
   -- Appearance
   {
     'nyoom-engineering/oxocarbon.nvim',
-     config = function()
-       vim.cmd('colorscheme oxocarbon')
-     end
+    config = function()
+      vim.cmd('colorscheme oxocarbon')
+      vim.cmd('hi Normal guibg=NONE ctermbg=NONE')
+      vim.cmd('hi clear LineNr')
+      vim.cmd('hi clear SignColumn')
+    end
   },
   {
     'mhinz/vim-startify',
@@ -35,7 +41,10 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     config = load('plugins.nvim-treesitter'),
   },
-  'ntpeters/vim-better-whitespace',
+  {
+    'ntpeters/vim-better-whitespace',
+    event = 'InsertEnter',
+  },
 
   -- Text-editing exp
   {
