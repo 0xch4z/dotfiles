@@ -22,7 +22,7 @@ done
 tmp=$(mktemp /tmp/bw-list.XXXXXXXXX)
 echo "$(rbw ls)" > $tmp
 
-login=$(/Users/ckenney/bin/popup "\echo \$(cat "$tmp" | $HOME/bin/fzfy) >> \$OUTFILE")
+login=$($HOME/bin/popup "\echo \$(cat "$tmp" | $HOME/bin/fzfy) >> \$OUTFILE")
 rm $tmp
 
 echo "run rbw $mode '$login'"
