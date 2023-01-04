@@ -130,7 +130,7 @@ for lsp, config in pairs(lsp_configs) do
   if not current_buffer_started then
     for _, ft in ipairs(config.ft) do
       if ft == bo.filetype then
-        vim.cmd(':LspStart ' + ls + '<CR>')
+        vim.cmd(':LspStart ' .. lsp .. '<CR>')
         current_buffer_started = true
       end
     end
