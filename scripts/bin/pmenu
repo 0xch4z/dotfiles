@@ -22,14 +22,18 @@ done
 # assert vault unlocked
 rbw unlock
 
-tmp=$(mktemp /tmp/bw-list.XXXXXXXXX)
-echo "$(rbw ls)" > $tmp
+opts="$(rbw ls)"
+echo "opts: $opts"
 
-login=$($HOME/bin/popup "\echo \$(cat "$tmp" | $HOME/bin/fzfy) >> \$OUTFILE")
-rm $tmp
+login="$(echo "$opts" | /Applications/dmenu-mac.app/Contents/MacOS/dmenu-mac)"
 
-echo "run rbw $mode '$login'"
-val="$(rbw $mode "$login")"
+if [[ "$mode" = "username" ]]; then
+    prefix="username: "
+    user_field="$(rbw get "$login" --full | grep -E "^$prefix")"
+    val="${user_field#"$prefix"}"
+else
+    val="$(rbw $mode "$login")"
+fi
 
 if [[ "$copy" -eq 1 ]]; then
     echo "$val" | pbcopy
