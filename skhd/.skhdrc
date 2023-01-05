@@ -92,4 +92,5 @@ alt - p : yabai -m window --focus prev
 shift + cmd - p : $HOME/bin/pmenu -pc
 cmd - p : $HOME/bin/pmenu -p # I don't print lol
 cmd - o : $HOME/bin/pmenu -o
-cmd - space : $HOME/bin/ripdmenu
+cmd - u : $HOME/bin/pmenu -u
+cmd - space : /Applications/dmenu-mac.app/Contents/MacOS/dmenu-mac
