@@ -32,7 +32,7 @@ tsconf.setup({
     'typescript',
     'rust',
     'hcl',
-    'norg',
+    'org',
   },
   autotag = {
     enabled = true
@@ -40,7 +40,8 @@ tsconf.setup({
   highlight = {
     enable = true,
     use_languagetree = true,
-    custom_captures = {}
+    custom_captures = {},
+    additional_vim_regex_highlighting = {'org'}
   },
   ident = {
     enable = true

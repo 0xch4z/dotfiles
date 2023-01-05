@@ -111,6 +111,11 @@ require('lazy').setup({
     'nvim-lua/plenary.nvim',
     lazy = true,
   },
+  {
+    'nvim-orgmode/orgmode',
+    dependencies = 'nvim-treesitter',
+    config = load('plugins.orgmode')
+  },
 
   -- Utilities
   {
