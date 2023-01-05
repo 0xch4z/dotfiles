@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-tmp=$(mktemp /tmp/ripdmenu-list.XXXXXXXXX)
-echo "$(ls -a1d /Applications/*.app /System/Applications/*.app /System/Applications/Utilities/*.app /System/Library/CoreServices/*.app)" > $tmp
+items="$(ls -a1d /Applications/*.app /System/Applications/*.app /System/Applications/Utilities/*.app /System/Library/CoreServices/*.app)" > $tmp
 
-app=$($HOME/bin/popup "echo \$(cat "$tmp" | fzf) > \$OUTFILE")
-rm $tmp
-
-open -a "$app"
+open -a "$(echo "$items" | /Applications/dmenu-mac.app/Contents/MacOS/dmenu-mac)"
