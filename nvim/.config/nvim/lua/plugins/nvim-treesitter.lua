@@ -27,7 +27,6 @@ tsconf.setup({
     'ruby',
     'toml',
     'solidity',
-    'norg',
     'tsx',
     'typescript',
     'rust',
