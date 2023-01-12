@@ -1,4 +1,4 @@
---[[ local telescope = require('telescope')
+local telescope = require('telescope')
 local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
 
@@ -10,6 +10,7 @@ telescope.setup({
 		file_previewer = previewers.vim_buffer_cat.new,
 		grep_previewer = previewers.vim_buffer_vimgrep.new,
 		qflist_previewer = previewers.vim_buffer_qflist.new,
+    find_command = {'rg', '--files', '--hidden', '--glob', '\'!*git*\''},
 
 		mappings = {
 			i = {
