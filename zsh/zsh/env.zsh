@@ -1,5 +1,6 @@
 export DOTFILES=$HOME/.dotfiles
 export LOCAL_DOTFILES=$HOME/.local.dotfiles
+export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
 # POSIX
 export EDITOR=nvim
