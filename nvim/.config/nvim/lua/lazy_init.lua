@@ -11,6 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   })
 end
+
 vim.opt.runtimepath:prepend(lazypath)
 vim.g.mapleader = ' '
 
@@ -24,12 +25,7 @@ require('lazy').setup({
   -- Appearance
   {
     'nyoom-engineering/oxocarbon.nvim',
-    config = function()
-      vim.cmd('colorscheme oxocarbon')
-      vim.cmd('hi Normal guibg=NONE ctermbg=NONE')
-      vim.cmd('hi clear LineNr')
-      vim.cmd('hi clear SignColumn')
-    end
+    config = load('plugins.oxocarbon'),
   },
   {
     'mhinz/vim-startify',
@@ -103,7 +99,6 @@ require('lazy').setup({
     'nvim-telescope/telescope.nvim',
     tag = '0.1.0',
     dependencies = 'nvim-lua/plenary.nvim',
-    lazy = true,
   },
 
   -- Misc.
