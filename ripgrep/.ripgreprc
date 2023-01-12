@@ -1,0 +1,17 @@
+# Sane(-ish) defaults
+--max-depth=10
+--max-columns=150
+
+# Show hidden files
+--hidden
+
+# Ignore these patterns
+--glob=!.git/
+--glob=!.cache/
+--glob=!.cargo/
+--glob=!.node_modules/
+--glob=!tmp/
+--glob=!vendor/
+
+# Case-insensitive for lower-case
+--smart-case
