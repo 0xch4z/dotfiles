@@ -19,6 +19,7 @@ util.opt('history', 100)             -- keep last 100 lines of buffer in memory
 util.opt('synmaxcol', 240)           -- don't process syntax of 240+ char line
 util.opt('signcolumn', 'yes')        -- allow signs alongside line numbers
 util.opt('number', true)             -- number lines
+util.opt('clipboard', 'unnamed')     -- copy/paste with system pasteboard
 
 -- Text
 util.opt('expandtab', true)     -- use spaces instead of tabs
