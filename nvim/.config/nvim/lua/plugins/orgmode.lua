@@ -1,6 +1,6 @@
 require('orgmode').setup_ts_grammar()
 require('orgmode').setup {
-  org_agend_files = {'~/notes/misc/**/*'}
+  org_agend_files = {'~/notes/misc/**/*'},
   notifications = {
     enabled = true,
     cron_enabled = true,
