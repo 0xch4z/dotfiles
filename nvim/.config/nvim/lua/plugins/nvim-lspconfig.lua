@@ -1,4 +1,4 @@
-local lsp_status_ok, lspconfig = pcall(require, 'lspconfig')
+local lsp_status_ok = pcall(require, 'lspconfig')
 if not lsp_status_ok then
   error("lspconfig is not available")
 end
@@ -8,8 +8,8 @@ if not cmp_status_ok then
   error("cmp_nvim_lsp is not available")
 end
 
-local protocol = require('vim.lsp.protocol')
 local bo = vim.bo
+local utils = require('core.util')
 
 if (os.getenv("NVIM_DEBUG") == "1") then
   vim.lsp.set_log_level("debug")
@@ -49,7 +49,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
   local function bmap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function bset(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -86,7 +86,6 @@ local root_dir = function()
 end
 
 -- all language servers: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
--- local servers = { 'bashls', 'clangd', 'tsserver', 'gopls', 'rls', 'yamlls', 'jsonls', 'terraformls' }
 local lsp_configs = {
   bashls = {
     ft = {'bash', 'sh'},
@@ -102,7 +101,28 @@ local lsp_configs = {
   },
   rust_analyzer = {
     ft = {'rust'}
-  }
+  },
+
+  -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
+  sumneko_lua = {
+    ft = {'lua'},
+
+    options = {
+      settings = {
+        Lua = {
+          runtime = { version = 'luaJIT' },
+          diagnostics = {
+            globals = {'vim'}
+          },
+          workspace = {
+            -- Make aware of Neovim runtime!
+            library = vim.api.nvim_get_runtime_file("", true),
+          },
+        },
+      },
+    },
+  },
+
 }
 
 
@@ -112,7 +132,7 @@ local current_buffer_started = false
 
 for lsp, config in pairs(lsp_configs) do
   -- Setup the language server
-  require('lspconfig')[lsp].setup {
+  local setup_options = {
     on_attach = on_attach,
     filetypes = config.ft,
     root_dir = root_dir,
@@ -121,6 +141,19 @@ for lsp, config in pairs(lsp_configs) do
       debounce_text_changes = 150,
     }
   }
+
+  -- Add lsp-specific options to setup options
+
+  local lsp_options = config.options
+  if type(lsp_options) == "table" then
+    for k, v in pairs(lsp_options) do
+      setup_options[k] = v
+      print('adding custom options for lspconfig: ' .. lsp)
+      utils.log_table(setup_options)
+    end
+  end
+
+  require('lspconfig')[lsp].setup(setup_options)
 
   -- The LSP is lazy loaded until InsertEnter is emitted on a buffer. This
   -- means that on first emit for a buffer, the proper LSP is not automatically
