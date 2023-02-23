@@ -16,7 +16,7 @@ util.nmap('<leader>src', ':luafile ~/.dotfiles/nvim/.config/nvim/init.lua<cr>')
 
 -- Quit current buffer
 util.nnoremap('<leader>q', ':q<cr>')
--- Quit all open buffers 
+-- Quit all open buffers
 util.nnoremap('<leader>qa', ':q<cr>')
 -- Force quit (kill) current buffer
 util.nnoremap('<leader>k', ':q!<cr>')
@@ -26,7 +26,7 @@ util.nnoremap('<leader>ka', ':xa!<cr>')
 util.nnoremap('<leader>fs', ':update<cr>')
 -- Write all open buffers
 util.nnoremap('<leader>fsa', ':wall<cr>')
--- Write and quit current buffer 
+-- Write and quit current buffer
 util.nnoremap('<leader>wq', ':update<cr>:q<cr>')
 -- Write and quit all open buffers
 util.nnoremap('<leader>wqa', ':wall<cr>:xa<cr>')
@@ -39,10 +39,9 @@ util.nnoremap('<leader>qwj', '<c-w>j:q<cr>')
 
 -- Buffer navigation
 
--- Open nerdtree buffer
-util.nnoremap('<leader>fo', ':Lf<cr>')
 
 -- Telescope navigation
+util.nnoremap('<leader>fo', ':Telescope file_browser<cr>')
 util.nnoremap('<leader>ff', ':Telescope find_files<cr>')
 util.nnoremap('<leader>fg', ':Telescope live_grep<cr>')
 util.nnoremap('<leader>fb', ':Telescope buffers<cr>')
@@ -70,4 +69,3 @@ util.nnoremap('<leader>ss', ':SymbolsOutline<cr>')
 
 -- Open up lazygit
 util.nnoremap('<leader>gg', ':LazyGit<cr>')
-
