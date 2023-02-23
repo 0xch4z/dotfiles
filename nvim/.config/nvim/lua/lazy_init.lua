@@ -59,7 +59,8 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp"
+      'ray-x/lsp_signature.nvim',
+      'hrsh7th/cmp-nvim-lsp',
     },
     config = load('plugins.nvim-lspconfig'),
   },
@@ -92,13 +93,14 @@ require('lazy').setup({
 
   -- Navigation
   {
-    'lmburns/lf.nvim',
-    config = load('plugins.lf'),
-  },
-  {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.0',
     dependencies = 'nvim-lua/plenary.nvim',
+    config = load('plugins.telescope'),
+  },
+  {
+    'nvim-telescope/telescope-file-browser.nvim',
+    dependencies = 'nvim-telescope/telescope.nvim',
   },
 
   -- Misc.
@@ -115,6 +117,5 @@ require('lazy').setup({
   -- Utilities
   {
     'akinsho/toggleterm.nvim',
-    lazy = true,
   },
 })

@@ -3,6 +3,13 @@ if not lsp_status_ok then
   error("lspconfig is not available")
 end
 
+require "lsp_signature".setup({
+  bind = true, -- This is mandatory, otherwise border config won't get registered.
+  handler_opts = {
+    border = "rounded"
+  }
+})
+
 local cmp_status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if not cmp_status_ok then
   error("cmp_nvim_lsp is not available")
@@ -115,6 +122,8 @@ local lsp_configs = {
             globals = {'vim'}
           },
           workspace = {
+            -- Disable prompt
+            checkThirdParty = false,
             -- Make aware of Neovim runtime!
             library = vim.api.nvim_get_runtime_file("", true),
           },
