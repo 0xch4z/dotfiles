@@ -5,6 +5,15 @@ local function _printi(lvl, ...)
   print(indent, ...)
 end
 
+-- gets the current file
+function M.get_current_file()
+  return vim.api.nvim_buf_get_name(0)
+end
+
+function M.get_workdir()
+  return vim.fn.getcwd()
+end
+
 -- prints a table
 function M.log_table(table, lvl)
   lvl = lvl or 0
