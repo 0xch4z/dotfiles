@@ -16,7 +16,6 @@ if not cmp_status_ok then
 end
 
 local bo = vim.bo
-local utils = require('core.util')
 
 if (os.getenv("NVIM_DEBUG") == "1") then
   vim.lsp.set_log_level("debug")
@@ -157,8 +156,6 @@ for lsp, config in pairs(lsp_configs) do
   if type(lsp_options) == "table" then
     for k, v in pairs(lsp_options) do
       setup_options[k] = v
-      print('adding custom options for lspconfig: ' .. lsp)
-      utils.log_table(setup_options)
     end
   end
 

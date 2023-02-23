@@ -1,5 +1,6 @@
 -- Load lua modules
-require('core.keybinds')
+require('keymap')
 require('core.config')
 require('core.autocmd')
 require('lazy_init')
+
