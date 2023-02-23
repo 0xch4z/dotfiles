@@ -113,6 +113,12 @@ require('lazy').setup({
     dependencies = 'nvim-treesitter',
     config = load('plugins.orgmode')
   },
+  {
+    'rainbowhxch/accelerated-jk.nvim',
+    lazy = true,
+    event = 'VeryLazy',
+    config = load('plugins.accelerated-jk')
+  },
 
   -- Utilities
   {
