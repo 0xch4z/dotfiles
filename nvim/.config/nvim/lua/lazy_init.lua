@@ -57,10 +57,9 @@ require('lazy').setup({
   },
   {
     'neovim/nvim-lspconfig',
-    event = "InsertEnter",
+    event = { "BufReadPost", "BufAdd", "BufNewFile" },
     dependencies = {
       'ray-x/lsp_signature.nvim',
-      'hrsh7th/cmp-nvim-lsp',
     },
     config = load('plugins.nvim-lspconfig'),
   },
