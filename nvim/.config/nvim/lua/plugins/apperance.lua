@@ -1,14 +1,20 @@
-local apperance = {}
+local ui = {}
 
 local util = require('plugins.util')
 local load = util.load
 
-apperance['nyoom-engineering/oxocarbon.nvim'] = {
+ui['nyoom-engineering/oxocarbon.nvim'] = {
   config = load('plugins.oxocarbon')
 }
 
-apperance['mhinz/vim-startify'] = {
+ui['mhinz/vim-startify'] = {
   config = load('plugins.vim-startify')
 }
 
-return apperance
+ui['lewis6991/gitsigns.nvim'] = {
+  lazy = true,
+  event = { 'CursorHold', 'CursorHoldI' },
+  config = load('plugins.configs.ui.gitsigns'),
+}
+
+return ui

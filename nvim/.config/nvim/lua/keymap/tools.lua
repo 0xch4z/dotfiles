@@ -14,7 +14,9 @@ local mappings = {
 
   -- Diagnostics
   ['n|<leader>de'] = cmd('TroubleToggle'):noremap():desc('diag: errors'),
-  ['n|<leader>ds'] = cmd('SymbolsOutline'):noremap():desc('diag: symbol outline')
+  ['n|<leader>ds'] = cmd('SymbolsOutline'):noremap():desc('diag: symbol outline'),
+  ['n|<leader>vb'] = cmd('Gitsigns blame_line'):noremap():desc('git: blame line'),
+  ['n|<leader>vd'] = cmd('Gitsigns toggle_deleted'):noremap():desc('git: show deleted'),
 }
 
 map.register_keys(mappings)
