@@ -110,7 +110,7 @@ local lsp_configs = {
   },
 
   -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
-  sumneko_lua = {
+  lua_ls = {
     ft = {'lua'},
 
     options = {
