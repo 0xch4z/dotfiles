@@ -17,11 +17,13 @@ local mappings = {
   ['n|<leader>wk'] = cmd('<c-w>k'):noremap():desc('window: go down'),
   ['n|<leader>wl'] = cmd('<c-w>l'):noremap():desc('window: go right'),
 
-  -- Buffer lifecycle
+  -- Buffer lifecycle/navigation
   ['n|<leader>q']   = cmd('q'):noremap():desc('buffer: quit'),
   ['n|<leader>qa']  = cmd('qa'):noremap():desc('buffer: quit all'),
   ['n|<leader>k']   = cmd('q!'):noremap():desc('buffer: kill'),
   ['n|<leader>ka']  = cmd('xa!'):noremap():desc('buffer: kill all'),
+  ['n|,']           = cmd('bprevious'):noremap():desc('buffer: prev'),
+  ['n|.']           = cmd('bnext'):noremap():desc('buffer: prev'),
 
   -- Misc
   ['n|<leader>nh'] = cmd('noh'):noremap():desc('search: clear highlight')
