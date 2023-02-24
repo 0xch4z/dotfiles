@@ -29,6 +29,23 @@ editor["nvim-treesitter/nvim-treesitter"] = {
     event = { "CursorHold", "CursorHoldI" },
     dependencies = {
         { "abecodes/tabout.nvim" },
+        { "nvim-treesitter/nvim-treesitter-textobjects" },
+        { "mrjones2014/nvim-ts-rainbow" },
+        { "JoosepAlviste/nvim-ts-context-commentstring" },
+        { "mfussenegger/nvim-treehopper" },
+        { "andymass/vim-matchup" },
+        {
+            "windwp/nvim-ts-autotag",
+            config = load("plugins.configs.editor.autotag"),
+        },
+        {
+            "NvChad/nvim-colorizer.lua",
+            config = load("plugins.configs.editor.colorizer"),
+        },
+        {
+            "abecodes/tabout.nvim",
+            config = load("plugins.configs.editor.tabout"),
+        },
     },
     config = load("plugins.configs.editor.nvim-treesitter"),
 }

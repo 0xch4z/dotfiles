@@ -38,8 +38,10 @@ tools["ibhagwan/smartyank.nvim"] = {
 
 tools["klen/nvim-test"] = {
     lazy = true,
-    event = "BufReadPost",
     config = load("plugins.configs.tools.nvim-test"),
+    dependencies = {
+        { "nvim-treesitter/nvim-treesitter" },
+    },
 }
 
 return tools

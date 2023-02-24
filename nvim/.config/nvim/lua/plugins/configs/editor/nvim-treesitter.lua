@@ -1,16 +1,3 @@
-local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-
-parser_config.objc = {
-    install_info = {
-        url = "https://github.com/merico-dev/tree-sitter-objc",
-        files = { "src/parser.c" },
-        branch = "master",
-        generate_requires_npm = false,
-        requires_generate_from_grammar = false,
-    },
-    filetype = "m",
-}
-
 local tsconf = require("nvim-treesitter.configs")
 
 tsconf.setup({
@@ -19,32 +6,76 @@ tsconf.setup({
         "c",
         "cpp",
         "go",
-        "java",
+        "gomod",
         "javascript",
         "json",
         "lua",
         "python",
         "ruby",
         "toml",
-        "solidity",
+        "yaml",
         "tsx",
+        "vue",
         "typescript",
         "rust",
         "hcl",
-        "org",
+        "make",
+        "help",
     },
     autotag = {
         enabled = true,
     },
-    highlight = {
-        enable = true,
-        use_languagetree = true,
-        custom_captures = {},
-    },
     ident = {
         enable = true,
     },
+    highlight = {
+        enable = true,
+        disable = function(ft, bufnr)
+            if vim.tbl_contains({ "vim" }, ft) then
+                return true
+            end
+
+            local ok, is_large_file = pcall(vim.api.nvim_buf_get_var, bufnr, "bigfile_disable_treesitter")
+            return ok and is_large_file
+        end,
+        additional_vim_regex_highlighting = { "c", "cpp" },
+    },
+    textobjects = {
+        select = {
+            enable = true,
+            keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = "@class.inner",
+            },
+        },
+        move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                ["]["] = "@function.outer",
+                ["]m"] = "@class.outer",
+            },
+            goto_next_end = {
+                ["]]"] = "@function.outer",
+                ["]M"] = "@class.outer",
+            },
+            goto_previous_start = {
+                ["[["] = "@function.outer",
+                ["[m"] = "@class.outer",
+            },
+            goto_previous_end = {
+                ["[]"] = "@function.outer",
+                ["[M"] = "@class.outer",
+            },
+        },
+    },
     rainbow = {
         enable = true,
+        extended_mode = true,
+        max_file_lines = 2000,
     },
+    context_commentstring = { enable = true, enable_autocmd = false },
+    matchup = { enable = true },
 })
