@@ -7,6 +7,7 @@ local load = util.load
 editor["rainbowhxch/accelerated-jk.nvim"] = {
     lazy = true,
     event = "VeryLazy",
+    config = load("plugins.configs.editor.accelerated-jk"),
 }
 
 -- autopairs syntax
@@ -29,7 +30,7 @@ editor["nvim-treesitter/nvim-treesitter"] = {
     dependencies = {
         { "abecodes/tabout.nvim" },
     },
-    config = load("plugins.nvim-treesitter"),
+    config = load("plugins.configs.editor.nvim-treesitter"),
 }
 
 -- Trailing whitespace shows up red

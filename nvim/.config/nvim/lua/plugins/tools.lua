@@ -22,12 +22,13 @@ tools["nvim-telescope/telescope.nvim"] = {
             { "kkharji/sqlite.lua" },
         } },
     },
-    config = load("plugins.telescope"),
+    config = load("plugins.configs.tools.telescope"),
 }
 
 tools["folke/trouble.nvim"] = {
     lazy = true,
     cmd = { "Trouble", "TroubleToggle", "TroubleRefresh" },
+    config = load("plugins.configs.tools.trouble"),
 }
 
 tools["ibhagwan/smartyank.nvim"] = {

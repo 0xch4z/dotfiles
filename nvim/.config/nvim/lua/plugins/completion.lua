@@ -13,10 +13,10 @@ completion["neovim/nvim-lspconfig"] = {
             dependencies = {
                 "nvim-lua/plenary.nvim",
             },
-            config = load("plugins.null-ls"),
+            config = load("plugins.configs.completion.null-ls"),
         },
     },
-    config = load("plugins.nvim-lspconfig"),
+    config = load("plugins.configs.completion.nvim-lspconfig"),
 }
 
 completion["hrsh7th/nvim-cmp"] = {
@@ -33,7 +33,7 @@ completion["hrsh7th/nvim-cmp"] = {
         { "onsails/lspkind.nvim" },
         { "ray-x/cmp-treesitter" },
     },
-    config = load("plugins.nvim-cmp"),
+    config = load("plugins.configs.completion.nvim-cmp"),
 }
 
 return completion
