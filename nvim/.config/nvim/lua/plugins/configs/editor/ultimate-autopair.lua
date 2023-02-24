@@ -1,5 +1,5 @@
-local autopair = require('ultimate-autopair')
+local autopair = require("ultimate-autopair")
 
 autopair.setup({
-  -- so far, so good.
+    -- so far, so good.
 })
