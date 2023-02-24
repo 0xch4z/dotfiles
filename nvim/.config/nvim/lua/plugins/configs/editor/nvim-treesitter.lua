@@ -40,7 +40,6 @@ tsconf.setup({
         enable = true,
         use_languagetree = true,
         custom_captures = {},
-        additional_vim_regex_highlighting = { "org" },
     },
     ident = {
         enable = true,

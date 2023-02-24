@@ -15,6 +15,7 @@
   "null-ls.nvim": { "branch": "main", "commit": "689cdd78f70af20a37b5309ebc287ac645ae4f76" },
   "nvim-cmp": { "branch": "main", "commit": "7cd39409e7378fa711624687d3b430b8a56c3af9" },
   "nvim-lspconfig": { "branch": "master", "commit": "69e2fe3d638566a812c39bc4ea1980f7b833e2fc" },
+  "nvim-test": { "branch": "main", "commit": "4e30d0772a43bd67ff299cfe201964c5bd799d73" },
   "nvim-treesitter": { "branch": "master", "commit": "83e2e22d9e25d739093c38f0663d547dfea00cf4" },
   "oxocarbon.nvim": { "branch": "main", "commit": "42a79b47f61170eb68f82fc557da208bda95c353" },
   "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" },

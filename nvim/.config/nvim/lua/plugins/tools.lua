@@ -36,4 +36,10 @@ tools["ibhagwan/smartyank.nvim"] = {
     event = "BufReadPost",
 }
 
+tools["klen/nvim-test"] = {
+    lazy = true,
+    event = "BufReadPost",
+    config = load("plugins.configs.tools.nvim-test"),
+}
+
 return tools

@@ -7,7 +7,7 @@ completion["neovim/nvim-lspconfig"] = {
     event = { "BufReadPost", "BufAdd", "BufNewFile" },
     dependencies = {
         { "ray-x/lsp_signature.nvim" },
-        { "glepnir/lspsaga.nvim" },
+        { "glepnir/lspsaga.nvim", config = load("plugins.configs.completion.lspsaga") },
         {
             "jose-elias-alvarez/null-ls.nvim",
             dependencies = {

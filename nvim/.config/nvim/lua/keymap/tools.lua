@@ -17,6 +17,11 @@ local mappings = {
     ["n|<leader>ds"] = cmd("SymbolsOutline"):noremap():desc("diag: symbol outline"),
     ["n|<leader>vb"] = cmd("Gitsigns blame_line"):noremap():desc("git: blame line"),
     ["n|<leader>vd"] = cmd("Gitsigns toggle_deleted"):noremap():desc("git: show deleted"),
+
+    ["n|<leader>ts"] = cmd("TestSuite"):noremap():desc("test: run suite"),
+    ["n|<leader>tf"] = cmd("TestFile"):noremap():desc("test: run file"),
+    ["n|<leader>tt"] = cmd("TestNearest"):noremap():desc("test: run nearest"),
+    ["n|<leader>tr"] = cmd("TestLast"):noremap():desc("test: rerun"),
 }
 
 map.register_keys(mappings)
