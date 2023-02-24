@@ -8,16 +8,18 @@ local Mapping = {}
 -- @returns a Mapping instance
 function Mapping:new(action)
     local instance = {
+        cmd = "",
         options = {
             noremap = false,
             silent = true,
             desc = "",
+            callback = nil,
         },
     }
 
     local action_type = type(action)
     if action_type == "function" then
-        instance.func = action
+        instance.options.callback = action
     elseif action_type == "string" then
         instance.cmd = action
     else
