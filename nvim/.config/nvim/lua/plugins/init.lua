@@ -26,9 +26,9 @@ local function flatten_plugins(...)
 end
 
 local plugins = flatten_plugins(
-  require('plugins.apperance'),
+  require('plugins.ui'),
+  require('plugins.tools'),
   require('plugins.completion'),
-  require('plugins.diagnostics'),
   require('plugins.editor')
 )
 

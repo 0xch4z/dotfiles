@@ -2,13 +2,15 @@ local tools = {}
 local util = require('plugins.util')
 local load = util.load
 
-tools['simtra39/symbols-outline.nvim'] = {
-  config = load('plugins.symbols-outline'),
-}
-
 tools['folke/which-key.nvim'] = {
 	lazy = true,
 	event = 'VeryLazy',
+}
+
+tools['LeonHeidelbach/trailblazer.nvim'] = {
+  lazy = true,
+  config = load('plugins.configs.tools.trailblazer'),
+  event = 'VeryLazy',
 }
 
 tools['nvim-telescope/telescope.nvim'] = {

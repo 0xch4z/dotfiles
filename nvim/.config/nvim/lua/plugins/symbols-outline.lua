@@ -1,5 +1,4 @@
-local status, symbols = pcall(require, "symbols-outline")
-if (not status) then return end
+local symbols = require('symbols-outline')
 
 symbols.setup({
   highlight_hovered_item = true,
@@ -17,20 +16,19 @@ symbols.setup({
   auto_unfold_hover = true,
   wrap = false,
   keymaps = {
-    close = {"<Esc>", "q"},
-    goto_location = "<Cr>",
-    focus_location = "o",
-    hover_symbol = "<C-space>",
-    toggle_preview = "K",
-    rename_symbol = "r",
-    code_actions = "a",
-    fold = "h",
-    unfold = "l",
-    fold_all = "W",
-    unfold_all = "E",
-    fold_reset = "R",
+    close = {'<Esc>', 'q'},
+    goto_location = '<Cr>',
+    focus_location = 'o',
+    hover_symbol = '<C-space>',
+    toggle_preview = 'K',
+    rename_symbol = 'r',
+    code_actions = 'a',
+    fold = 'h',
+    unfold = 'l',
+    fold_all = 'W',
+    unfold_all = 'E',
+    fold_reset = 'R',
   },
   lsp_blacklist = {},
   symbol_blacklist = {},
 })
-
