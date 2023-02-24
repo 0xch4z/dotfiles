@@ -9,6 +9,13 @@ editor['rainbowhxch/accelerated-jk.nvim'] = {
 	event = 'VeryLazy',
 }
 
+-- autopairs syntax
+editor['altermo/ultimate-autopair.nvim'] = {
+  lazy = true,
+  event = 'InsertEnter',
+  config = load('plugins.configs.editor.ultimate-autopair')
+}
+
 -- Utility for commenting/uncommenting
 editor['tpope/vim-commentary'] = {
   lazy = true,
