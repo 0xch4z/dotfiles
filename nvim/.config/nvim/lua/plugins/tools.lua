@@ -48,4 +48,8 @@ tools["klen/nvim-test"] = {
     },
 }
 
+tools["tamago324/lir.nvim"] = {
+    config = load("plugins.configs.tools.lir"),
+}
+
 return tools
