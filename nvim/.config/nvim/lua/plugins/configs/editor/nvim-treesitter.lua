@@ -76,6 +76,5 @@ tsconf.setup({
         extended_mode = true,
         max_file_lines = 2000,
     },
-    context_commentstring = { enable = true, enable_autocmd = false },
     matchup = { enable = true },
 })

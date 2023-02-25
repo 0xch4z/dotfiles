@@ -11,6 +11,9 @@ telescope.setup({
         grep_previewer = previewers.vim_buffer_vimgrep.new,
         qflist_previewer = previewers.vim_buffer_qflist.new,
         find_command = { "rg", "--files", "--hidden", "--glob", "'!*git*'" },
+        file_ignore_patterns = { ".git/", "%.dll", ".cache", "%.class", "%.pdf", "%.o", "%.a", "%.tar", "%s.gz", "%.zip" },
+        layout_strategy = "horizontal",path_display = { "absolute" },
+        scroll_strategy = "limit",results_title = false,initial_mode = "insert",
 
         mappings = {
             i = {

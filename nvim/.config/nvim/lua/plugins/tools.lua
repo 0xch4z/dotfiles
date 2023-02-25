@@ -16,11 +16,14 @@ tools["LeonHeidelbach/trailblazer.nvim"] = {
 tools["nvim-telescope/telescope.nvim"] = {
     tag = "0.1.0",
     dependencies = {
+        { "nvim-tree/nvim-web-devicons" },
         { "nvim-lua/plenary.nvim" },
         { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
         { "nvim-telescope/telescope-frecency.nvim", dependencies = {
             { "kkharji/sqlite.lua" },
         } },
+        { "debugloop/telescope-undo.nvim" },
+        { "nvim-lua/popup.nvim" },
     },
     config = load("plugins.configs.tools.telescope"),
 }
@@ -39,6 +42,7 @@ tools["ibhagwan/smartyank.nvim"] = {
 tools["klen/nvim-test"] = {
     lazy = true,
     config = load("plugins.configs.tools.nvim-test"),
+    cmd = { "TestSuite", "TestFile", "TestPrevious", "TestInfo", "TestNearest" },
     dependencies = {
         { "nvim-treesitter/nvim-treesitter" },
     },
