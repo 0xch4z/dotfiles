@@ -28,8 +28,9 @@ end
 local plugins = flatten_plugins(
     require("plugins.ui"),
     require("plugins.tools"),
+    require("plugins.editor"),
     require("plugins.completion"),
-    require("plugins.editor")
+    require("plugins.lang")
 )
 
 require("lazy").setup(plugins)

@@ -6,7 +6,6 @@ lspkind.init({ preset = "codicons" })
 require("luasnip.loaders.from_vscode").lazy_load()
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-
 vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
 cmp.setup({
@@ -51,6 +50,7 @@ cmp.setup({
 
     -- Load sources, see: https://github.com/topics/nvim-cmp
     sources = {
+        { name = "crates" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
         { name = "path" },
@@ -66,4 +66,12 @@ cmp.setup({
             side_padding = 0,
         },
     },
+})
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+    group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),
+    pattern = "Cargo.toml",
+    callback = function()
+        cmp.setup.buffer({ sources = { { name = "crates" } } })
+    end,
 })

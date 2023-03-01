@@ -60,6 +60,11 @@ nls.setup({
             runtime_condition = has_exec("shellharden"),
         }),
 
+        -- Rust
+        builtins.formatting.rustfmt.with({
+            runtime_condition = has_exec("rustfmt"),
+        }),
+
         -- Lua
         builtins.diagnostics.luacheck.with({
             runtime_condition = has_exec("luacheck"),
