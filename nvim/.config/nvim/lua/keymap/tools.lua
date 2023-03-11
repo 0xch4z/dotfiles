@@ -22,6 +22,10 @@ local mappings = {
     ["n|<leader>tf"] = cmd("TestFile"):noremap():desc("test: run file"),
     ["n|<leader>tt"] = cmd("TestNearest"):noremap():desc("test: run nearest"),
     ["n|<leader>tr"] = cmd("TestLast"):noremap():desc("test: rerun"),
+
+    -- Note taking
+    ["n|<leader>mm"] = cmd("MindOpenMain"):noremap():desc("mind: open main"),
+    ["n|<leader>mp"] = cmd("MindOpenProject"):noremap():desc("mind: open project"),
 }
 
 map.register_keys(mappings)

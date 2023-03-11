@@ -52,4 +52,8 @@ tools["tamago324/lir.nvim"] = {
     config = load("plugins.configs.tools.lir"),
 }
 
+tools["phaazon/mind.nvim"] = {
+    config = load("plugins.configs.tools.mind"),
+}
+
 return tools
