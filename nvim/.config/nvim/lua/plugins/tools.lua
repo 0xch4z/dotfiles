@@ -42,7 +42,7 @@ tools["ibhagwan/smartyank.nvim"] = {
 tools["klen/nvim-test"] = {
     lazy = true,
     config = load("plugins.configs.tools.nvim-test"),
-    cmd = { "TestSuite", "TestFile", "TestPrevious", "TestInfo", "TestNearest" },
+    cmd = { "TestEdit", "TestSuite", "TestFile", "TestPrevious", "TestInfo", "TestNearest" },
     dependencies = {
         { "nvim-treesitter/nvim-treesitter" },
     },
