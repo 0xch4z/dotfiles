@@ -26,7 +26,7 @@ editor["tpope/vim-commentary"] = {
 -- Treesitter
 editor["nvim-treesitter/nvim-treesitter"] = {
     lazy = true,
-    event = { "CursorHold", "CursorHoldI" },
+    event = { "BufReadPost" },
     dependencies = {
         { "abecodes/tabout.nvim" },
         { "nvim-treesitter/nvim-treesitter-textobjects" },
