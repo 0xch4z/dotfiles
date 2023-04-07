@@ -101,6 +101,9 @@ local lsp_configs = {
     rust_analyzer = {
         ft = { "rust" },
     },
+    volar = {
+        ft = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
+    },
 
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
     lua_ls = {
