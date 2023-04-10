@@ -21,6 +21,7 @@ tsconf.setup({
         "hcl",
         "make",
         "help",
+        "zig",
     },
     autotag = {
         enabled = true,

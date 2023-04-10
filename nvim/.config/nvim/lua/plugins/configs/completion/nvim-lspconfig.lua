@@ -104,6 +104,12 @@ local lsp_configs = {
     volar = {
         ft = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
     },
+    pyright = {
+        ft = { "python" },
+    },
+    zls = {
+        ft = { "zig" },
+    },
 
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
     lua_ls = {
