@@ -26,6 +26,9 @@ local mappings = {
     -- Note taking
     ["n|<leader>mm"] = cmd("MindOpenMain"):noremap():desc("mind: open main"),
     ["n|<leader>mp"] = cmd("MindOpenProject"):noremap():desc("mind: open project"),
+
+    -- Misc
+    ["n|<leader>mv"] = cmd("Glow"):noremap():desc("markdown: preview")
 }
 
 map.register_keys(mappings)

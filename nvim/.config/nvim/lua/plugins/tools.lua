@@ -56,4 +56,9 @@ tools["phaazon/mind.nvim"] = {
     config = load("plugins.configs.tools.mind"),
 }
 
+tools["ellisonleao/glow.nvim"] = {
+    config = load("plugins.configs.tools.glow"),
+    cmd = { "Glow" },
+}
+
 return tools
