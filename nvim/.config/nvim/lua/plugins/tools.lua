@@ -19,9 +19,12 @@ tools["nvim-telescope/telescope.nvim"] = {
         { "nvim-tree/nvim-web-devicons" },
         { "nvim-lua/plenary.nvim" },
         { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-        { "nvim-telescope/telescope-frecency.nvim", dependencies = {
-            { "kkharji/sqlite.lua" },
-        } },
+        {
+            "nvim-telescope/telescope-frecency.nvim",
+            dependencies = {
+                { "kkharji/sqlite.lua" },
+            },
+        },
         { "debugloop/telescope-undo.nvim" },
         { "nvim-lua/popup.nvim" },
     },
@@ -59,6 +62,10 @@ tools["phaazon/mind.nvim"] = {
 tools["ellisonleao/glow.nvim"] = {
     config = load("plugins.configs.tools.glow"),
     cmd = { "Glow" },
+}
+
+tools["mrjones2014/smart-splits.nvim"] = {
+    config = load("plugins.configs.tools.smart-splits"),
 }
 
 return tools
