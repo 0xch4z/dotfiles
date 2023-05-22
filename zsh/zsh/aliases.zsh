@@ -4,7 +4,7 @@ alias -g nerdctl=nerdctl.lima
 alias -g nerd=nerdctl
 alias -g pinentry=pinentry-mac
 alias -g watch=hwatch
-alias -g n=neovim
+alias -g n=nvim
 
 alias -g gh="cd $HOME"
 alias -g gw="cd $HOME/work"
