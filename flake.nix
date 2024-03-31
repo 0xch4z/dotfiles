@@ -13,13 +13,18 @@
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    neovim-nightly-overlay = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/neovim-nightly-overlay";
+    };
   };
 
-  outputs = { darwin, home-manager, nur, nixpkgs, ... }:
+  outputs = { darwin, home-manager, nur, nixpkgs, neovim-nightly-overlay, ... }:
     let
       homeManagerConfFor = config:
         { ... }: {
           nixpkgs.overlays = [
+            neovim-nightly-overlay.overlay
             nur.overlay
           ];
           imports = [ config ];
