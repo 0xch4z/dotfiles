@@ -219,6 +219,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-kns-fork": {
+      "locked": {
+        "lastModified": 1712095617,
+        "narHash": "sha256-0Hob19QAzJE53RAr9QsqkBLGvbcAuhP6n6Hc9AUF1U8=",
+        "owner": "0xch4z",
+        "repo": "nixpkgs",
+        "rev": "ab59037ef4470934205ab968847de2f91a8dc22b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xch4z",
+        "ref": "kns-unix-support",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nur": {
       "locked": {
         "lastModified": 1711828914,
@@ -241,6 +257,7 @@
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-kns-fork": "nixpkgs-kns-fork",
         "nur": "nur"
       }
     },

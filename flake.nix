@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-kns-fork.url = "github:0xch4z/nixpkgs/kns-unix-support";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     nur.url = "github:nix-community/nur";
     home-manager = {
@@ -19,14 +20,19 @@
     };
   };
 
-  outputs = { darwin, home-manager, nur, nixpkgs, neovim-nightly-overlay, ... }:
+  outputs = { darwin, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
     let
+      overlay-kns-fork = final: prev: {
+        kns-fork = nixpkgs-kns-fork.legacyPackages.${prev.system};
+      };
       homeManagerConfFor = config:
         { ... }: {
           nixpkgs.overlays = [
+            overlay-kns-fork
             neovim-nightly-overlay.overlay
             nur.overlay
           ];
+          nixpkgs.config.allowUnfree = true;
           imports = [ config ];
         };
       darwinSystem = darwin.lib.darwinSystem {

@@ -43,12 +43,17 @@ in
     terraform-ls
   ];
 
+  home.sessionVariables = {
+    NVIM_TREESITTER_SKIP_PARSER_INSTALL = "1";
+  };
+
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
     vimAlias = true;
     coc.enable = false;
     withNodeJs = true;
+    defaultEditor = true;
 
     plugins = [
       treesitterWithGrammars

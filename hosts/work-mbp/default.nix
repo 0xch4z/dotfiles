@@ -19,12 +19,24 @@
 
   programs.zsh.enable = true;
 
-  system.stateVersion = 4;
-  users = {
-    users.ckenney = {
-      home = /Users/ckenney;
-    };
+  programs.tmux = {
+    enable = true;
   };
+
+  system.stateVersion = 4;
+
+  users.users.ckenney = {
+    home = /Users/ckenney;
+    shell = pkgs.fish;
+  };
+
+  system.keyboard = {
+    enableKeyMapping = true;
+    remapCapsLockToControl = true;
+  };
+
+  # allow authing with touch-id for sudo
+  security.pam.enableSudoTouchIdAuth = true;
 
   nix = {
     nixPath = lib.mkForce [
