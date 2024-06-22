@@ -20,34 +20,28 @@
     };
   };
 
-  outputs = { darwin, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
+  outputs = inputs @ { darwin, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
     let
       overlay-kns-fork = final: prev: {
         kns-fork = nixpkgs-kns-fork.legacyPackages.${prev.system};
       };
-      homeManagerConfFor = config:
-        { ... }: {
-          nixpkgs.overlays = [
-            overlay-kns-fork
-            neovim-nightly-overlay.overlay
-            nur.overlay
-          ];
-          nixpkgs.config.allowUnfree = true;
-          imports = [ config ];
-        };
-      darwinSystem = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          ./hosts/work-mbp
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.users.ckenney =
-              homeManagerConfFor ./hosts/work-mbp/home.nix;
-          }
+      nixpkgsConfig = {
+        config.allowUnfree = true;
+        overlays = [
+          overlay-kns-fork
+          neovim-nightly-overlay.overlay
+          nur.overlay
         ];
-        specialArgs = { inherit nixpkgs; };
       };
     in {
-      darwinConfigurations.USMK9RK6N3FN2 = darwinSystem;
+      darwinConfigurations.USMK9RK6N3FN2 = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {nixpkgs = nixpkgsConfig;}
+          ./machines/USMK9RK6N3FN2
+          home-manager.darwinModules.home-manager
+        ];
+        specialArgs = { inherit inputs nixpkgs nixpkgsConfig; };
+      };
     };
 }
