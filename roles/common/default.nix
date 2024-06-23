@@ -72,6 +72,9 @@
       grc
       watch
       wget
+
+      # misc
+      typespeed
     ];
   };
 }
