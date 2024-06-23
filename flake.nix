@@ -43,5 +43,15 @@
         ];
         specialArgs = { inherit inputs nixpkgs nixpkgsConfig; };
       };
+
+      darwinConfigurations.Charlies-MacBook-Pro = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {nixpkgs = nixpkgsConfig;}
+          ./machines/Charlies-MacBook-Pro
+          home-manager.darwinModules.home-manager
+        ];
+        specialArgs = { inherit inputs nixpkgs nixpkgsConfig; };
+      };
     };
 }

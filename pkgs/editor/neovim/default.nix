@@ -38,6 +38,7 @@ in
     nil
     nodePackages_latest.pyright
     rubyPackages_3_3.solargraph
+    ripgrep
     #rust-analyzer-unwrapped
     #terraform-ls
   ];
