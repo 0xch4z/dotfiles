@@ -35,7 +35,7 @@
   users.users.ckenney = {
     name = "ckenney";
     home = "/Users/ckenney";
-    shell = "fish";
+    shell = pkgs.fish;
   };
 
   system = {
