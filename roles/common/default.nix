@@ -8,7 +8,7 @@
     ../../pkgs/container
     ../../pkgs/dev
     ../../pkgs/editor/neovim
-    #../../pkgs/infra
+    ../../pkgs/infra
     #../../pkgs/networking
     ../../pkgs/productivity
     ../../pkgs/shell
