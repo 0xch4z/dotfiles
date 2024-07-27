@@ -14,13 +14,17 @@
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    wsl = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/NixOS-WSL";
+    };
     neovim-nightly-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/neovim-nightly-overlay";
     };
   };
 
-  outputs = inputs @ { darwin, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
+  outputs = inputs @ { darwin, wsl, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
     let
       overlay-kns-fork = final: prev: {
         kns-fork = nixpkgs-kns-fork.legacyPackages.${prev.system};
@@ -34,6 +38,17 @@
         ];
       };
     in {
+      nixosConfigurations.charbox2wsl = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          {nixpkgs = nixpkgsConfig;}
+          ./machines/charbox2wsl
+          home-manager.nixosModules.home-manager
+          wsl.nixosModules.wsl
+        ];
+        specialArgs = { inherit inputs nixpkgs nixpkgsConfig; };
+      };
+
       darwinConfigurations.USMK9RK6N3FN2 = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
