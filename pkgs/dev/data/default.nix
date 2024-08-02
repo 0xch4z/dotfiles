@@ -8,6 +8,7 @@
       jsonfmt
       yamlfmt
       yamllint
+      yaml-language-server
       yq-go
     ];
   };
