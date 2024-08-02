@@ -5,8 +5,7 @@
   pkgs,
   ...
 }: {
-  environment.shells = [pkgs.fish pkgs.bashInteractive];
-  programs.bash.enable = true;
+  environment.shells = [pkgs.fish];
   programs.fish.enable = true;
 
   environment.systemPackages = with pkgs; [
