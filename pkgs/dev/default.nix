@@ -2,6 +2,7 @@ _: {
   imports = [
     ./build
     ./data
+    ./elixir
     ./golang
     ./javascript
     ./lua
