@@ -34,13 +34,13 @@
   users.users.char = {
     name = "char";
     home = "/Users/char";
-    shell = "/etc/profiles/per-user/char/bin/fish";
+    shell = pkgs.fish;
   };
 
   system = {
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToEscape = true;
+      remapCapsLockToControl = true;
     };
 
     defaults = {

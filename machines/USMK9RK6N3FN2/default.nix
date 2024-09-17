@@ -40,7 +40,7 @@
   system = {
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToEscape = true;
+      remapCapsLockToControl = true;
     };
 
     defaults = {
@@ -48,7 +48,7 @@
         autohide = true;
         autohide-delay = 0.0;
         autohide-time-modifier = 1.0;
-        tilesize = 75;
+        tilesize = 50;
         static-only = false;
         showhidden = false;
         show-recents = false;

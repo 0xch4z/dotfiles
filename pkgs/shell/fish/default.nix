@@ -11,6 +11,9 @@
       set hydro_color_git ff00af
       set hydro_color_prompt afff00
       fish_vi_key_bindings
+
+      # automatic devenv
+      direnv hook fish | source
     '';
 
     plugins = with pkgs.fishPlugins; [

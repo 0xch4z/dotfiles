@@ -14,6 +14,5 @@
 
   home.sessionVariables = {
     SHELL = "fish";
-    TERMINAL = "kitty";
   };
 }

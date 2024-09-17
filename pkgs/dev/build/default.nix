@@ -4,6 +4,7 @@
       #actionlint
       buildpack
       cmake
+      devenv
       gnumake
       go-task
     ];

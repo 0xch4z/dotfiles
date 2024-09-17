@@ -12,8 +12,7 @@
     #../../pkgs/networking
     ../../pkgs/productivity
     ../../pkgs/shell
-    ../../pkgs/terminal/kitty
-    ../../pkgs/terminal/tmux
+    ../../pkgs/terminal
     ../../pkgs/utility
   ];
 
@@ -30,6 +29,7 @@
     sessionVariables = {
       EDITOR = "nvim";
       PAGER = "less";
+      TERMINAL = "alacritty";
     };
 
     packages = with pkgs; [
@@ -38,6 +38,9 @@
 
       # fonts
       font-awesome
+      fira-mono
+      fira-code-nerdfont
+      lato
 
       # remote util
       rsync

@@ -6,6 +6,7 @@
   home = {
     packages = with pkgs; [
       #rust-bin.beta.latest.default
+      cargo
       rustc
       rust-analyzer
     ];
