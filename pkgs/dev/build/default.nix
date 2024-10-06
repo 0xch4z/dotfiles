@@ -7,6 +7,8 @@
       devenv
       gnumake
       go-task
+      graphviz
+      plantuml
     ];
   };
 }
