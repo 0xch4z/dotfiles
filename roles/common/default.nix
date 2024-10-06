@@ -70,6 +70,9 @@
       htop
       tmux
 
+      # keyboard
+      via
+
       # utility
       file
       grc
