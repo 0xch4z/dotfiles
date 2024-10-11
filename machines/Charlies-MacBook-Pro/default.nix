@@ -92,6 +92,10 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+
+    settings = {
+      trusted-users = ["root" "char"];
+    };
   };
 
   services.nix-daemon.enable = true;
