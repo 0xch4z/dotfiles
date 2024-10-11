@@ -3,8 +3,6 @@
     enable = true;
 
     settings = {
-      live_reload_config = true;
-
       window = {
         title = "Terminal";
         opacity = 0.85;
@@ -16,11 +14,8 @@
 
       font = {
         normal.family = "SFMono Nerd Font";
-        normal.style = "regular";
         size = 22.0;
       };
-
-      background_opacity = 0.3;
 
       shell = { program = "${pkgs.fish}/bin/fish"; };
 

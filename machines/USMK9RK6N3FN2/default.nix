@@ -8,6 +8,8 @@
   environment.shells = [pkgs.fish];
   programs.fish.enable = true;
 
+  ids.uids.nixbld = 300;
+
   environment.systemPackages = with pkgs; [
       coreutils
       ffmpeg
@@ -20,15 +22,8 @@
       mods
   ];
 
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.ckenney = {
-      imports = [
-        ../../profiles/work-macos
-        ../../roles/work-macos
-      ];
-    };
+  fonts = {
+    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
   };
 
   users.users.ckenney = {
@@ -85,6 +80,10 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+
+    settings = {
+      trusted-users = ["ckenney"];
+    };
   };
 
   services.nix-daemon.enable = true;

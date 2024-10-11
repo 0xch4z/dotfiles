@@ -8,6 +8,7 @@
     ../../pkgs/container
     ../../pkgs/dev
     ../../pkgs/editor/neovim
+    ../../pkgs/fonts
     ../../pkgs/infra
     #../../pkgs/networking
     ../../pkgs/productivity
@@ -17,6 +18,21 @@
   ];
 
   xdg.enable = true;
+
+  fonts = {
+    # packages = [
+    #   (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {})
+    # ];
+    fontconfig = {
+      enable = true;
+      #useEmbeddedBitmaps = true;
+      # defaultFonts = {
+      #   serif = [ "SFProDisplay Nerd Font" ];
+      #   sansSerif = [ "SFProDisplay Nerd Font" ];
+      #   monospace = [ "SFMono Nerd Font" ];
+      # };
+    };
+  };
 
   home = {
     stateVersion = "22.11";
@@ -41,6 +57,8 @@
       fira-mono
       fira-code-nerdfont
       lato
+      nerdfonts
+      fontconfig
 
       # remote util
       rsync
@@ -71,7 +89,7 @@
       tmux
 
       # keyboard
-      via
+      # via
 
       # utility
       file
