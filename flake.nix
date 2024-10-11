@@ -46,7 +46,7 @@
         system = "aarch64-darwin";
         user   = "ckenney";
       };
-      darwinConfigurations.Charlies-MacBook-Pro = darwin.lib.darwinSystem {
+      darwinConfigurations.Charlies-MacBook-Pro = mkSystem "Charlies-MacBook-Pro" {
         system = "aarch64-darwin";
         user   = "char";
       };

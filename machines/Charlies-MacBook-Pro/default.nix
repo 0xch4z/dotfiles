@@ -5,6 +5,8 @@
   pkgs,
   ...
 }: {
+  ids.uids.nixbld = 300;
+
   environment.shells = [pkgs.fish];
   programs.fish.enable = true;
 
@@ -20,7 +22,12 @@
       mods
   ];
 
-  home-manager = {
+  fonts = {
+    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
+  };
+
+
+   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     users.char = {
