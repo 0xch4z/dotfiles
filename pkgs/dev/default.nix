@@ -1,4 +1,4 @@
-_: {
+{pkgs, ...}: {
   imports = [
     ./build
     ./data
@@ -11,5 +11,9 @@ _: {
     ./rust
     ./sql
     #./version-control/git
+  ];
+
+  home.packages = with pkgs; [
+    slint-lsp
   ];
 }

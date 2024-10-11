@@ -3,6 +3,7 @@
     ../../pkgs/container/colima
     #../../pkgs/desktop/window-manager/aerospace
     ../common
+    ../macos
   ];
 
 
