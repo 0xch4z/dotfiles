@@ -17,6 +17,7 @@
     kubectl-view-secret
     kubernetes-helm
     k9s
+    minikube
     stern
   ];
 }
