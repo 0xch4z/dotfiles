@@ -40,6 +40,7 @@
     sessionPath = [
       "$HOME/.local/bin"
       "/usr/local/bin"
+      "/opt/homebrew/bin"
     ];
 
     sessionVariables = {
