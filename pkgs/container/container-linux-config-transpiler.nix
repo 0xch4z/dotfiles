@@ -1,23 +1,41 @@
-{ lib, fetchFromGitHub, buildGoPackage }:
+{ lib, fetchFromGitHub, buildGoModule }:
 
 with lib;
 
-buildGoPackage rec {
+buildGoModule rec {
   pname = "ct";
   version = "0.9.0";
-
-  goPackagePath = "github.com/coreos/container-linux-config-transpiler";
 
   src = fetchFromGitHub {
     owner = "coreos";
     repo = "container-linux-config-transpiler";
     rev = "v${version}";
-    sha256="058zjk9yqgdli55gc6y48455il6wjpslyz2r2ckk2ki9c5qc8b7c";
+    sha256 = "058zjk9yqgdli55gc6y48455il6wjpslyz2r2ckk2ki9c5qc8b7c";
   };
 
-  meta = {
-    description = "Convert a Container Linux Config into Ignition";
-    license = licenses.asl20;
-    homepage = "https://github.com/coreos/container-linux-config-transpiler";
-  };
+   subPackages = [ "./internal" ];
+
+   vendorHash = "sha256-WkRcOp8pywP/XOgD9iK3RwI7KCQcXdjx4QnjShE/d2w=";
+
+   preBuild = ''
+     export buildFlagsArray=(
+       -mod="readonly"
+     )
+   '';
+
+   # vendor inconsistencies
+   deleteVendor = true;
+
+   # don't run tests
+   doCheck = false;
+
+   patches = [
+     ./container-linux-config-transpiler.0001-convert-to-gomod.patch
+   ];
+
+   meta = {
+     description = "Convert a Container Linux Config into Ignition";
+     license = licenses.asl20;
+     homepage = "https://github.com/coreos/container-linux-config-transpiler";
+   };
 }

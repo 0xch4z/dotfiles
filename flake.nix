@@ -2,7 +2,8 @@
   description = "0xch4z's systems configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # TODO: pin back to unstable channel when https://github.com/LnL7/nix-darwin/issues/1317 is closed
+    nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 

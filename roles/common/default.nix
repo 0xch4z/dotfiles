@@ -58,7 +58,6 @@
       fira-mono
       fira-code-nerdfont
       lato
-      nerdfonts
       fontconfig
 
       # remote util

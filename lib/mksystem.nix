@@ -33,8 +33,8 @@ let
     config.allowUnfree = true;
     overlays = with inputs; [
       overlay-kns-fork
-      neovim-nightly-overlay.overlay
-      nur.overlay
+      nur.overlays.default
+      neovim-nightly-overlay.overlays.default
     ];
   };
 

@@ -36,8 +36,9 @@ in
     #gopls
     #lua-language-server
     nil
-    nodePackages_latest.pyright
-    rubyPackages_3_3.solargraph
+    # nodePackages_latest.pyright
+    pyright
+    rubyPackages_3_4.solargraph
     ripgrep
     #rust-analyzer-unwrapped
     #terraform-ls
@@ -49,7 +50,7 @@ in
 
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-nightly;
+    # package = pkgs.neovim-nightly;
     vimAlias = true;
     coc.enable = false;
     withNodeJs = true;

@@ -10,8 +10,6 @@
       nodePackages.pnpm
       nodePackages.typescript
       nodePackages.typescript-language-server
-      nodePackages.vls
-      nodePackages.volar
       nodejs
       prettierd
     ];
