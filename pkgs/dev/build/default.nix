@@ -3,6 +3,8 @@
     packages = with pkgs; [
       #actionlint
       buildpack
+      devcontainer
+      devpod
       cmake
       devenv
       gnumake
