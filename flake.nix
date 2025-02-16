@@ -10,8 +10,8 @@
     # community
     nur.url = "github:nix-community/nur";
     home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     darwin = {
       url = "github:lnl7/nix-darwin/48b50b3b137be5cfb9f4d006835ce7c3fe558ccc";
@@ -37,7 +37,10 @@
       mkSystem = import ./lib/mksystem.nix {
         inherit nixpkgs inputs;
       };
-    in {
+      libHome = import ./lib/home.nix {
+        inherit nixpkgs inputs;
+      };
+    in rec {
       # machines
       nixosConfigurations.charbox2wsl = mkSystem "charbox2wsl" {
         system = "x86_64-linux";
@@ -53,11 +56,10 @@
       };
 
       # homes
-      homeConfigurations."ckenney@USMK9RK6N3FN2" = home-manager.lib.homeManagerConfiguration {
-        inherit nixpkgs;
-        modules = [
-          "./home/ckenney@USMK9RK6N3FN2"
-        ];
+      homeConfigurations."ckenney@USMK9RK6N3FN2" = libHome.mkHome {
+          name = "USMK9RK6N3FN2";
+          system = "aarch64-darwin";
+          user = "ckenney";
       };
     };
 }

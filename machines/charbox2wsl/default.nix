@@ -5,22 +5,22 @@
   pkgs,
   ...
 }: {
-  environment.shells = [pkgs.fish];
-  environment.enableAllTerminfo = true;
+  # environment.shells = [pkgs.fish];
+  # environment.enableAllTerminfo = true;
 
   programs.fish.enable = true;
 
-  environment.systemPackages = with pkgs; [
-      coreutils
-      ffmpeg
-      fswatch
-      fzf
-      gnupg
-      home-manager
-      kitty
-      openssl
-      mods
-  ];
+  # environment.systemPackages = with pkgs; [
+  #     coreutils
+  #     ffmpeg
+  #     fswatch
+  #     fzf
+  #     gnupg
+  #     home-manager
+  #     kitty
+  #     openssl
+  #     mods
+  # ];
 
   home-manager = {
     useGlobalPkgs = true;

@@ -7,20 +7,20 @@
 }: {
   ids.uids.nixbld = 300;
 
-  environment.shells = [pkgs.fish];
+  # environment.shells = [pkgs.fish];
   programs.fish.enable = true;
 
-  environment.systemPackages = with pkgs; [
-      coreutils
-      ffmpeg
-      fswatch
-      fzf
-      gnupg
-      home-manager
-      kitty
-      openssl
-      mods
-  ];
+  # environment.systemPackages = with pkgs; [
+  #     coreutils
+  #     ffmpeg
+  #     fswatch
+  #     fzf
+  #     gnupg
+  #     home-manager
+  #     kitty
+  #     openssl
+  #     mods
+  # ];
 
   fonts = {
     packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];

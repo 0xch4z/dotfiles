@@ -10,9 +10,10 @@ let
   # determine if this is a darwin/macos system.
   darwin = nixpkgs.lib.strings.hasInfix "darwin" system;
 
-  # get system factory for darwin/linux
+  # get the factory for this system.
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
-  # get home manager modules
+
+  # get the home-manager modules for this system
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
 
   # define pkgs

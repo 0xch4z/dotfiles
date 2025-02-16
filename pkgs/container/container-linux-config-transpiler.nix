@@ -18,6 +18,7 @@ buildGoModule rec {
    vendorHash = "sha256-WkRcOp8pywP/XOgD9iK3RwI7KCQcXdjx4QnjShE/d2w=";
 
    preBuild = ''
+     GOPROXY="https://proxy.golang.org,direct"
      export buildFlagsArray=(
        -mod="readonly"
      )

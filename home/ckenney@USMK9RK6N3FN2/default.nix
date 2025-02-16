@@ -1,8 +1,9 @@
-{ config, lib, pkgs, user, darwin, inputs, ... }@args: {
+{ lib, user, ... }@args: {
   imports = [
     ../../roles/work-macos
     ../../profiles/work-macos
   ];
 
-  home.stateVersion = "22.11";
+  home.stateVersion = lib.mkForce "22.11";
+  home.homeDirectory = "/Users/${user}";
 }

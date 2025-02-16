@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+USER="$(whoami)"
+HOST="$(hostname)"
+
+home-manager switch --flake ".#${USER}@${HOST}" "${@}"
