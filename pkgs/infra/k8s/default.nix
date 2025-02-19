@@ -8,7 +8,7 @@
     clusterctl
     helm-ls
     kdash
-    kns-fork.kns
+    kns
     kubecm
     kubectl
     kubectl-images

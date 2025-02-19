@@ -6,6 +6,7 @@
     ./golang
     ./javascript
     ./lua
+    ./nix
     ./protobuf
     ./python
     ./rust

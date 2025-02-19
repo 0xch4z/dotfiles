@@ -32,34 +32,15 @@
     nixpkgs-kns-fork.url = "github:0xch4z/nixpkgs/kns-unix-support";
   };
 
-  outputs = inputs @ { darwin, wsl, home-manager, nur, nixpkgs, nixpkgs-kns-fork, neovim-nightly-overlay, ... }:
-    let
-      mkSystem = import ./lib/mksystem.nix {
-        inherit nixpkgs inputs;
-      };
-      libHome = import ./lib/home.nix {
-        inherit nixpkgs inputs;
-      };
-    in rec {
-      # machines
-      nixosConfigurations.charbox2wsl = mkSystem "charbox2wsl" {
-        system = "x86_64-linux";
-        user   = "char";
-      };
-      darwinConfigurations.USMK9RK6N3FN2 = mkSystem "USMK9RK6N3FN2" {
-        system = "aarch64-darwin";
-        user   = "ckenney";
-      };
-      darwinConfigurations.Charlies-MacBook-Pro = mkSystem "Charlies-MacBook-Pro" {
-        system = "aarch64-darwin";
-        user   = "char";
-      };
+  outputs = { self, ... }: {
+    constants = import ./constants.nix self;
+    overlays = import ./overlays.nix self;
+    lib = import ./lib.nix self;
+    users = import ./home self;
+    machines = import ./machines self;
 
-      # homes
-      homeConfigurations."ckenney@USMK9RK6N3FN2" = libHome.mkHome {
-          name = "USMK9RK6N3FN2";
-          system = "aarch64-darwin";
-          user = "ckenney";
-      };
-    };
+    nixosConfigurations = self.lib.buildMachinesForOS "nixos";
+    darwinConfigurations = self.lib.buildMachinesForOS "darwin";
+    homeConfigurations = self.lib.buildHomeConfigurations {};
+  };
 }

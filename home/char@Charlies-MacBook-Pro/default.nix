@@ -1,4 +1,4 @@
-{ config, lib, pkgs, user, darwin, inputs, ... }@args: {
+{}@args: {
   imports = [
     ../../roles/personal-macos
     ../../profiles/personal-macos
