@@ -85,21 +85,21 @@ let
   # machineConfigurationFactory builds the given machine's system configuration.
   machineConfigurationFactory = machine:
     let
-      inherit (machine) hostname os system users;
+      inherit (machine) hostname os system users variant wsl;
 
       user = elemAt users 0;
       userhost = "${user}@${hostname}";
 
       pkgs = pkgsFor system;
-      homeManagerFactory = systemHomeManagerFactories.${os};
+      homeManagerFactory = systemHomeManagerFactories.${variant};
 
       nixpkgsModule = nixpkgsModuleFactory { inherit system; };
       machineModule = ./machines/${hostname};
       homeModule = ./home/${userhost};
     in
-    systemFactories.${os} {
+    systemFactories.${variant} {
       specialArgs = {
-        inherit lib hostname os self machine;
+        inherit inputs lib hostname os self machine;
         nixpkgs = inputs.nixpkgs;
       };
       modules = [
@@ -113,6 +113,8 @@ let
             nixpkgs = inputs.nixpkgs;
           })];
         }
+      ] ++ lib.optionals wsl [
+        inputs.wsl.nixosModules.wsl
       ];
     };
 
@@ -152,9 +154,9 @@ inputs.nixpkgs.lib.extend (_: _: {
   filterHosts = predicate: builtins.filter predicate machineList;
 
   # e.g. darwinConfigurations = <{ "${HOSTNAME}" = { ... } }>
-  buildMachinesForOS = os:
+  buildMachinesForOS = variant:
     let
-      matchesOS = _: mach: mach.os == os;
+      matchesOS = _: mach: mach.variant == variant;
       machines = lib.filterAttrs matchesOS self.machines;
     in
     mapAttrs (_: mach: mach.configuration) machines;

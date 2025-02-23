@@ -3,35 +3,14 @@
   inputs,
   nixpkgs,
   pkgs,
+  hostname,
   ...
 }: {
-  # environment.shells = [pkgs.fish];
-  # environment.enableAllTerminfo = true;
+  imports = [
+    inputs.wsl.nixosModules.default
+  ];
 
   programs.fish.enable = true;
-
-  # environment.systemPackages = with pkgs; [
-  #     coreutils
-  #     ffmpeg
-  #     fswatch
-  #     fzf
-  #     gnupg
-  #     home-manager
-  #     kitty
-  #     openssl
-  #     mods
-  # ];
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.char = {
-      imports = [
-        ../../profiles/nixos
-        ../../roles/nixos
-      ];
-    };
-  };
 
   users.users.char = {
     name = "char";
@@ -39,11 +18,28 @@
     shell = pkgs.fish;
   };
 
+  networking.hostName = hostname;
+
   wsl = {
     enable = true;
     defaultUser = "char";
     startMenuLaunchers = true;
+    useWindowsDriver = true;
+    wslConf = {
+      automount.root = "/mnt";
+      interop.appendWindowsPath = true;
+      network.generateHosts = false;
+    };
   };
+
+  services.xserver.enable = true;
+  services.xserver.windowManager.xmonad = {
+    enable = true;
+    enableContribAndExtras = true;
+  };
+
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = [pkgs.mesa.drivers];
 
   nix = {
     settings = {

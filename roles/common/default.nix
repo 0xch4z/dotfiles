@@ -19,20 +19,7 @@
 
   xdg.enable = true;
 
-  fonts = {
-    # packages = [
-    #   (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {})
-    # ];
-    fontconfig = {
-      enable = true;
-      #useEmbeddedBitmaps = true;
-      # defaultFonts = {
-      #   serif = [ "SFProDisplay Nerd Font" ];
-      #   sansSerif = [ "SFProDisplay Nerd Font" ];
-      #   monospace = [ "SFMono Nerd Font" ];
-      # };
-    };
-  };
+  fonts.fontconfig.enable = true;
 
   home = {
     stateVersion = "22.11";

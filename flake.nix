@@ -21,6 +21,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/NixOS-WSL";
     };
+
     neovim-nightly-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/neovim-nightly-overlay";

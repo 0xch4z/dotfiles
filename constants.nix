@@ -6,7 +6,7 @@ let
 
   allCPUArchs = [ "aarch64" "x86_64" ];
 
-  allOSes = [ "darwin" "nixos" ];
+  allOSes = [ "darwin" "linux" ];
 
   # platformStr builds a platform string (e.g. "x86_64-darwin").
   platformStr = os: arch: "${arch}-${os}";
