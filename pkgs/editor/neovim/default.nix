@@ -1,33 +1,6 @@
 { pkgs, lib, ... }:
 let
   treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
-    p.bash
-    p.comment
-    p.css
-    p.dockerfile
-    p.elixir
-    p.fish
-    p.gitattributes
-    p.gitignore
-    p.go
-    p.gomod
-    p.gowork
-    p.hcl
-    p.javascript
-    p.jq
-    p.json5
-    p.json
-    p.lua
-    p.make
-    p.markdown
-    p.nix
-    p.python
-    p.ruby
-    p.rust
-    p.toml
-    p.typescript
-    p.vue
-    p.yaml
   ]));
 in
 {
@@ -47,6 +20,39 @@ in
   home.sessionVariables = {
     NVIM_TREESITTER_SKIP_PARSER_INSTALL = "1";
   };
+
+  xdg.configFile."nvim/parser".source = "${pkgs.symlinkJoin {
+      name = "treesitter-parsers";
+      paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+        bash
+        comment
+        css
+        dockerfile
+        elixir
+        fish
+        gitattributes
+        gitignore
+        go
+        gomod
+        gowork
+        hcl
+        javascript
+        jq
+        json5
+        json
+        lua
+        make
+        markdown
+        nix
+        python
+        ruby
+        rust
+        toml
+        typescript
+        vue
+        yaml
+      ])).dependencies;
+    }}/parser";
 
   programs.neovim = {
     enable = true;
