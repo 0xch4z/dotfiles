@@ -33,7 +33,7 @@ let
           let
             userhost = "${user}@${hostname}";
             userConfig = rec {
-              inherit arch homes hostname os platform system user userhost;
+              inherit arch homes hostname os platform system user userhost variant;
 
               module = ../home/${userhost};
               configuration = homeConfigurationFactory userConfig;

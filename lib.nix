@@ -31,6 +31,14 @@ let
     darwin = inputs.home-manager.darwinModules.home-manager;
   };
 
+  systemHomePrefix = {
+    nixos = "/home";
+    darwin = "/Users";
+  };
+
+  homeDirFor = { variant, user }:
+    "${(systemHomePrefix.${variant})}/${user}";
+
   # osSpecificSystemModules contain OS-specific module lists.
   # key: os
   osSpecificSystemModules = {
@@ -89,6 +97,7 @@ let
 
       user = elemAt users 0;
       userhost = "${user}@${hostname}";
+      homeDir = homeDirFor { inherit user variant; };
 
       pkgs = pkgsFor system;
       homeManagerFactory = systemHomeManagerFactories.${variant};
@@ -99,7 +108,7 @@ let
     in
     systemFactories.${variant} {
       specialArgs = {
-        inherit inputs lib hostname os self machine;
+        inherit inputs lib hostname os self machine homeDir;
         nixpkgs = inputs.nixpkgs;
       };
       modules = [
@@ -109,7 +118,7 @@ let
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.${user}.imports = [({config, lib, ...}: import homeModule {
-            inherit user inputs config lib pkgs;
+            inherit user inputs config lib pkgs homeDir;
             nixpkgs = inputs.nixpkgs;
           })];
         }
@@ -121,8 +130,9 @@ let
   # homeConfigurationFactory builds the given user's home configuration.
   homeConfigurationFactory = home:
     let
-      inherit (home) system user userhost;
+      inherit (home) variant system user userhost;
 
+      homeDir = homeDirFor { inherit user variant; };
       homeUserModule = { home.username = "${user}"; };
       homeModule = ./home/${userhost};
       nixpkgsModule = { nixpkgs.config = defaultNixpkgsConfig; };
@@ -130,7 +140,7 @@ let
       pkgs = pkgsFor system;
 
       extraSpecialArgs = {
-        inherit self home system user userhost;
+        inherit self home system user userhost homeDir;
 
         nixpkgs = inputs.nixpkgs;
       };
