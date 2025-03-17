@@ -1,4 +1,4 @@
-{config, pkgs, ...}: {
+{pkgs, ...}: {
   imports = [
     ../../pkgs/container/colima
     #../../pkgs/desktop/window-manager/aerospace
