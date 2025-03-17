@@ -20,9 +20,8 @@ in {
       extraConfig = templateFile {
         file = ./config/tmux.conf;
         data = {
-          inherit kubeTmux;
-
-          bash = pkgs.tmux;
+          kubeTmux = "${kubeTmux}";
+          bash = "${pkgs.bash}";
         };
       };
     };
