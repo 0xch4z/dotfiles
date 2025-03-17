@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{config, pkgs, ...}: {
   programs.fish = {
     enable = true;
 
@@ -14,6 +14,9 @@
 
       # automatic devenv
       direnv hook fish | source
+
+      # fifc setup
+      set -x fifc_editor ${config.home.sessionVariables."EDITOR"}
     '';
 
     plugins = with pkgs.fishPlugins; [
@@ -37,14 +40,33 @@
         name = "fzf-fish";
         src = fzf-fish.src;
       }
+      { # bash "compat"
+        name = "bass";
+        src = bass.src;
+      }
+      { # completion
+        name = "fifc";
+        src = fifc.src;
+      }
+      { # jump around
+        name = "z";
+        src = z.src;
+      }
     ];
 
-    shellAbbrs = with pkgs; {
-      gh = "cd $HOME";
+    shellAliases = with pkgs; {
+      ls = "${eza}/bin/exa --icons";
+      tree = "${eza}/bin/exa --tree";
+      cat = "${bat}/bin/bat --theme base16-256";
+      kubectl = "${kubecolor}/bin/kubecolor";
+    };
+
+    shellAbbrs = {
+      l = "ls";
+      gh = "cd $HOME"; # go $HOME
+      gw = "cd $HOME/work"; # go to ~/work
       n = "nvim";
       k = "kubectl";
-      l = "${eza}/bin/exa --icons";
-      tree = "${eza}/bin/exa --tree";
     };
   };
 }
