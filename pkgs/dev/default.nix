@@ -15,6 +15,8 @@
   ];
 
   home.packages = with pkgs; [
+    buildkite-agent
+    buildkite-cli
     slint-lsp
     vscode # :(
   ];

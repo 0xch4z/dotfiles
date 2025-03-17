@@ -1,13 +1,13 @@
 self @ { lib, inputs, constants, ... }:
 let
-  inherit (builtins) elemAt;
+  inherit (builtins) attrNames attrValues elemAt;
   inherit (constants) allPlatforms defaultNixpkgsConfig;
-  inherit (lib) attrsets lists mapAttrs strings;
+  inherit (lib) lists readFile mapAttrs strings;
   inherit (lists) foldl';
-  inherit (strings) hasInfix;
+  inherit (strings) hasInfix replaceStrings;
 
   overlays = with self.overlays; [ all unstable ];
-  machineList = builtins.attrValues self.machines;
+  machineList = attrValues self.machines;
 
   # pkgsFor gets the packages for the given (platform) system.
   pkgsFor = system:
@@ -153,9 +153,20 @@ let
         homeModule
       ];
     };
+
+  templateFile = { file, data }:
+    let
+      fileContent = readFile file;
+
+      placeholders =
+        map (name: "{{ " + name + " }}") (attrNames data);
+      newValues =
+        attrValues data;
+    in
+      replaceStrings placeholders newValues fileContent;
 in
 inputs.nixpkgs.lib.extend (_: _: {
-  inherit pkgsFor systemFactories homeConfigurationFactory machineConfigurationFactory;
+  inherit pkgsFor systemFactories homeConfigurationFactory machineConfigurationFactory templateFile;
 
   # forAllSystems builds an attribute set for each platform.
   forAllPlatforms = lib.genAttrs allPlatforms;
