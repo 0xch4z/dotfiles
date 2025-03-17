@@ -5,6 +5,7 @@
 }: {
   home = {
     packages = with pkgs; [
+      deno
       nodePackages."@tailwindcss/language-server"
       nodePackages.eslint_d
       nodePackages.pnpm
