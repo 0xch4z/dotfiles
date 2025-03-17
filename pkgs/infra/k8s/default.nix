@@ -5,15 +5,18 @@
   home.packages = with pkgs; [
     argocd
     clusterctl
-    clusterctl
     helm-ls
     kdash
     kns
+    #kubetrim
     kubecm
+    kubecolor
     kubectl
     kubectl-images
     kubectl-ktop
-    #kubectl-node-shell
+    kubectl-neat
+    kubectl-images
+    kubectl-tree
     kubectl-view-secret
     kubernetes-helm
     k9s
