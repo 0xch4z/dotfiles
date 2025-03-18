@@ -4,13 +4,13 @@
   inputs = {
     # TODO: pin back to unstable channel when https://github.com/LnL7/nix-darwin/issues/1317 is closed
     nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     # community
     nur.url = "github:nix-community/nur";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     darwin = {
@@ -31,6 +31,9 @@
 
     # custom
     nixpkgs-kns-fork.url = "github:0xch4z/nixpkgs/kns-unix-support";
+
+    gauntlet.url = "github:project-gauntlet/gauntlet/v17";
+    gauntlet.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, ... }: {

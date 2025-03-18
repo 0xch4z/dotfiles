@@ -63,7 +63,7 @@
       # dev
       codespell
       editorconfig-core-c
-      mimir
+      #mimir
       tree-sitter
 
       # viewers
