@@ -12,6 +12,11 @@
       set hydro_color_prompt afff00
       fish_vi_key_bindings
 
+      # hook for local, out-of-band config
+      if test -e ~/.fishrc.local
+        source ~/.fishrc.local
+      end
+
       # automatic devenv
       direnv hook fish | source
 
