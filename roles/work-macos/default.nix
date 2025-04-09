@@ -1,19 +1,9 @@
-{self, pkgs, ...}: {
+{pkgs, ...}: {
   imports = [
     ../../pkgs/container/colima
-    #../../pkgs/desktop/window-manager/aerospace
     ../common
     ../macos
-
-    self.inputs.gauntlet.homeManagerModules.default
   ];
-
-    programs.gauntlet = {
-      enable = true;
-      service.enable = true;
-      config = {};
-    };
-
 
   home = {
     packages = with pkgs; [
@@ -24,7 +14,6 @@
       kubelogin
       kubelogin-oidc
     ];
-
 
     sessionVariables = {
       XDG_RUNTIME_DIR = "$TMPDIR";

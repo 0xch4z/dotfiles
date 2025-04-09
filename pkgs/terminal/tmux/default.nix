@@ -13,6 +13,7 @@ in {
     in
     {
       enable = true;
+      sensibleOnTop = false;
       shell = "${pkgs.fish}/bin/fish";
       terminal = "tmux-256color";
       historyLimit = 100000;
@@ -20,9 +21,16 @@ in {
       extraConfig = templateFile {
         file = ./config/tmux.conf;
         data = {
+          fish = "${pkgs.fish}";
           kubeTmux = "${kubeTmux}";
           bash = "${pkgs.bash}";
         };
       };
+
+      plugins = with pkgs.tmuxPlugins; [
+        pain-control
+        tmux-fzf
+        tmux-thumbs
+      ];
     };
 }

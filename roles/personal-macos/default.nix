@@ -1,11 +1,12 @@
-{config, pkgs, ...}: {
+{pkgs, ...}: {
   imports = [
     ../../pkgs/container/colima
-    #../../pkgs/desktop/window-manager/aerospace
     ../common
+    ../macos
   ];
 
   home = {
+
     packages = with pkgs; [
     ];
 

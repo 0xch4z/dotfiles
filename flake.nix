@@ -8,24 +8,30 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     # community
-    nur.url = "github:nix-community/nur";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+
     darwin = {
       url = "github:lnl7/nix-darwin/48b50b3b137be5cfb9f4d006835ce7c3fe558ccc";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     wsl = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/NixOS-WSL";
+    };
+
+    nur = {
+      url = "github:nix-community/nur";
     };
 
     neovim-nightly-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/neovim-nightly-overlay";
     };
+
     # necessary for linking per-user apps to /Applications directory on MacOS
     mac-app-util.url = "github:hraban/mac-app-util";
 

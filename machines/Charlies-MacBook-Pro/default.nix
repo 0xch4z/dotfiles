@@ -10,32 +10,8 @@
   # environment.shells = [pkgs.fish];
   programs.fish.enable = true;
 
-  # environment.systemPackages = with pkgs; [
-  #     coreutils
-  #     ffmpeg
-  #     fswatch
-  #     fzf
-  #     gnupg
-  #     home-manager
-  #     kitty
-  #     openssl
-  #     mods
-  # ];
-
   fonts = {
     packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
-  };
-
-
-   home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.char = {
-      imports = [
-        ../../profiles/personal-macos
-        ../../roles/personal-macos
-      ];
-    };
   };
 
   users.users.char = {

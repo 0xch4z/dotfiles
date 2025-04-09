@@ -1,4 +1,4 @@
-{ pkgs, homeDir, ... }:
+{ homeDir, pkgs, ... }:
 let
     # lazy config in neovim will use this path
     localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
