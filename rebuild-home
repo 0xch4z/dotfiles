@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-set -e
+set -eou pipefail
 
 USER="$(whoami)"
 HOST="$(hostname)"
+
+export NIX_CONFIG="experimental-features = nix-command flakes"
 
 home-manager switch --flake ".#${USER}@${HOST}" "${@}"

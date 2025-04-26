@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+FLAKE="${FLAKE:-${HOME}/.dotfiles}"
+HOST="$(hostname -s)"
+OS="$(uname -s)"
+
+export NIX_CONFIG="experimental-features = nix-command flakes"
+
+REBUILD_CMD="nixos-rebuild"
+
+case "${OS}" in
+	Darwin)
+		REBUILD_CMD="darwin-rebuild"
+		;;
+	Linux)
+		if ! [ -e /etc/NIXOS ]; then	
+			echo "non-nixos flavored linux... cannot rebuild"
+			exit 1
+		fi
+		;;
+	*)
+		echo "unexpected OS: ${OS}"
+		exit 1
+		;;
+esac
+
+${REBUILD_CMD} switch --flake ".#${HOST}" "${@}"
