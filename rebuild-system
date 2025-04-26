@@ -6,7 +6,8 @@ FLAKE="${FLAKE:-${HOME}/.dotfiles}"
 HOST="$(hostname -s)"
 OS="$(uname -s)"
 
-export NIX_CONFIG="experimental-features = nix-command flakes"
+export NIX_CONFIG="experimental-features = nix-command flakes
+download-buffer-size = 1073741824" # 1GiB
 
 REBUILD_CMD="nixos-rebuild"
 

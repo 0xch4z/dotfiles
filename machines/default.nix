@@ -55,4 +55,5 @@ in
     Charlies-MacBook-Pro = { os = "darwin"; };
     USMK9RK6N3FN2 = { os = "darwin"; };
     charbox2wsl = { os = "linux"; arch = "x86_64"; variant = "nixos"; wsl = true; };
+    charbit = { os = "linux"; arch = "x86_64"; variant = "nixos"; };
   }

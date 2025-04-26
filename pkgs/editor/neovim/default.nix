@@ -1,4 +1,4 @@
-{ homeDir, pkgs, ... }:
+{ homeDir, pkgs, config,... }:
 let
     # lazy config in neovim will use this path
     localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
@@ -53,6 +53,17 @@ in
     coc.enable = false;
     withNodeJs = true;
     defaultEditor = true;
+  };
+
+  # Symlink actual neovim lua config source.
+  xdg.configFile.neovim = {
+    enable = true;
+    recursive = true;
+    # NB: this line makes an assumption that this repo exists at `$HOME/.dotfiles`.
+    # Setting an absolute path to the symlink source is the only way to avoid
+    # write protection.
+    source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/.dotfiles/nvim/.config/nvim";
+    target = "nvim";
   };
 
   # Adapted from: https://github.com/Kidsan/nixos-config/blob/466dae0d720b229f97e9ece369e661db106f41c0/home/programs/neovim/default.nix#L71
