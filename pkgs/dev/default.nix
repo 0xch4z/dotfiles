@@ -17,6 +17,8 @@
   home.packages = with pkgs; [
     buildkite-agent
     buildkite-cli
+    minio-client
+    s5cmd
     slint-lsp
     vscode # :(
   ];
