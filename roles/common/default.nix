@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }: {
@@ -7,10 +6,8 @@
     ../../pkgs/cloud
     ../../pkgs/container
     ../../pkgs/dev
-    ../../pkgs/editor/neovim
     ../../pkgs/fonts
     ../../pkgs/infra
-    #../../pkgs/networking
     ../../pkgs/productivity
     ../../pkgs/shell
     ../../pkgs/terminal
@@ -19,7 +16,18 @@
 
   xdg.enable = true;
 
-  fonts.fontconfig.enable = true;
+  gtk.font.name = "Inter";
+  gtk.font.size = 10;
+
+  fonts.fontconfig = {
+    enable = true;
+
+    defaultFonts = {
+      monospace = ["Source Code Pro"];
+      sansSerif = ["Noto Sans"];
+      serif = ["Noto Serif"];
+    };
+  };
 
   programs.home-manager.enable = true;
 
@@ -39,6 +47,12 @@
     };
 
     packages = with pkgs; [
+      # fonts
+      inter
+      noto-fonts
+      noto-fonts-emoji
+      font-awesome
+
       # home
       xdg-utils
 
@@ -85,6 +99,7 @@
       grc
       watch
       wget
+      pinentry
 
       # misc
       typespeed

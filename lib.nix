@@ -119,7 +119,7 @@ let
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit homeDir self; };
           home-manager.users.${user}.imports = [({config, lib, ...}: import homeModule {
-            inherit user inputs config lib pkgs homeDir;
+            inherit self user inputs config lib pkgs homeDir;
             nixpkgs = inputs.nixpkgs;
           })];
         }

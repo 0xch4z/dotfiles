@@ -13,11 +13,10 @@
       };
 
       font = {
-        normal.family = "SFMono Nerd Font";
+        #normal.family = "SFMono Nerd Font";
+        normal.family = "FiraCode Nerd Font";
         size = 22.0;
       };
-
-      shell = { program = "${pkgs.fish}/bin/fish"; };
 
       colors = {
         primary = {

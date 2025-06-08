@@ -9,7 +9,7 @@
 
     # community
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
@@ -25,6 +25,17 @@
 
     nur = {
       url = "github:nix-community/nur";
+    };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     neovim-nightly-overlay = {
@@ -48,6 +59,7 @@
     lib = import ./lib.nix self;
     users = import ./home self;
     machines = import ./machines self;
+    modules = import ./modules;
 
     nixosConfigurations = self.lib.buildMachinesForOS "nixos";
     darwinConfigurations = self.lib.buildMachinesForOS "darwin";
