@@ -5,12 +5,16 @@ let
 in
 rec {
   all = lib.composeManyExtensions [
-    #packages
+    unstable
 
+    #packages
     kns-fork
+    inputs.neovim-nightly-overlay.overlays.default
+    inputs.nix-darwin-browsers.overlays.default
+    inputs.nixpkgs-firefox-darwin.overlays.default
+
     # community
     inputs.nur.overlays.default
-    inputs.neovim-nightly-overlay.overlays.default
   ];
 
   kns-fork = final: prev: {

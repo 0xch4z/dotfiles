@@ -2,14 +2,20 @@
 
 > "you are your dotfiles" -Tony Soprano
 
-I have this repo cloned to `$HOME/.dotfiles` on all my machines and use [gnu
-stow][stow] to manage them.
+## Setup
 
-These are my base dotfiles. I also have some 'environment-specific'
-dotfiles/configs based on the machine I'm using (e.g. for work). I handle this
-by having a seperate, private repo cloned to `$HOME/.local` which is
-hooked-in/referenced by files in this repo. For instance, at the bottom of
-[.zshrc](./.zshrc).
+### Macos
 
+```
+# install nix
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+
+# add initial config
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
+# install nix-darwin
+nix run github:LnL7/nix-darwin#darwin-installer
+```
 
 [stow]: https://www.gnu.org/software/stow/

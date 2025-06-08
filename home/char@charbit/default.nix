@@ -1,4 +1,4 @@
-{ lib, ... }@args: {
+{ lib, ... }: {
   imports = [
     ../../profiles/nixos
     ../../roles/nixos

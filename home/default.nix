@@ -5,6 +5,7 @@ let
   inherit (lists) foldl';
   inherit (strings) hasInfix;
 
+  # each subdirectory is a "home"
   homeModules = attrNames
     (filterAttrs (name: type: type == "directory" && hasInfix "@" name)
         (readDir (toPath ./.)));
