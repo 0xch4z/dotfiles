@@ -1,4 +1,4 @@
-{ lib, self, ... }: {
+{ lib, self, pkgs, ... }: {
   imports = [
     ../../profiles/nixos
     ../../roles/nixos
@@ -7,10 +7,21 @@
   ];
 
   x.home = {
-    browser.zen.enable = true;
+    browser = {
+      firefox.enable = true;
+      zen.enable = true;
+    };
+    desktop.hyprland = {
+      enable = true;
+      hyprpaper.enable = true;
+    };
     editor.neovim = {
       enable = true;
       nightly = true;
+    };
+    editor.vscode.enable = true;
+    taskbar.waybar = {
+      enable = true;
     };
   };
 

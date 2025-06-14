@@ -6,70 +6,12 @@
   services.hyprpaper = {
     enable = true;
     settings = {
-      ipc = "on";
       splash = false;
       splash_offset = 2.0;
 
       preload = [ "${homeDir}/.dotfiles/assets/philly-dark.jpg" ];
 
       wallpaper = [ "${homeDir}/.dotfiles/assets/philly-dark.jpg" ];
-    };
-  };
-
-  wayland.windowManager.hyprland = {
-    enable = true;
-    systemd.enable = true;
-
-    #enableNvidiaPatches = true;
-
-    xwayland.enable = true;
-
-    settings = {
-      exec-once = [
-        "hyprpaper"
-        "hyprctl setcursor Qogir 24"
-        "waybar"
-        "mako"
-      ];
-
-      monitor = [
-        "HDMI-A-2,3840x2160@144,0x0,1"
-        "DP-4,3840x2160@144,0x-2160,1"
-      ];
-
-      bind = [
-        # launcher
-        "SUPER,SPACE,exec,wofi --show drun"
-        # terminal
-        "SUPER,RETURN,exec,alacritty"
-        # quit
-        "SUPER,Q,killactive"
-        # copy
-        "SUPER,C,exec,wl-copy"
-        # paste
-        "SUPER,V,exec,wl-paste | wl-copy"
-        # exit to tty
-        "SUPER SHIFT,E,exit,"
-      ];
-
-      decoration = {
-        rounding = 3;
-        active_opacity = 1.0;
-        inactive_opacity = 1.0;
-        fullscreen_opacity = 1.0;
-        #drop_shadow = false;
-
-        blur = {
-          enabled = true;
-          passes = 3;
-          size = 16;
-        };
-      };
-
-      misc = {
-        disable_hyprland_logo = true;
-        force_default_wallpaper = 0;
-      };
     };
   };
 
@@ -80,8 +22,9 @@
       general = {
         disable_loading_bar = true;
         immediate_render = true;
-        hide_cursor = false;
+        hide_cursor = true;
         no_fade_in = true;
+        grace = 5;
       };
 
       animation = [
@@ -89,20 +32,18 @@
         "fadeIn, 0"
       ];
 
-      background = [
-        # {
-        #   monitor = "";
-        #   color = "rgb(0,0,0)";
-        # }
-      ];
+      background = {
+          color = "rgba(25, 20, 20, 1.0)";
+          blur_passes = 2;
+          brightness = 0.5;
+      };
 
       input-field = [
         {
-          monitor = "";
-
           size = "300, 50";
           valign = "bottom";
           position = "0%, 10%";
+          placeholder_text = "password";
 
           outline_thickness = 1;
 
@@ -113,7 +54,6 @@
           fail_color = "rgba(255, 106, 134, 0.5)";
 
           fade_on_empty = false;
-          placeholder_text = "Enter Password";
 
           dots_spacing = 0.2;
           dots_center = true;
@@ -162,7 +102,6 @@
     };
   };
 
-  programs.waybar.enable = true;
   services.mako.enable = true;
 
   home = {

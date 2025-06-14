@@ -51,6 +51,8 @@
 
     gauntlet.url = "github:project-gauntlet/gauntlet/v17";
     gauntlet.inputs.nixpkgs.follows = "nixpkgs";
+
+    hyprcursor-phinger.url = "github:jappie3/hyprcursor-phinger";
   };
 
   outputs = { self, ... }: {
