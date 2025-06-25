@@ -1,0 +1,104 @@
+# Conditional imports
+
+{ config, lib, pkgs, ... }:
+
+with lib;
+let
+  cfg = config.myConfig.desktop.hyprland;
+in
+{
+  config = mkIf (config.myConfig.desktop.backend == "hyprland") {
+    # Core Hyprland configuration (works everywhere)
+    wayland.windowManager.hyprland = {
+      enable = true;
+      # Configuration that works on any system
+    };
+
+    # Conditional imports based on what's enabled
+    imports = [
+      (mkIf cfg.extensions.hyprpaper.enable ./hyprpaper.nix)
+      (mkIf cfg.extensions.hypridle.enable ./hypridle.nix)
+      (mkIf cfg.extensions.hyprlock.enable ./hyprlock.nix)
+      (mkIf cfg.extensions.hyprshade.enable ./hyprshade.nix)
+      (mkIf cfg.extensions.hyprcursor.enable ./hyprcursor.nix)
+      ./keybinds.nix
+    ];
+  };
+}
+
+# Desktop setup 
+
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+{
+  options.myConfig.desktop = {
+    enable = mkEnableOption "desktop environment";
+
+    backend = mkOption {
+      type = types.enum [ "hyprland" "x11" "none" ];
+      default = "none";
+      description = "Desktop backend to use";
+    };
+
+    # Hyprland-specific options
+    hyprland = {
+      systemIntegration = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether running on a system with Hyprland integration (NixOS)";
+      };
+
+      extensions = {
+        hyprpaper.enable = mkEnableOption "hyprpaper wallpaper daemon";
+        hypridle.enable = mkEnableOption "hypridle idle daemon";
+        hyprlock.enable = mkEnableOption "hyprlock screen locker";
+        hyprshade.enable = mkEnableOption "hyprshade blue light filter";
+        hyprcursor.enable = mkEnableOption "hyprcursor cursor theme";
+      };
+    };
+  };
+
+  config = mkIf config.myConfig.desktop.enable {
+    imports = [
+      (mkIf (config.myConfig.desktop.backend == "hyprland") ./hyprland)
+      (mkIf (config.myConfig.desktop.backend == "x11") ./x11)
+      ./common
+    ];
+  };
+}
+
+# Usage examples
+
+{ ... }:
+
+{
+  imports = [
+    ../../modules/nixos/audio
+    ../../modules/nixos/desktop/hyprland  # NixOS system integration
+    ../../modules/home-manager/desktop
+  ];
+
+  # System-level Hyprland setup
+  programs.hyprland.enable = true;
+  
+  myConfig.audio.enable = true;
+
+  home-manager.users.yourusername = {
+    myConfig.desktop = {
+      enable = true;
+      backend = "hyprland";
+      hyprland = {
+        systemIntegration = true;  # Running on NixOS
+        extensions = {
+          hyprpaper.enable = true;
+          hypridle.enable = true;
+          hyprlock.enable = true;
+          hyprshade.enable = true;
+        };
+      };
+    };
+  };
+}
+

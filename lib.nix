@@ -2,18 +2,36 @@ self @ { lib, inputs, constants, ... }:
 let
   inherit (builtins) attrNames attrValues elemAt;
   inherit (constants) allPlatforms defaultNixpkgsConfig;
-  inherit (lib) lists readFile mapAttrs strings;
+  inherit (lib) lists literalExpression types readFile mapAttrs strings mkOption;
   inherit (lists) foldl';
   inherit (strings) hasInfix replaceStrings;
 
   overlays = with self.overlays; [ all unstable ];
   machineList = attrValues self.machines;
 
+  mkDesktopEnabledOption = config: description:
+    mkOption {
+      inherit description;
+      type = types.bool;
+      default = config.x.home.desktop.enable;
+      defaultText = literalExpression "config.desktop.hyprland.enable";
+    };
+
+  mkEnabledOption = description:
+    mkOption {
+      inherit description;
+      type = types.bool;
+      default = true;
+    };
+
+  # determines whether the given system is darwin.
+  isDarwin = system:
+    hasInfix "darwin" system;
+
   # pkgsFor gets the packages for the given (platform) system.
   pkgsFor = system:
     let
-      isDarwin = hasInfix "darwin" system;
-      pkgs = if isDarwin then inputs.nixpkgs-darwin else inputs.nixpkgs;
+      pkgs = if (isDarwin system) then inputs.nixpkgs-darwin else inputs.nixpkgs;
     in
       import pkgs { inherit system overlays; };
 
@@ -167,7 +185,8 @@ let
       replaceStrings placeholders newValues fileContent;
 in
 inputs.nixpkgs.lib.extend (_: _: {
-  inherit pkgsFor systemFactories homeConfigurationFactory machineConfigurationFactory templateFile;
+  inherit isDarwin pkgsFor systemFactories homeConfigurationFactory machineConfigurationFactory
+  templateFile mkEnabledOption mkDesktopEnabledOption;
 
   # forAllSystems builds an attribute set for each platform.
   forAllPlatforms = lib.genAttrs allPlatforms;

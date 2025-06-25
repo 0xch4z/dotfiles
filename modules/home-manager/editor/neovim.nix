@@ -1,6 +1,6 @@
 { self, homeDir, pkgs, config, lib, ... }:
 let
-  inherit (lib) mkEnableOption;
+  inherit (self.lib) mkEnableOption mkEnabledOption;
   cfg = config.x.home.editor.neovim;
 
   # lazy config in neovim will use this path
@@ -39,7 +39,7 @@ let
 in
 {
   options.x.home.editor.neovim = {
-    enable = mkEnableOption "Enable neovim module.";
+    enable = mkEnabledOption "Enable neovim module.";
     nightly = mkEnableOption "Install nightly build of neovim";
   };
 

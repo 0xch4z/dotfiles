@@ -8,6 +8,53 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc.lib
+    zlib
+    libpng
+    libjpeg
+    openssl
+    bzip2
+    xz
+    ncurses
+    readline
+    sqlite
+    libffi
+    expat
+    libxml2
+    libxslt
+
+    libGL
+    mesa
+    glib
+    gtk3
+    xorg.libX11
+    xorg.libXext
+    xorg.libXrender
+    xorg.libXi
+    xorg.libXrandr
+    xorg.libXcursor
+    xorg.libXinerama
+    xorg.libXxf86vm
+  ];
+
+  home-manager.users.ckenney = {
+    home.sessionVariables = {
+      LD_LIBRARY_PATH = "${pkgs.cudatoolkit}/lib64:/run/current-system/sw/share/nix-ld/lib";
+    };
+  };
+
+  # themeing
+  qt5.platformTheme = "qt5ct";
+
+  # Additional environment variables
+  environment.sessionVariables = {
+    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_QPA_PLATFORMTHEME = "qt5ct";
+    NIXOS_OZONE_WL = "1";
+  };
+
   services.openssh = {
     enable = true;
     ports = [ 22 ];
@@ -55,17 +102,37 @@
 
   users.users.ckenney = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
+      ffmpeg
       tree
     ];
     initialPassword = "2300";
   };
 
   # sound
-  services.pipewire = { enable = true; pulse.enable = true; };
+  hardware.pulseaudio.enable = false; # in favor of pipewire
+  security.rtkit.enable = true; # allows pipewire to request realtime scheduling. reduces audio latency.
+  services.pipewire = {
+    enable = true;
+
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
+    pulse.enable = true;
+    jack.enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
+    # TODO move somewhere
+    cudatoolkit
+    cudaPackages.cudnn
+    pciutils
+    glxinfo
+
+    opencv4
+
     glxinfo
     vulkan-tools
     nvtopPackages.full
@@ -76,7 +143,12 @@
     wget
     alacritty
 
-    wofi
+    # sound
+    pavucontrol
+    pamixer
+    playerctl
+
+    rofi
     mako
     wl-clipboard
     grim
@@ -96,7 +168,7 @@
     powerManagement.enable = false;
 
     # open-source drivers
-    open = true;
+    open = false;
 
     # latest stable
     #package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -116,6 +188,9 @@
   boot.blacklistedKernelModules = [ "nouveau" ];
 
   environment.variables = {
+    CUDA_PATH = "${pkgs.cudatoolkit}";
+    CUDA_ROOT = "${pkgs.cudatoolkit}";
+
     LIBVA_DRIVER_NAME = "nvidia";
 
     # NVIDIA in Wayland

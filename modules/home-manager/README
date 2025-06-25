@@ -1,1 +1,29 @@
 see xaiverlauzon/nixos-modules/modules
+
+### Plan
+
+Module tree
+```
+modules/home-manager/desktop/
+├── backends/
+│   ├── wayland.nix
+│   ├── x11.nix
+│   └── quartz.nix
+├── window-managers/
+│   ├── hyprland/
+│   │   ├── hyprpaper.nix
+│   │   ├── hypridle.nix
+│   │   └── hyprlock.nix
+│   ├── hyprland.nix
+│   ├── sway/
+│   │   ├── waybar.nix
+│   │   └── swaylock.nix
+│   ├── sway.nix
+│   └── yabai.nix
+├── status-bar/
+└── default.nix
+```
+
+```
+
+```

@@ -1,8 +1,8 @@
 { config, pkgs, lib, ... }:
 let
-  cfg = config.x.home.desktop.hyprland;
+  cfg = config.x.home.desktop;
 in {
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.backend == "hyprland") {
     home.packages = with pkgs; [
       capitaine-cursors
     ];

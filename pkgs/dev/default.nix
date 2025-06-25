@@ -21,5 +21,7 @@
     s5cmd
     slint-lsp
     vscode # :(
+
+    pyright
   ];
 }

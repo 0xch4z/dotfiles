@@ -1,12 +1,14 @@
 args@{ config, lib, self, pkgs, ... }:
 let
+  inherit (self.lib) mkIf mkDesktopEnabledOption;
+
   cfg = config.x.home.browser.firefox;
 in {
   options.x.home.browser.firefox = {
-    enable = lib.mkEnableOption "Enable Firefox home-manager module.";
+    enable = mkDesktopEnabledOption config "Enable Firefox home-manager module.";
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
       programs.firefox = {
         enable = true;
 

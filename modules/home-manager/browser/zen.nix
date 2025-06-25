@@ -1,14 +1,16 @@
 args@{ config, lib, self, pkgs, ... }:
 let
+  inherit (self.lib) mkIf mkDesktopEnabledOption;
+
   cfg = config.x.home.browser.zen;
 in {
   imports = [ self.inputs.zen-browser.homeModules.beta ];
 
   options.x.home.browser.zen = {
-    enable = lib.mkEnableOption "Enable Zen home-manager module.";
+    enable = mkDesktopEnabledOption config "Enable Zen home-manager module.";
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
       programs.zen-browser = {
         enable = true;
 

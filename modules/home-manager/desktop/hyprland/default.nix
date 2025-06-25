@@ -2,14 +2,23 @@
 let
   cfg = config.x.home.desktop.hyprland;
 
-  inherit (lib.lists) map range;
+  inherit (self.lib) lists types mkEnabledOption mkEnableOption mkOption;
+  inherit (lists) map range;
 
   nStrRange = lower: upper: map(n: toString n)
     (range lower upper);
 in {
   options.x.home.desktop.hyprland = {
-    enable = lib.mkEnableOption "Enable hyprland module.";
+    xwayland.enable = mkEnabledOption "enable Hyprland xwayland support.";
 
+    # TODO: hookup
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = "extra configuration for Hyprland";
+    };
+
+    # TODO: move this higher up!
     theme = {
       activeBorderColor = lib.mkOption {
         type = lib.types.str;
@@ -24,47 +33,13 @@ in {
   };
 
   imports = [
-    ./hyprpaper.nix
     ./cursor.nix
+    ./greetd.nix
+    ./hypridle.nix
+    ./hyprpaper.nix
   ];
 
-  config = lib.mkIf cfg.enable {
-    # start hyprland on boot
-
-    # https://wiki.hyprland.org/Hypr-Ecosystem/hypridle
-    services.hypridle = {
-      enable = true;
-
-      settings = {
-        general = {
-          lock_cmd = "pidof hyprlock || hyprlock";      # enter hyprlock
-          before_sleep_cmd = "loginctl lock-session";   # lock before suspend
-          after_sleep_cmd = "hyprctl dispatch dpms on"; # turn screen on after key press
-        };
-
-        listener = [
-          {
-            timeout = 60;                           # 1min
-            on-timeout = "brightnessctl -s set 10"; # set monitor backlight to min
-            on-resume = "brightnessctl -r";         # restore monitor brightness
-          }
-          {
-            timeout = 300;                        # 5min
-            on-timeout = "loginctl lock-session"; # log out
-          }
-          {
-            timeout = 330;                            # 5.5min
-            on-timeout = "hyprctl dispatch dpms off"; # 5.5min
-            on-resume = "hyprctl dispatch dpms on";   # screen off
-          }
-          {
-            timeout = 1800;                   # 30min
-            on-timeout = "systemctl suspend"; # suspend
-          }
-        ];
-      };
-    };
-
+  config = lib.mkIf (config.x.home.desktop.backend == "hyprland") {
     wayland.windowManager.hyprland = {
       enable = true;
       systemd = {
@@ -72,7 +47,7 @@ in {
         variables = ["all"];
       };
 
-      xwayland.enable = true;
+      xwayland.enable = cfg.xwayland.enable;
 
       settings = {
         general = {
@@ -92,15 +67,14 @@ in {
         ];
 
         bind = [
-          "SUPER,SPACE,exec,wofi --show drun"                    # launcher
+          "SUPER,SPACE,exec,rofi -show drun"                     # launcher
           "SUPER,RETURN,exec,alacritty"                          # terminal
           "SUPER,Q,killactive"                                   # app: quit
           "SUPER,W,killactive"                                   # window: close
           "SUPER,BACKSPACE,exec,wtype -k ctrl+shift+left ctrl+x" # Delete to beginning of line
           "SUPER,DELETE,exec,wtype -k ctrl+shift+left ctrl+x"    # Delete to beginning of line
           "SUPER,C,exec,wl-copy"                                 # copy
-          "SUPER,V,exec,wl-paste | wl-copy"                      # paste
-          "SUPER,V,exec,wl-paste | wl-copy && wl-pase --clear"   # cut
+          "SUPER,V,exec,wl-paste"                                # paste
           "SUPER SHIFT,E,exit,"                                  # exit to tty
           "ALT,F,fullscreen,1"                                   # fullscreen
           "SUPER SHIFT,DELETE,exec,hyprctl dispatch dpms off"    # sleep
@@ -110,6 +84,13 @@ in {
           "ALT SHIFT,P,swapnext,prev"                            # swap to prev
         ] ++ map(n: "ALT,${n},workspace,${n}") (nStrRange 0 9)   # goto workspace N
           ++ map(n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 0 9); # move to workspace N
+
+        bindm = [
+          "SUPER,C,pass"
+          "SUPER,X,pass"
+          "SUPER,V,pass"
+          "SUPER,P,pass"
+        ];
 
         workspace = map(n: "${n},monitor:HDMI-A-2") (nStrRange 0 2)
           ++ map(n: "${n},monitor:DP-4") (nStrRange 3 9);

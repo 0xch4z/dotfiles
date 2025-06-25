@@ -1,10 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, self, pkgs, ... }:
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (self.lib) mkIf mkDesktopEnabledOption;
   cfg = config.x.home.editor.vscode;
 in {
   options.x.home.editor.vscode = {
-    enable = mkEnableOption "Enable vscode home-manager module.";
+    enable = mkDesktopEnabledOption config "Enable vscode home-manager module.";
   };
 
   config = mkIf cfg.enable {
