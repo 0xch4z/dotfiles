@@ -62,6 +62,7 @@
     users = import ./home self;
     machines = import ./machines self;
     modules = import ./modules;
+    roles = import ./roles;
 
     nixosConfigurations = self.lib.buildMachinesForOS "nixos";
     darwinConfigurations = self.lib.buildMachinesForOS "darwin";

@@ -1,8 +1,6 @@
-{ config, self, ... }:
+{ self, ... }:
 let
-  inherit (self.lib) mkEnabledOption mkIf mkOption types;
-
-  cfg = config.x.home.desktop;
+  inherit (self.lib) mkEnabledOption mkOption types;
 in {
   options.x.home.desktop = {
     enable = mkEnabledOption "enable desktop";

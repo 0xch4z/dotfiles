@@ -1,13 +1,13 @@
 {config, pkgs, self, ...}:
 let
-  inherit (self.lib) templateFile mkOption;
+  inherit (self.lib) templateFile mkOption mkEnabledOption types mkIf;
 
   cfg = config.x.home.shell.tmux;
 in {
   options.x.home.shell.tmux = {
-    enable = lib.mkEnableOption "Enable tmux home-manager module.";
+    enable = mkEnabledOption "Enable tmux home-manager module.";
 
-    historyLimit = lib.mkOption {
+    historyLimit = mkOption {
       type = types.ints.u32;
       default = 100000;
     };

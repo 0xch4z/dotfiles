@@ -9,6 +9,11 @@ let
   overlays = with self.overlays; [ all unstable ];
   machineList = attrValues self.machines;
 
+  baseModules = [
+    self.outputs.modules
+    self.outputs.roles
+  ];
+
   mkDesktopEnabledOption = config: description:
     mkOption {
       inherit description;
@@ -136,10 +141,12 @@ let
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit homeDir self; };
-          home-manager.users.${user}.imports = [({config, lib, ...}: import homeModule {
-            inherit self user inputs config lib pkgs homeDir;
-            nixpkgs = inputs.nixpkgs;
-          })];
+          home-manager.users.${user}.imports = baseModules ++ [
+            ({config, lib, ...}: import homeModule {
+              inherit self user inputs config lib pkgs homeDir;
+              nixpkgs = inputs.nixpkgs;
+            })
+          ];
         }
       ] ++ lib.optionals wsl [
         inputs.wsl.nixosModules.wsl
@@ -166,7 +173,7 @@ let
     in
     inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs extraSpecialArgs;
-      modules = [
+      modules = baseModules ++ [
         nixpkgsModule
         homeUserModule
         homeModule
