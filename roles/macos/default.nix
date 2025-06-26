@@ -1,13 +1,13 @@
 {self, ...}: {
   imports = [
-    self.inputs.gauntlet.homeManagerModules.default
+#    self.inputs.gauntlet.homeManagerModules.default
   ];
 
 
-  programs.gauntlet = {
-    enable = true;
-    service.enable = true;
-    config = {};
-  };
+#  programs.gauntlet = {
+#    enable = true;
+#    service.enable = true;
+#    config = {};
+#  };
 
 }

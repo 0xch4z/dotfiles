@@ -5,18 +5,15 @@
   pkgs,
   ...
 }: {
-  # environment.shells = [pkgs.fish];
   programs.fish.enable = true;
-
-  ids.uids.nixbld = 300;
 
   fonts = {
     packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
   };
 
-  users.users.ckenney = {
-    name = "ckenney";
-    home = "/Users/ckenney";
+  users.users.chakenne = {
+    name = "chakenne";
+    home = "/Users/chakenne";
     shell = pkgs.fish;
   };
 
@@ -61,6 +58,8 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   nix = {
+    enable = false; # using determinate-systems install
+
     nixPath = lib.mkForce [
       "nixpkgs=${nixpkgs}"
     ];
@@ -70,13 +69,13 @@
     '';
 
     settings = {
-      trusted-users = ["ckenney"];
+      trusted-users = ["chakenne"];
     };
   };
-
-  services.nix-daemon.enable = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+  system.primaryUser = "chakenne";
 }
+

@@ -1,6 +1,6 @@
 _: {
   programs.git = {
-    userEmail = "ckenney@equinix.com";
+    userEmail = "charles.kenney@isovalent.com";
     userName = "Charlie Kenney";
   };
 }

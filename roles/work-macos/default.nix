@@ -8,8 +8,6 @@
   home = {
     packages = with pkgs; [
       _1password
-      elixir
-      erlang
       # k8s
       kubelogin
       kubelogin-oidc
