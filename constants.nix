@@ -25,6 +25,7 @@ rec {
 
   defaultNixpkgsConfig = {
     allowUnfree = true;
+    allowBroken = true;
     allowUnsupportedSystem = true;
     overlays = (import ./overlays.nix).all;
   };

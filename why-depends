@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+# e.g. why-depends /nix/store/jkb14nw5p7j17kp6ppd29naqqayd7grl-valgrind-3.24.0.drv
+#
+# Outputs:
+#
+# /nix/store/j94ylr3yvknry3q9rqxgkf1n08589msc-darwin-system-25.05.536f951.drv
+# └───/nix/store/00rgyws1b3sfajqd2kla6zv3pn8ypash-etc.drv
+#     └───/nix/store/z3hrjw52g88nvz75mw3vnzdd0c4n2j4q-user-environment.drv
+#         └───/nix/store/bg6nkwj57akfyd9b21w4dqzr81l00sxb-home-manager-path.drv
+#             └───/nix/store/lbcadslmp4nlm0vlsy924wgzffl4ri10-pinentry-all-1.3.1.drv
+#                 └───/nix/store/znl0yp8xzysywzs087aagsxcml4jdlsx-qtwayland-6.9.0.drv
+#                     └───/nix/store/dw9kjd9n756bs3nxf6lsy58lwfhm7a8s-libdrm-2.4.124.drv
+#                         └───/nix/store/jkb14nw5p7j17kp6ppd29naqqayd7grl-valgrind-3.24.0.drv
+
+PLATFORM_CONFIGS=
+OS="$(uname -s)"
+
+case "${OS}" in
+	Darwin)
+		PLATFORM_CONFIGS="darwinConfigurations"
+		;;
+	Linux)
+		if ! [ -e /etc/NIXOS ]; then
+			echo "non-nixos flavored linux..."
+			exit 1
+		fi
+
+        PLATFORM_CONFIGS="nixosConfigurations"
+		;;
+	*)
+		echo "unexpected OS: ${OS}"
+		exit 1
+		;;
+esac
+
+SYSTEM_PATH=".#${PLATFORM_CONFIGS}.$(hostname).system"
+
+nix why-depends --derivation "${SYSTEM_PATH}" "${@}"
