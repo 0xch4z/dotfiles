@@ -32,7 +32,7 @@ in {
     #   Service = serviceConfig;
     # };
 
-    launchd.user.agents.${serviceName} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+    launchd.agents.${serviceName} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
       enable = true;
       config = {
         Program = serviceCommand;
