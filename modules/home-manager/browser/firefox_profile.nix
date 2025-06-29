@@ -1,9 +1,11 @@
-{ self, pkgs, ... }:
+{ self, pkgs, config, ... }:
 let
-  extraBookmarksFile = ./extra_bookmarks.json;
-  extraBookmarks = if builtins.pathExists extraBookmarksFile
-    then builtins.fromJSON (builtins.readFile extraBookmarksFile)
-    else [];
+  secrets = config.x.home.secrets;
+
+  extraBookmarks = [];
+  # extraBookmarks = if (secrets.enable)
+  #   then builtins.fromTOML (builtins.readFile config.sops.secrets.userBrowserExtraBookmarks.path)
+  #   else [];
 
   extraSearchEnginesFile = ./extra_bookmarks.json;
   extraSearchEngines = if builtins.pathExists extraSearchEnginesFile

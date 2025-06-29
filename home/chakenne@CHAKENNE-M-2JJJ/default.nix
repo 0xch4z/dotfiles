@@ -1,6 +1,7 @@
 { lib, user, ... }: {
   x.role = "mac-workstation";
   x.home.editor.neovim.nightly = true;
+  x.home.secrets.enable = true;
 
   home.stateVersion = lib.mkForce "22.11";
   home.homeDirectory = "/Users/${user}";

@@ -11,9 +11,14 @@ in {
   config = mkIf cfg.enable {
     home = {
       packages = with pkgs; [
+        age
         pass
         rbw
         sops
+        (if pkgs.stdenv.hostPlatform.isDarwin then
+          pinentry_mac
+        else
+          pinentry)
       ];
     };
   };

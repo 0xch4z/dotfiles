@@ -1,0 +1,7 @@
+keys:
+  - &chakenne__CHAKENNEM2JJJ age1uyjrnsaeuh44q85rtmm3wll5rndv8qfzez9tp72pr6v2dfwfw3fqsalrkn
+creation_rules:
+  - path_regex: home/chakenne@CHAKENNE-M-2JJJ/secrets/[^/]+\.(yaml)
+    key_groups:
+      - age:
+        - *chakenne__CHAKENNEM2JJJ
