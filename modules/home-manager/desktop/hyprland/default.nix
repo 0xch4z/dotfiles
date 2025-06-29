@@ -62,7 +62,7 @@ in {
         ];
 
         monitor = [
-          "HDMI-A-2,3840x2160@144,0x0,1" # Samsung Odyssey G8 32"
+          "HDMI-A-1,3840x2160@144,0x0,1" # Samsung Odyssey G8 32"
           "DP-4,3840x2160@144,0x-2160,1" # Samsung Odyssey G5 27"
         ];
 
@@ -92,7 +92,7 @@ in {
           "SUPER,P,pass"
         ];
 
-        workspace = map(n: "${n},monitor:HDMI-A-2") (nStrRange 0 2)
+        workspace = map(n: "${n},monitor:HDMI-A-1") (nStrRange 0 2)
           ++ map(n: "${n},monitor:DP-4") (nStrRange 3 9);
 
         decoration = {

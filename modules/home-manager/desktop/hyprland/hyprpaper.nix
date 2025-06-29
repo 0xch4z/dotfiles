@@ -26,7 +26,7 @@ in
         splash_offset = 2.0;
 
         preload = [ wallpaper ];
-        wallpaper = [ "HDMI-A-2, ${wallpaper}" ];
+        wallpaper = [ ", ${wallpaper}" ];
       };
     };
   };
