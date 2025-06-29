@@ -65,13 +65,13 @@ let
   # osSpecificSystemModules contain OS-specific module lists.
   # key: os
   osSpecificSystemModules = {
-    nixos  = [];
+    linux  = [];
     darwin = [
     ];
   };
 
   osSpecificHomeModules = {
-    nixos  = [];
+    linux  = [];
     darwin = [
       # link applications to "/Applications" dir for macos
       inputs.mac-app-util.homeManagerModules.default
