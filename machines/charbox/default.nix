@@ -148,10 +148,10 @@
     powerManagement.enable = false;
 
     # open-source drivers
-    open = false;
+    open = true;
 
     # latest stable
-    #package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
     # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
     #   version = "570.86.16"; # use new 570 drivers
     #   sha256_64bit = "sha256-RWPqS7ZUJH9JEAWlfHLGdqrNlavhaR1xMyzs8lJhy9U=";
@@ -159,7 +159,7 @@
     #   settingsSha256 = "sha256-9rtqh64TyhDF5fFAYiWl3oDHzKJqyOW3abpcf2iNRT8=";
     #   usePersistenced = false;
     # };
-    #forceFullCompositionPipeline = true;
+    forceFullCompositionPipeline = true;
     nvidiaPersistenced = true; # keeps driver persistent, perf
     nvidiaSettings = true;
   };
