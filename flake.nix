@@ -26,6 +26,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops = {
+      url = "github:Mic92/sops-nix";
+    };
+
     nur = {
       url = "github:nix-community/nur";
     };

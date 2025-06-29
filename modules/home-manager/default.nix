@@ -8,5 +8,7 @@
     ./taskbar
     ./terminal
     ./tools
+
+    ./secrets.nix
   ];
 }

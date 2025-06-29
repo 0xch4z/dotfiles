@@ -1,2 +1,7 @@
+# artifacts
 .lazy_init.*
 result
+
+# exclude all but encrypted yaml
+secrets/!(*.enc.yaml)
+home/*/secrets/!(*.enc.yaml)
