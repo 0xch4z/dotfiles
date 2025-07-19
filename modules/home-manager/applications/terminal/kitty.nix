@@ -2,9 +2,9 @@
 let
   inherit (self.lib) mkEnableOption mkIf;
 
-  cfg = config.x.home.terminal.kitty;
+  cfg = config.x.home.applications.terminal.kitty;
 in {
-  options.x.home.terminal.kitty = {
+  options.x.home.applications.terminal.kitty = {
     enable = mkEnableOption "Enable kitty module.";
   };
 

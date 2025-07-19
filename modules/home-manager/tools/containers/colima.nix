@@ -16,6 +16,7 @@ in {
 
       sessionVariables = {
         LIMA_HOME = "${config.xdg.configHome}/lima";
+        DOCKER_HOST = "unix://$HOME/.colima/default/docker.sock";
       };
     };
   };

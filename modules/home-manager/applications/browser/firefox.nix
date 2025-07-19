@@ -1,12 +1,11 @@
 args@{ config, self, pkgs, ... }:
 let
-  inherit (pkgs) stdenv types;
-  inherit (stdenv.hostPlatform) isDarwin;
-  inherit (self.lib) mkIf mkDesktopEnabledOption mkOption;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (self.lib) types mkIf mkDesktopEnabledOption mkOption;
 
-  cfg = config.x.home.browser.firefox;
+  cfg = config.x.home.applications.browser.firefox;
 in {
-  options.x.home.browser.firefox = {
+  options.x.home.applications.browser.firefox = {
     enable = mkDesktopEnabledOption config "Enable Firefox home-manager module.";
 
     devPixelsPerPx = mkOption {

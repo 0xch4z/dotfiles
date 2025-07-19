@@ -6,7 +6,6 @@ let
   inherit (lists) foldl';
   inherit (strings) hasInfix replaceStrings;
 
-  overlays = with self.overlays; [ all unstable ];
   machineList = attrValues self.machines;
 
   baseModules = [
@@ -38,7 +37,11 @@ let
     let
       pkgs = if (isDarwin system) then inputs.nixpkgs-darwin else inputs.nixpkgs;
     in
-      import pkgs { inherit system overlays; };
+      import pkgs {
+        inherit system;
+        config = { allowBroken = true; };
+        overlays = [self.overlays];
+      };
 
   # systemFactories contain OS-specific system factories.
   # key: os

@@ -36,6 +36,5 @@ python3Packages.buildPythonApplication rec {
     mainProgram = "nerd-font-patcher";
     homepage = "https://nerdfonts.com/";
     license = licenses.mit;
-    maintainers = with maintainers; [ ck3d ];
   };
 }

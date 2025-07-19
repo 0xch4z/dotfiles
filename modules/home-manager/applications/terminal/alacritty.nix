@@ -2,9 +2,9 @@
 let
   inherit (self.lib) mkEnableOption mkIf;
 
-  cfg = config.x.home.terminal.alacritty;
+  cfg = config.x.home.applications.terminal.alacritty;
 in {
-  options.x.home.terminal.alacritty = {
+  options.x.home.applications.terminal.alacritty = {
     enable = mkEnableOption "Enable alacritty module.";
   };
 

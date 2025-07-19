@@ -46,10 +46,10 @@ in {
           name = "pisces";
           src = pisces.src;
         }
-        { # clean invalid history search
-          name = "sponge";
-          src = sponge.src;
-        }
+        # { # clean invalid history search
+        #   name = "sponge";
+        #   src = sponge.src;
+        # }
         { # fzf search mnemonics
           name = "fzf-fish";
           src = fzf-fish.src;
@@ -77,8 +77,8 @@ in {
 
       shellAbbrs = {
         l = "ls";
-        gh = "cd $HOME"; # go $HOME
-        gw = "cd $HOME/work"; # go to ~/work
+        h = "cd $HOME"; # go $HOME
+        w = "cd $HOME/work"; # go to ~/work
         n = "nvim";
         k = "kubectl";
       };

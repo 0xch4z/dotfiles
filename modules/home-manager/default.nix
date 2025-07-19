@@ -1,12 +1,11 @@
 {
   imports = [
-    ./browser
+    ./applications
     ./desktop
     ./development
     ./editor
     ./shell
     ./taskbar
-    ./terminal
     ./tools
 
     ./secrets.nix

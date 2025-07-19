@@ -177,7 +177,7 @@ in {
 
      "gfx.webrender.all" = true;
      "gfx.webrender.force-disabled" = false;
-     "layout.css.devPixelsPerPx" = config.x.home.browser.firefox.devPixelsPerPx;
+     "layout.css.devPixelsPerPx" = config.x.home.applications.browser.firefox.devPixelsPerPx;
 
      "browser.uidensity" = 1;
      "browser.tabs.drawInTitlebar" = true;

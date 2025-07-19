@@ -3,11 +3,11 @@ let
   inherit (self.lib) isDarwin mkIf mkEnableOption mkForce;
   inherit (self.inputs) zen-browser;
 
-  cfg = config.x.home.browser.zen;
+  cfg = config.x.home.applications.browser.zen;
 in {
   imports = [ zen-browser.homeModules.beta ];
 
-  options.x.home.browser.zen = {
+  options.x.home.applications.browser.zen = {
     enable = mkEnableOption "Enable Zen home-manager module.";
   };
 

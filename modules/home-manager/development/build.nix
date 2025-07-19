@@ -4,6 +4,7 @@
       actionlint
       buildpack
       cmake
+      envsubst
       gnumake
       go-task
       graphviz
