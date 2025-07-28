@@ -36,14 +36,18 @@ in {
             fish = "${pkgs.fish}";
             kubeTmux = "${kubeTmux}";
             bash = "${pkgs.bash}";
+            tmuxFloax = "${pkgs.tmuxPlugins.tmux-floax}";
+            tmuxSessionx = "${pkgs.tmuxPlugins.tmux-sessionx}";
           };
         };
 
         plugins = with pkgs.tmuxPlugins; [
-          # TODO: tmux-resurrect, tmux-fingers (replace thumbs)
+          # TODO: tmux-resurrect
           pain-control
           tmux-fzf
           tmux-thumbs
+          tmux-floax
+          tmux-sessionx
         ];
       };
   };
