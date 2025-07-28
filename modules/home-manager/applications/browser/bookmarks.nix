@@ -17,7 +17,7 @@ let
 
   serviceName = "home-manager-bookmarks";
   bookmarksPath = "$HOME/.local/state/io.0xch4z.${serviceName}/bookmarks.html";
-  serviceCommand = "${prepareBookmarksScript} ${userBrowserExtraBookmarks.path} ${bookmarksPath}";
+  serviceCommand = "${prepareBookmarksScript} #{userBrowserExtraBookmarks.path} ${bookmarksPath}";
 in {
     # launchd.user.agents.${serviceName} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     #   inherit description serviceConfig;

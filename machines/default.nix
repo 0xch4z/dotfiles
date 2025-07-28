@@ -53,6 +53,7 @@ let
 in
   lib.mapAttrs buildMachine {
     Charlies-MacBook-Pro = { os = "darwin"; };
+    charbook  = { os = "darwin"; };
     USMK9RK6N3FN2 = { os = "darwin"; };
     CHAKENNE-M-2JJJ = { os = "darwin"; };
     charbox2wsl = { os = "linux"; arch = "x86_64"; variant = "nixos"; wsl = true; };
