@@ -15,7 +15,7 @@ in {
       settings = {
         window = {
           title = "Terminal";
-          opacity = 0.7;
+          opacity = 0.85;
 
           padding = { y = 16; x = 18; };
           dynamic_padding = false;
