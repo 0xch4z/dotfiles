@@ -6,6 +6,7 @@
   imports = [
     ./ansible.nix
     ./aws.nix
+    ./cloudflare.nix
     ./equinix.nix
     ./hetzner.nix
     ./k8s.nix
