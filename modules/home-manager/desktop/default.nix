@@ -6,12 +6,13 @@ in {
     enable = mkEnabledOption "enable desktop";
 
     backend = mkOption {
-      type = types.enum [ "hyprland" "x11" "none" ];
+      type = types.enum [ "hyprland" "aerospace" "none" ];
       default = "none";
     };
   };
 
   imports = [
+    ./aerospace.nix
     ./hyprland
   ];
 }

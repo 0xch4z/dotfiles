@@ -13,7 +13,6 @@ sbar.hotload(true)
 
 sbar.bar {
     height = 42,
-    -- color = "0xdd" .. palette.base,
     shadow = "on",
     position = "bottom",
     sticky = "on",
@@ -24,7 +23,6 @@ sbar.bar {
     margin = 10,
     blur_radius = 40,
     notch_width = 200,
-    -- display = "main",
     color = "0x00ffffff" -- transparent
 }
 
@@ -66,14 +64,8 @@ sbar.default {
     padding_right = 5,
 }
 
--- require("apple")
-require("focused")
-
--- require("date")
--- require("battery")
--- -- require("cpu")
--- -- require("memory")
--- require("volume")
+require("items.focused")
+require("items.spaces")
 
 sbar.end_config()
 sbar.event_loop()

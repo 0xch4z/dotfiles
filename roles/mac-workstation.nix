@@ -8,7 +8,7 @@ in {
 
   config = lib.mkIf (cfg == "mac-workstation") {
     x.home.tools.containers.colima.enable = true;
-    x.home.desktop.backend = "none";
+    x.home.desktop.backend = "aerospace";
     x.home.applications.utility.caffeine.enable = true;
   };
 }

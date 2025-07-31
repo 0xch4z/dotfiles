@@ -81,31 +81,6 @@ let
     ];
   };
 
-  ## machineHomeModuleFactory builds the home module for a machine based on the
-  ## defined user.
-  #machineHomeModuleFactory = machine:
-  #  let
-  #    inherit (machine) hostname os system users;
-
-  #    # TODO: multi-user setup here
-  #    user = elemAt users 0;
-  #    pkgs = pkgsFor system;
-
-  #    userHost = "${user}@${hostname}";
-  #    homeModule = ./home/${userHost};
-  #    sharedHomeModules = osSpecificHomeModules.${os};
-  #    homeManagerFactory = systemHomeManagerFactories.${os};
-  #  in
-  #      homeManagerFactory {
-  #        home-manager.useGlobalPkgs = true;
-  #        home-manager.useUserPackages = true;
-  #        #home-manager.sharedModules = sharedHomeModules;
-  #        home-manager.users.${user}.imports = [({config, lib, ...}: import homeModule {
-  #          inherit config lib inputs pkgs users;
-  #        })];
-  #      };
-
-
   # nixpkgsModuleFactory
   nixpkgsModuleFactory = {
       system,
@@ -115,6 +90,7 @@ let
       nixpkgs.hostPlatform = {
         inherit system;
       };
+      nixpkgs.overlays = [ self.overlays ];
     };
 
   # machineConfigurationFactory builds the given machine's system configuration.

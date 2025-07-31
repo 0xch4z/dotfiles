@@ -1,6 +1,6 @@
 {
   imports = [
-    ./sketchybar.nix
+    ./sketchybar
     ./waybar.nix
   ];
 }
