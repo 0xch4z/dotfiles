@@ -55,6 +55,12 @@ in {
           }
         ];
 
+        exec-on-workspace-change = [
+          "${lib.getExe pkgs.bash}"
+          "-c"
+          "${lib.getExe pkgs.sketchybar} --trigger aerospace_workspace_changed FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
+        ];
+
         gaps = {
           inner.horizontal = 8;
           inner.vertical = 8;

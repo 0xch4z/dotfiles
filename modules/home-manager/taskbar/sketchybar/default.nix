@@ -14,6 +14,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       sketchybar
+      sketchybar-app-font
     ];
 
     xdg.configFile."sketchybar/sketchybarrc" = {

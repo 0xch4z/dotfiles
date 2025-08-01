@@ -18,6 +18,7 @@ return {
 
     black = 0xff181819,
     white = 0xffe2e2e3,
+    offwhite = 0xffc8cccc,
     red = 0xfffc5d7c,
     green = 0xff9ed072,
     blue = 0xff76cce0,
@@ -25,6 +26,10 @@ return {
     orange = 0xfff39660,
     magenta = 0xffb39df3,
     grey = 0xff7f8490,
+    hotpink = 0xffff69b4,
+    hotpink2 = 0xffbd6490,
+    cyan = 0xff008b8b,
+    cyan2 = 0xff137070,
     transparent = 0x00000000,
 
     bar = {
