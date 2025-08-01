@@ -11,20 +11,4 @@
   home.packages = with pkgs; [
     gh
   ];
-
-
-### SKETCHYBAR
-
-  # entrypoint for config
-### AEROSPACE
-
-  services.jankyborders = {
-    enable = true;
-    settings = {
-      hidpi = "on";
-      active_color = "0xff69b4ff";
-      inactive_color = "0x00ffffff";
-    };
-  };
-
 }
