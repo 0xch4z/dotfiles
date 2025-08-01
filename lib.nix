@@ -39,7 +39,10 @@ let
     in
       import pkgs {
         inherit system;
-        config = { allowBroken = true; };
+        config = {
+          allowBroken = true;
+          allowUnfree = true;
+        };
         overlays = [self.overlays];
       };
 

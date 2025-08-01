@@ -8,6 +8,8 @@
     ./taskbar
     ./tools
 
+    ./fonts.nix
     ./secrets.nix
+    ./theme.nix
   ];
 }

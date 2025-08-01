@@ -1,7 +1,6 @@
 local settings = require("settings")
 local colors = require("colors")
 
--- Equivalent to the --default domain
 sbar.default({
   updates = "when_shown",
   icon = {
@@ -28,8 +27,8 @@ sbar.default({
   background = {
     height = 28,
     corner_radius = 9,
-    border_width = 2,
-    border_color = colors.bg2,
+    border_width = 0,
+    border_color = colors.transparent,
     image = {
       corner_radius = 9,
       border_color = colors.grey,

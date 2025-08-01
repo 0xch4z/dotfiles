@@ -64,7 +64,7 @@ in {
         gaps = {
           inner.horizontal = 8;
           inner.vertical = 8;
-          outer.top = 30;
+          outer.top = 8;
           outer.bottom = 45; # for sketchybar
           outer.left = 8;
           outer.right = 8;

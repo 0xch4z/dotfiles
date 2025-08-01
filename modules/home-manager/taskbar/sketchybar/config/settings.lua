@@ -2,7 +2,7 @@ return {
   paddings = 3,
   group_paddings = 5,
 
-  icons = "NerdFont",
+  icon_font = "SFMono Nerd Font",
 
   font = require("helpers.default_font"),
 }

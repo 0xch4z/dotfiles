@@ -23,7 +23,7 @@ in {
         };
 
         font = {
-          normal.family = "FiraCode Nerd Font";
+          normal.family = config.x.home.theme.font.mono;
           size = 22.0;
         };
 

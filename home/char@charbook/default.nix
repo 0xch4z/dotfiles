@@ -1,4 +1,4 @@
-{ lib, user, ... }: {
+{ lib, user, pkgs, ... }: {
   x.role = "mac-workstation";
 
   x.home.applications.passwords._1pass.enable = true;
@@ -17,6 +17,10 @@
     "8" = ["DELL U2718Q" "main"];
     "9" = ["DELL U2718Q" "main"];
   };
+
+  home.packages = with pkgs; [
+    x.apple-nerdfont
+  ];
 
   home.stateVersion = lib.mkForce "22.11";
   home.homeDirectory = "/Users/${user}";

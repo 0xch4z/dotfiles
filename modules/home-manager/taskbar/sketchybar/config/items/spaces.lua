@@ -28,8 +28,8 @@ local function create_empty_workspace(workspace_name, monitor_id)
         background = {color = colors.black, corner_radius = 6},
         icon = {
             string = workspace_name,
-            padding_left = 10,
-            padding_right = 10,
+            padding_left = 5,
+            padding_right = 5,
             color = colors.white,
             highlight_color = colors.blue,
         },
@@ -38,7 +38,7 @@ local function create_empty_workspace(workspace_name, monitor_id)
         label = {
             font = "sketchybar-app-font:Regular:16.0",
             string = "<>",
-            padding_right = 20,
+            padding_right = 10,
             color = colors.unselected.foreground,
             highlight_color = colors.selected.foreground,
             y_offset = -1,
@@ -134,7 +134,9 @@ local function update_workspaces()
                 highlight = true,
                 highlight_color = fg_color
             },
-            background = {color = bg_color},
+            background = {
+                color = colors.with_alpha(bg_color, 0.85),
+            },
             drawing = should_draw,
             display = relevant_spaces[workspace_name] or 1
         })
