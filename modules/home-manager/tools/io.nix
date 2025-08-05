@@ -15,6 +15,7 @@ in {
         pv
         iotop
         dool
+        lsof
         #strace #broken?
         hwatch
         watch
