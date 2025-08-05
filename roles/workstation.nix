@@ -1,8 +1,4 @@
 {pkgs, lib, ...}: {
-  # TODO move out of here
-  # xdg.enable = lib.mkDefault true;
-  # gtk.font.name = "Inter";
-  # gtk.font.size = 10;
   fonts.fontconfig = {
     enable = lib.mkDefault true;
 
@@ -94,6 +90,7 @@
       vscode.enable = lib.mkDefault true;
     };
     tools = {
+      coreutils = "full";
       containers.enable = lib.mkDefault true;
       infrastructure.enable = lib.mkDefault true;
       io.enable = lib.mkDefault true;
