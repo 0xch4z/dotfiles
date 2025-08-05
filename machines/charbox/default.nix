@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ nixpkgs, config, lib, pkgs, ... }:
 
 {
   imports =
@@ -7,6 +7,12 @@
     ];
 
   nixpkgs.config.allowUnfree = true;
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -90,7 +96,7 @@
 
   users.users.ckenney = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" "docker" ];
     packages = with pkgs; [
       ffmpeg
       tree
@@ -183,6 +189,12 @@
 
     # Firefox HW acceleration
     MOZ_DISABLE_RDD_SANDBOX = "1";
+  };
+
+  nix = {
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
   };
 
   system.stateVersion = "24.11";
