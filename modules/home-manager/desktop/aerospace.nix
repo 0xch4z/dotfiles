@@ -3,6 +3,16 @@ let
   cfg = config.x.home.desktop.aerospace;
 
   inherit (self.lib) types mkEnabledOption mkOption;
+
+  findWindowScript = pkgs.writeShellScriptBin "aerospace-find-window.sh" ''
+    #!/bin/bash
+
+    window=$(aerospace list-windows --all | ${lib.getExe pkgs.choose-gui} | awk '{print $1}')
+
+    if [ -n "$window" ]; then
+      aerospace focus --window-id "$window"
+    fi
+  '';
 in {
   options.x.home.desktop.aerospace = {
     jankyborders.enable = mkEnabledOption "enable jankyborders";
@@ -157,10 +167,22 @@ in {
           alt-slash = "layout tiles horizontal vertical";
           alt-minus = "layout accordion horizontal vertical";
 
+          alt-space = "exec-and-forget ${lib.getExe findWindowScript}";
+
           alt-shift-minus = "resize smart -10";
           alt-shift-equal = "resize smart +10";
         } // cfg.extraBindings.normal;
       };
+    };
+
+    services.skhd = {
+      enable = true;
+      config = ''
+        cmd - return : open --new -a ${lib.getExe pkgs.alacritty}
+        alt - space : ${lib.getExe findWindowScript}
+        alt - shift - s : ${lib.getExe pkgs.sketchybar} --reload
+        alt - shift - r : ${lib.getExe pkgs.aerospace} --reload-config
+      '';
     };
 
     services.jankyborders = lib.mkIf cfg.jankyborders.enable {
