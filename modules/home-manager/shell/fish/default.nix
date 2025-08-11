@@ -76,10 +76,40 @@ in {
       };
 
       shellAbbrs = {
+        # git
+        g = "git";
+        ga = "git add";
+        gc = "git commit";
+        gcv = "git commit -v";
+        gch = "git checkout";
+        gcl = "git clone";
+        gb = "git branch";
+        gl = "git log --graph --decorate";
+        gw = "git worktree";
+        gwl = "git worktree list";
+        gwm = "git worktree move";
+        gp = "git push";
+        gpo = "git push origin $(git branch --show-current)";
+        gr = "git rebase";
+        gri = "git rebase -i";
+        gs = "git status";
+        gsw = "git switch";
+        gst = "git stash";
+        gd = "git diff";
+        gds = "git diff --staged";
+        gdsu = "git diff --staged --unified=0";
+        gfo = "git fetch origin";
+        gfoa = "git fetch origin --all";
+
+        # (n)vim
+        v = "nvim";
+        vi = "nvim";
+        vim = "nvim";
+        n = "nvim";
+
         l = "ls";
         h = "cd $HOME"; # go $HOME
         w = "cd $HOME/work"; # go to ~/work
-        n = "nvim";
         k = "kubectl";
       };
     };
