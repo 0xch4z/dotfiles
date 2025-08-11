@@ -91,7 +91,9 @@
     };
     tools = {
       coreutils = "full";
+
       containers.enable = lib.mkDefault true;
+      file.enable = lib.mkDefault true;
       infrastructure.enable = lib.mkDefault true;
       io.enable = lib.mkDefault true;
       networking.enable = lib.mkDefault true;

@@ -23,7 +23,7 @@ in {
 
       settings = {
         mgr.show_hidden = true;
-      }
+      };
       plugins = {
         smart-enter = pkgs.unstable.yaziPlugins.smart-enter;
       };
@@ -32,7 +32,22 @@ in {
           {
             on = "<Enter>";
             run = "plugin --sync smart-enter";
-            desc = "enter child directory or open file"
+            desc = "enter child directory or open file";
+          }
+          {
+            on = "n";
+            run = "create";
+            desc = "create file or directory";
+          }
+          {
+            on = ".";
+            run = "hidden toggle";
+            desc = "toggle hidden files";
+          }
+          {
+            on = ["c" "c"];
+            run = "copy path";
+            desc = "copy absolute path";
           }
         ];
       };

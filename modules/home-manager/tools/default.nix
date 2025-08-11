@@ -13,6 +13,7 @@ in {
 
   imports = [
     ./containers
+    ./file.nix
     ./infrastructure
     ./io.nix
     ./networking.nix
