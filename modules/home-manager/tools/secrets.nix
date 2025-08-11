@@ -9,17 +9,29 @@ in {
   };
 
   config = mkIf cfg.enable {
+    programs.rbw = {
+      enable = true;
+      settings = {
+        email = "charlesc.kenney@gmail.com";
+        lock_timeout = 3600 * 10;
+        pinentry = with pkgs; (if pkgs.stdenv.hostPlatform.isDarwin then
+          pinentry_mac
+        else
+          pinentry);
+      };
+    };
+
     home = {
       packages = with pkgs; [
         age
         pass
-        rbw
         sops
         (if pkgs.stdenv.hostPlatform.isDarwin then
           pinentry_mac
         else
           pinentry)
       ];
+
     };
   };
 }
