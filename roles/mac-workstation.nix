@@ -1,4 +1,4 @@
-{lib, config, ...}:
+{lib, config, homeDir, ...}:
 let
   cfg = config.x.role;
 in {
@@ -13,5 +13,14 @@ in {
     x.home.fonts.apple-nerdfont.enable = true;
 
     x.home.theme.font.mono = "SFMono Nerd Font";
+
+    home.activation = {
+      "setWallpaper" = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        set -e
+        echo "[+] setting wallpaper"
+
+        /usr/bin/osascript -e 'tell application "Finder" to set desktop picture to POSIX file "${homeDir}/.dotfiles/assets/philly-light.jpg"'
+      '';
+    };
   };
 }
