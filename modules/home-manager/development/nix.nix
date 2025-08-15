@@ -7,6 +7,7 @@
     # };
 
     home.packages = with pkgs; [
+      nixfmt
       nixd
       #devcontainer # maybe I'll never have to use this again
       #devpod       # ^
