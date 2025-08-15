@@ -4,38 +4,57 @@ let
 
   inherit (self.lib) types mkEnabledOption mkOption;
 
-  findWindowScript = pkgs.writeShellScriptBin "aerospace-find-window.sh" ''
-    #!/bin/bash
+  findWindowScript = pkgs.writeScriptBin "aerospace-find-window.sh" ''
+    #!${lib.getExe pkgs.python3}
+    import subprocess
+    import json
+    import sys
 
-    window=$(aerospace list-windows --all | ${lib.getExe pkgs.choose-gui} | awk '{print $1}')
+    def run_cmd(args, stdin=None):
+      return subprocess.run(args, capture_output=True, text=True, input=stdin).stdout
 
-    if [ -n "$window" ]; then
-      aerospace focus --window-id "$window"
-    fi
+    aerospace_windows = json.loads(run_cmd([
+      "aerospace", 
+      "list-windows",
+      "--format",
+      "%{app-name}%{window-id}%{window-title}%{workspace}%{monitor-name}",
+      "--all",
+      "--json",
+    ]))
+
+    windows = dict()
+
+    for window in aerospace_windows:
+      window_id = window["window-id"]
+      option = f"{window['app-name']:<15} {window['window-title']:<40} {window['monitor-name']:<5}"
+
+      windows[option] = window_id
+
+    selected_window = run_cmd(["${lib.getExe pkgs.choose-gui}"], stdin="\n".join(windows.keys()))
+
+    if selected_window not in windows:
+      print("couldn't find window", selected_window)
+      sys.exit(1)
+
+    run_cmd(["aerospace", "focus", "--window-id", str(windows[selected_window])])
   '';
 in {
   options.x.home.desktop.aerospace = {
     jankyborders.enable = mkEnabledOption "enable jankyborders";
 
     workspaceMap = mkOption {
-      type =
-        with types;
-        attrsOf(oneOf [
-          int
-          str
-          (listOf str)
-        ]);
-      default = {};
+      type = with types; attrsOf (oneOf [ int str (listOf str) ]);
+      default = { };
     };
 
     extraBindings = {
       normal = mkOption {
         type = types.attrsOf types.str;
-        default = {};
+        default = { };
       };
       service = mkOption {
         type = types.attrsOf types.str;
-        default = {};
+        default = { };
       };
     };
 
@@ -59,16 +78,14 @@ in {
           "exec-and-forget ${lib.getExe pkgs.sketchybar}"
         ];
 
-        on-window-detected = [
-          {
-            run = [ "layout floating" ];
-          }
-        ];
+        on-window-detected = [{ run = [ "layout floating" ]; }];
 
         exec-on-workspace-change = [
           "${lib.getExe pkgs.bash}"
           "-c"
-          "${lib.getExe pkgs.sketchybar} --trigger aerospace_workspace_changed FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
+          "${
+            lib.getExe pkgs.sketchybar
+          } --trigger aerospace_workspace_changed FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
         ];
 
         gaps = {
@@ -83,20 +100,11 @@ in {
         workspace-to-monitor-force-assignment = cfg.workspaceMap;
 
         mode.service.binding = {
-          esc = [
-            "reload-config"
-            "mode main"
-          ];
+          esc = [ "reload-config" "mode main" ];
 
-          r = [
-            "flatten-workspace-tree"
-            "mode main"
-          ]; # reset
+          r = [ "flatten-workspace-tree" "mode main" ]; # reset
 
-          backspace = [
-            "close-all-windows-but-current"
-            "mode main"
-          ];
+          backspace = [ "close-all-windows-but-current" "mode main" ];
         } // cfg.extraBindings.service;
 
         mode.main.binding = {
@@ -180,8 +188,8 @@ in {
       config = ''
         cmd - return : open --new -a ${lib.getExe pkgs.alacritty}
         alt - space : ${lib.getExe findWindowScript}
-        alt - shift - s : ${lib.getExe pkgs.sketchybar} --reload
-        alt - shift - r : ${lib.getExe pkgs.aerospace} --reload-config
+        alt + shift - s : ${lib.getExe pkgs.sketchybar} --reload
+        alt + shift - r : ${lib.getExe pkgs.aerospace} --reload-config
       '';
     };
 
