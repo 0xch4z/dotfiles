@@ -1,4 +1,4 @@
-{
+{variant, userhost, ...}: {
   imports = [
     ./applications
     ./desktop
@@ -12,4 +12,10 @@
     ./secrets.nix
     ./theme.nix
   ];
+
+  home.sessionVariables = {
+    NIX_SYSTEM = "1";
+    NIX_VARIANT = variant;
+    NIX_USERHOST = userhost;
+  };
 }

@@ -123,7 +123,7 @@ let
         homeManagerFactory {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit userhost homeDir self; };
+          home-manager.extraSpecialArgs = { inherit variant userhost homeDir self; };
           home-manager.users.${user}.imports = baseModules ++ osSpecificHomeModules.${os} ++ [
             ({config, lib, ...}: import homeModule {
               inherit self user inputs config lib pkgs homeDir;

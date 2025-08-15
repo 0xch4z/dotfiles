@@ -45,9 +45,11 @@ in {
           # TODO: tmux-resurrect
           pain-control
           tmux-fzf
-          tmux-thumbs
           tmux-floax
           tmux-sessionx
+          tmux-which-key
+
+          pkgs.x.tmux-picker
         ];
       };
   };

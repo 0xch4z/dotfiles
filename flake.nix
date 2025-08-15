@@ -6,9 +6,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
-    nixpkgs-darwin = {
-      url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
-    };
+    nixpkgs-darwin = { url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin"; };
 
     # community
     home-manager = {
@@ -26,13 +24,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops = {
-      url = "github:Mic92/sops-nix";
-    };
+    sops = { url = "github:Mic92/sops-nix"; };
 
-    nur = {
-      url = "github:nix-community/nur";
-    };
+    nur = { url = "github:nix-community/nur"; };
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -83,6 +77,6 @@
 
     nixosConfigurations = self.lib.buildMachinesForOS "nixos";
     darwinConfigurations = self.lib.buildMachinesForOS "darwin";
-    homeConfigurations = self.lib.buildHomeConfigurations {};
+    homeConfigurations = self.lib.buildHomeConfigurations { };
   };
 }
