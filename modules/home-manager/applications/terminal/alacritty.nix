@@ -15,7 +15,7 @@ in {
       settings = {
         window = {
           title = "Terminal";
-          opacity = 0.85;
+          opacity = 0.94;
 
           padding = { y = 16; x = 18; };
           dynamic_padding = false;
@@ -29,8 +29,8 @@ in {
 
         colors = {
           primary = {
-            background = "0x000000";
-            foreground = "0xEBEBEB";
+            background = "0x222436";
+            foreground = "0xFFFFFC";
           };
           cursor = {
             text = "0xFF261E";
