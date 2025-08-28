@@ -1,9 +1,9 @@
-#include "cpu.h"
 #include "../sketchybar.h"
+#include "cpu.h"
 
 #define event_name argv[1]
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   float update_freq;
   if (argc < 3 || (sscanf(argv[2], "%f", &update_freq) != 1)) {
     printf("Usage: %s \"<event-name>\" \"<event_freq>\"\n", argv[0]);
@@ -23,20 +23,16 @@ int main(int argc, char** argv) {
   for (;;) {
     // Acquire new info
     cpu_update(&cpu);
-    printf("acquired cpu info %d\n", cpu.user_load);
 
+    // For initial update, cpu_load is wrong
+    if (cpu.total_load < 0 || cpu.total_load > 100) continue;
 
     // Prepare the event message
-    snprintf(trigger_message,
-             512,
+    snprintf(trigger_message, 512,
              "--trigger '%s' user_load='%d' sys_load='%02d' total_load='%02d'",
-             event_name,
-             cpu.user_load,
-             cpu.sys_load,
-             cpu.total_load                                        );
+             event_name, cpu.user_load, cpu.sys_load, cpu.total_load);
 
     // Trigger the event
-    puts("firing event message");
     sketchybar(trigger_message);
 
     // Wait
