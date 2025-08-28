@@ -141,9 +141,10 @@ in {
      "zen.welcome-screen.seen" = true;
      "zen.theme.accent-color" = "#f6b0ea";
      "zen.urlbar.behavior" = "float";
-     "zen.tab-unloader.enable" = true;
+     "zen.tab-unloader.enabled" = true;
      "zen.tab-unloader.timeout-minutes" = 20;
      "zen.view.show-newtab-button-top" = false;
+     "zen.workspaces.continue-where-left-off" = true;
      "zen.keyboard.shortcuts" = builtins.toJSON {
          zenSplitViewHorizontal = mkZenKeybind { meta = true; key = "|"; };
          openNewTab = mkZenKeybind { meta = true; key = "T"; };
