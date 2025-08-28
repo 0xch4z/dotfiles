@@ -13,5 +13,5 @@ sbar.bar({
     margin = 10,
     blur_radius = 40,
     notch_width = 200,
-    color = "0x00ffffff" -- transparent
+    color = "0x00ffffff", -- transparent
 })

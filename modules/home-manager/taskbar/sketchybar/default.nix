@@ -17,6 +17,30 @@ in {
       sketchybar-app-font
     ];
 
+    xdg.configFile."sketchybar/.luarc.json" = let 
+      config = {
+        runtime.version = "LuaJIT";
+        runtime.path = [
+          "lua"
+          "sketchybarrc"
+          "config/init.lua"
+          "config/?/init.lua"
+          "?.lua"
+          "?/init.lua"
+        ];
+        workspace = {
+          checkThirdParty = false;
+          library = [
+            "${pkgs.lua54Packages.cjson}/lib/lua/5.4"
+            "${pkgs.lua54Packages.luaposix}/lib/lua/5.4"
+            "${pkgs.x.sbarlua}/lua"
+          ];
+        };
+      };
+    in {
+      text = builtins.toJSON config;
+    };
+
     xdg.configFile."sketchybar/sketchybarrc" = {
       text =
         ''

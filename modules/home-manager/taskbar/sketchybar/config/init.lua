@@ -14,3 +14,4 @@ sbar.end_config()
 
 -- Run the event loop of the sketchybar module
 sbar.event_loop()
+print("sketchybar event loop exited")
