@@ -9,6 +9,7 @@ let
     import subprocess
     import json
     import sys
+    from functools import reduce
 
     def run_cmd(args, stdin=None):
       return subprocess.run(args, capture_output=True, text=True, input=stdin).stdout
@@ -22,15 +23,20 @@ let
       "--json",
     ]))
 
-    windows = dict()
+    windows = dict(reduce(lambda acc, w: acc + [(
+      f"{w['app-name'][:15]:<15}  {w['window-title'][:40]:<40}  ({w['workspace'][:5]}):{w['monitor-name']}",
+      str(w["window-id"])
+    )], aerospace_windows, []))
 
-    for window in aerospace_windows:
-      window_id = window["window-id"]
-      option = f"{window['app-name']:<15} {window['window-title']:<40} {window['monitor-name']:<5}"
+    print(windows)
 
-      windows[option] = window_id
-
-    selected_window = run_cmd(["${lib.getExe pkgs.choose-gui}"], stdin="\n".join(windows.keys()))
+    selected_window = run_cmd([
+      "${lib.getExe pkgs.choose-gui}", "-u",
+      "-f", "Menlo",
+      "-c", "E31C79",
+      "-b", "E31C79",
+      "-w", "32",
+    ], stdin="\n".join(windows.keys()))
 
     if selected_window not in windows:
       print("couldn't find window", selected_window)
