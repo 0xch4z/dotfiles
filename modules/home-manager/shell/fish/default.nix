@@ -31,6 +31,9 @@ in {
 
         # fifc setup
         set -x fifc_editor ${config.home.sessionVariables."EDITOR"}
+
+        # krew setup
+        set -q KREW_ROOT; and set -gx PATH $PATH $KREW_ROOT/.krew/bin; or set -gx PATH $PATH $HOME/.krew/bin
       '';
 
       plugins = with pkgs.fishPlugins; [

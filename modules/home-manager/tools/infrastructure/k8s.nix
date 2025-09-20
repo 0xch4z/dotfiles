@@ -1,8 +1,6 @@
-{pkgs, config, lib, ...}: {
+{ pkgs, config, lib, ... }: {
   config = lib.mkIf config.x.home.tools.infrastructure.enable {
-    home.shellAliases = {
-      k = "kubectl";
-    };
+    home.shellAliases = { k = "kubectl"; };
     home.packages = with pkgs; [
       argocd
       clusterctl
@@ -10,6 +8,7 @@
       kdash
       kns
       #kubetrim
+      krew
       kubecm
       kubecolor
       kubectl
