@@ -8,9 +8,15 @@ in {
     caffeine.enable = mkEnableOption "Enable caffeine app";
   };
 
+  options.x.home.applications.utility = {
+    gitify.enable = mkEnableOption "Enable gitify app";
+  };
+
   config = {
-    home.packages = with pkgs; [
-      #(mkIf cfg.caffeine.enable x.caffeine-bin)
-    ];
+    home.packages = with pkgs;
+      [
+        #(mkIf cfg.caffeine.enable x.caffeine-bin)
+        gitify
+      ];
   };
 }

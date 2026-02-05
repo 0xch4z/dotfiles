@@ -1,6 +1,6 @@
 args@{ config, self, pkgs, ... }:
 let
-  inherit (self.lib) isDarwin mkIf mkEnableOption mkForce;
+  inherit (self.lib) mkIf mkEnableOption mkForce;
   inherit (self.inputs) zen-browser;
 
   cfg = config.x.home.applications.browser.zen;
@@ -11,15 +11,16 @@ in {
     enable = mkEnableOption "Enable Zen home-manager module.";
   };
 
-  config = mkIf cfg.enable {
-      programs.zen-browser = {
-        enable = true;
+  config = mkIf (cfg.enable && !pkgs.stdenv.hostPlatform.isDarwin) {
+    programs.zen-browser = {
+      enable = true;
 
-        # can't install via home-manager on darwin yet :(
-        package = mkIf pkgs.stdenv.hostPlatform.isDarwin (mkForce null);
+      # can't install via home-manager on darwin yet :(
+      finalPackage =
+        mkForce (mkIf pkgs.stdenv.hostPlatform.isDarwin (mkForce null));
 
-        policies = import ./firefox_policies.nix;
-        profiles = import ./firefox_profile.nix args;
-     };
+      policies = import ./firefox_policies.nix;
+      profiles = import ./firefox_profile.nix args;
+    };
   };
 }

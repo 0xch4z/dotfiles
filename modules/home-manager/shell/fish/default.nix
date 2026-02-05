@@ -11,7 +11,7 @@ in {
     programs.fish = {
       enable = true;
 
-      loginShellInit = "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/$USER/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
+      loginShellInit = "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/${config.home.username}/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
 
       interactiveShellInit = ''
         set TERM "xterm-256color"

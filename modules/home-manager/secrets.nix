@@ -1,24 +1,20 @@
-/*
- * SECRETS
- *
- * Secrets are stored and encrypted per user (home).
- *
- * The sops encrypted file is at ${ROOT}/home/${USER}@${HOST}/secrets.enc.yaml.
- */
+# SECRETS
+#
+# Secrets are stored and encrypted per user (home).
+#
+# The sops encrypted file is at ${ROOT}/home/${USER}@${HOST}/secrets.enc.yaml.
 
-{self, config, lib, userhost, user, homeDir, ...}:
+{ self, config, lib, userhost, user, homeDir, ... }:
 let
   dotfilesDir = "${homeDir}/.dotfiles";
 
   mkSecret = dir: filename:
-    let
-      sopsFile = "${dir}/${filename}.enc.yaml";
-    in
-        {
-          inherit sopsFile;
-          #owner = builtins.trace "owner: ${user}" user;
-          format = "yaml";
-        };
+    let sopsFile = "${dir}/${filename}.enc.yaml";
+    in {
+      inherit sopsFile;
+      #owner = builtins.trace "owner: ${user}" user;
+      format = "yaml";
+    };
 
   # mkGlobalSecret = filename:
   #   (mkSecret "../../secrets" filename);
@@ -31,14 +27,12 @@ in {
   options.x.home.secrets = {
     enable = lib.mkEnableOption "enable sops integration";
     keyFile = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "${homeDir}/.config/sops/age/keys.txt";
     };
   };
 
-  imports = [
-    self.inputs.sops.homeManagerModules.sops
-  ];
+  imports = [ self.inputs.sops.homeManagerModules.sops ];
 
   config = lib.mkIf cfg.enable {
     sops = {

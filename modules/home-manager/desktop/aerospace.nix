@@ -1,4 +1,10 @@
-{ self, config, pkgs, lib, ... }:
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.x.home.desktop.aerospace;
 
@@ -44,12 +50,19 @@ let
 
     run_cmd(["aerospace", "focus", "--window-id", str(windows[selected_window])])
   '';
-in {
+in
+{
   options.x.home.desktop.aerospace = {
     jankyborders.enable = mkEnabledOption "enable jankyborders";
 
     workspaceMap = mkOption {
-      type = with types; attrsOf (oneOf [ int str (listOf str) ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          int
+          str
+          (listOf str)
+        ]);
       default = { };
     };
 
@@ -84,14 +97,12 @@ in {
           "exec-and-forget ${lib.getExe pkgs.sketchybar}"
         ];
 
-        on-window-detected = [{ run = [ "layout floating" ]; }];
+        on-window-detected = [ { run = [ "layout floating" ]; } ];
 
         exec-on-workspace-change = [
           "${lib.getExe pkgs.bash}"
           "-c"
-          "${
-            lib.getExe pkgs.sketchybar
-          } --trigger aerospace_workspace_changed FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
+          "${lib.getExe pkgs.sketchybar} --trigger aerospace_workspace_changed FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
         ];
 
         gaps = {
@@ -106,12 +117,22 @@ in {
         workspace-to-monitor-force-assignment = cfg.workspaceMap;
 
         mode.service.binding = {
-          esc = [ "reload-config" "mode main" ];
+          esc = [
+            "reload-config"
+            "mode main"
+          ];
 
-          r = [ "flatten-workspace-tree" "mode main" ]; # reset
+          r = [
+            "flatten-workspace-tree"
+            "mode main"
+          ]; # reset
 
-          backspace = [ "close-all-windows-but-current" "mode main" ];
-        } // cfg.extraBindings.service;
+          backspace = [
+            "close-all-windows-but-current"
+            "mode main"
+          ];
+        }
+        // cfg.extraBindings.service;
 
         mode.main.binding = {
           # All possible keys:
@@ -185,7 +206,8 @@ in {
 
           alt-shift-minus = "resize smart -10";
           alt-shift-equal = "resize smart +10";
-        } // cfg.extraBindings.normal;
+        }
+        // cfg.extraBindings.normal;
       };
     };
 

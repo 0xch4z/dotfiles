@@ -10,14 +10,23 @@ in {
 
   config = mkIf cfg.enable {
     home = {
-      packages = with pkgs; [
-        arping
-        curl
-        dig
-        grpcurl
-        netcat
-        socat
-      ];
+      packages = with pkgs;
+        [
+          arping
+          bmon
+          curl
+          dig
+          gping
+          grpcurl
+          iperf3
+          mtr
+          netcat
+          nghttp2
+          socat
+          trippy
+          wrk
+        ]
+        ++ (if pkgs.stdenv.hostPlatform.isDarwin then [ iproute2mac ] else [ ]);
     };
   };
 }

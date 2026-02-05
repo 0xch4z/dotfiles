@@ -1,9 +1,5 @@
-{pkgs, config, lib, ...}: {
+{ pkgs, config, lib, ... }: {
   config = lib.mkIf config.x.home.tools.infrastructure.enable {
-    home.packages = with pkgs; [
-      ansible
-      ansible-lint
-      ansible-language-server
-    ];
+    home.packages = with pkgs; [ ansible ansible-lint ];
   };
 }

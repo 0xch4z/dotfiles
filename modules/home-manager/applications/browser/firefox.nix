@@ -6,22 +6,23 @@ let
   cfg = config.x.home.applications.browser.firefox;
 in {
   options.x.home.applications.browser.firefox = {
-    enable = mkDesktopEnabledOption config "Enable Firefox home-manager module.";
+    enable =
+      mkDesktopEnabledOption config "Enable Firefox home-manager module.";
 
     devPixelsPerPx = mkOption {
-      type = types.string;
+      type = types.str;
       default = if isDarwin then "1.5" else "1.0"; # scaling
     };
   };
 
   config = mkIf cfg.enable {
-      programs.firefox = {
-        enable = true;
+    programs.firefox = {
+      enable = true;
 
-        package = if isDarwin then pkgs.firefox-bin else pkgs.firefox;
+      package = if isDarwin then pkgs.firefox-bin else pkgs.firefox;
 
-        policies = import ./firefox_policies.nix;
-        profiles = import ./firefox_profile.nix args;
-     };
+      policies = import ./firefox_policies.nix;
+      profiles = import ./firefox_profile.nix args;
+    };
   };
 }

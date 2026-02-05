@@ -8,15 +8,9 @@ pkgs.swiftPackages.stdenv.mkDerivation rec {
 
   src = ./.;
 
-  nativeBuildInputs = with pkgs; [
-    swift
-  ];
+  nativeBuildInputs = with pkgs; [ swift ];
 
-  buildInputs = with pkgs.darwin.apple_sdk.frameworks; [
-    Foundation
-    Cocoa
-    CoreGraphics
-  ];
+  buildInputs = with pkgs; [ apple-sdk ];
 
   buildPhase = ''
     echo "Building ${pname}..."
@@ -33,7 +27,8 @@ pkgs.swiftPackages.stdenv.mkDerivation rec {
   system = pkgs.stdenv.system;
 
   meta = with pkgs.lib; {
-    description = "CLI tool to check MacBook display configuration and notch presence.";
+    description =
+      "CLI tool to check MacBook display configuration and notch presence.";
     platforms = platforms.darwin;
   };
 }

@@ -1,4 +1,4 @@
-{pkgs, config, lib, ...}: {
+{ pkgs, config, lib, ... }: {
   config = lib.mkIf config.x.home.development.enable {
     home.packages = with pkgs; [
       luajit
@@ -7,10 +7,8 @@
       luajitPackages.luarocks
       selene
       stylua
-      sumneko-lua-language-server
+      lua-language-server
     ];
-    home.sessionPath = [
-      "$HOME/.luarocks/bin"
-    ];
+    home.sessionPath = [ "$HOME/.luarocks/bin" ];
   };
 }

@@ -7,8 +7,4 @@
 
   home.stateVersion = lib.mkForce "22.11";
   home.homeDirectory = "/Users/${user}";
-
-  home.packages = with pkgs; [
-    gh
-  ];
 }

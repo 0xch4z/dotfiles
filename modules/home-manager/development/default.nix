@@ -1,12 +1,14 @@
 { self, ... }:
 let
   inherit (self.lib) mkEnabledOption;
-in {
+in
+{
   options.x.home.development = {
     enable = mkEnabledOption "enable development";
   };
 
   imports = [
+    ./ai
     ./build.nix
     ./data.nix
     ./elixir.nix

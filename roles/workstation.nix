@@ -1,11 +1,11 @@
-{pkgs, lib, ...}: {
+{ pkgs, lib, ... }: {
   fonts.fontconfig = {
     enable = lib.mkDefault true;
 
     defaultFonts = {
-      monospace = ["Source Code Pro"];
-      sansSerif = ["Noto Sans"];
-      serif = ["Noto Serif"];
+      monospace = [ "Source Code Pro" ];
+      sansSerif = [ "Noto Sans" ];
+      serif = [ "Noto Serif" ];
     };
   };
 
@@ -13,7 +13,7 @@
     # fonts
     inter
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     font-awesome
 
     # home
@@ -22,7 +22,7 @@
     # fonts
     font-awesome
     fira-mono
-    fira-code-nerdfont
+    nerd-fonts.fira-code
     lato
     fontconfig
 
@@ -76,13 +76,10 @@
         firefox.enable = lib.mkDefault true;
         zen.enable = lib.mkDefault true;
       };
-      music = {
-        spotify.enable = lib.mkDefault true;
-      };
-      passwords = {
-        bitwarden.enable = lib.mkDefault true;
-      };
+      music = { spotify.enable = lib.mkDefault true; };
+      passwords = { bitwarden.enable = lib.mkDefault true; };
       terminal.alacritty.enable = lib.mkDefault true;
+      terminal.kitty.enable = lib.mkDefault true;
     };
     development.enable = lib.mkDefault true;
     editor = {

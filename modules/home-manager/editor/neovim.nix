@@ -1,4 +1,11 @@
-{ self, homeDir, pkgs, config, lib, ... }:
+{
+  self,
+  homeDir,
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkEnabledOption;
   cfg = config.x.home.editor.neovim;
@@ -7,35 +14,39 @@ let
   localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
 
   # install treesitter with the following grammars
-  treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
-      bash
-      comment
-      css
-      dockerfile
-      elixir
-      fish
-      gitattributes
-      gitignore
-      go
-      gomod
-      gowork
-      hcl
-      javascript
-      jq
-      json5
-      json
-      lua
-      make
-      markdown
-      nix
-      python
-      ruby
-      rust
-      toml
-      typescript
-      vue
-      yaml
-    ]));
+  treesitterWithGrammars = (
+    pkgs.vimPlugins.nvim-treesitter.withPlugins (
+      plugins: with plugins; [
+        bash
+        comment
+        css
+        dockerfile
+        elixir
+        fish
+        gitattributes
+        gitignore
+        go
+        gomod
+        gowork
+        hcl
+        javascript
+        jq
+        json5
+        json
+        lua
+        make
+        markdown
+        nix
+        python
+        ruby
+        rust
+        toml
+        typescript
+        vue
+        yaml
+      ]
+    )
+  );
 in
 {
   options.x.home.editor.neovim = {
@@ -45,17 +56,21 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      nil     # nil language server
-      fzf     # several plugins depend on native fzf install
+      nil # nil language server
+      fzf # several plugins depend on native fzf install
       ripgrep # ^ same with ripgrep
+      marksman # markdown language server
+      #python3Packages.esbonio # rst language server
     ];
 
     programs.neovim = {
       enable = true;
 
-      package = if cfg.nightly then (
-          self.inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
-        ) else pkgs.unstable.neovim;
+      package =
+        if cfg.nightly then
+          (self.inputs.neovim-nightly-overlay.packages.${pkgs.system}.default)
+        else
+          pkgs.unstable.neovim;
 
       viAlias = true;
       vimAlias = true;

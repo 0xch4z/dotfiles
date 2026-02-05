@@ -1,14 +1,8 @@
-{
-  lib,
-  inputs,
-  nixpkgs,
-  pkgs,
-  ...
-}: {
+{ lib, inputs, nixpkgs, pkgs, ... }: {
   programs.fish.enable = true;
 
   fonts = {
-    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
+    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix { }) ];
   };
 
   users.users.chakenne = {
@@ -51,6 +45,8 @@
         AppleShowScrollBars = "Automatic";
         # Makes fonts look better. See https://tonsky.me/blog/monitors.
         AppleFontSmoothing = 0;
+        # Disables window animations
+        NSAutomaticWindowAnimationsEnabled = false;
       };
     };
   };
@@ -60,17 +56,13 @@
   nix = {
     enable = false; # using determinate-systems install
 
-    nixPath = lib.mkForce [
-      "nixpkgs=${nixpkgs}"
-    ];
+    nixPath = lib.mkForce [ "nixpkgs=${nixpkgs}" ];
     package = pkgs.nixVersions.latest;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
 
-    settings = {
-      trusted-users = ["chakenne"];
-    };
+    settings = { trusted-users = [ "chakenne" ]; };
   };
 
   # Used for backwards compatibility, please read the changelog before changing.

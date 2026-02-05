@@ -1,21 +1,19 @@
-{lib, config, homeDir, ...}:
-let
-  cfg = config.x.role;
+{ lib, config, homeDir, ... }:
+let cfg = config.x.role;
 in {
-  imports = [
-    ./workstation.nix
-  ];
+  imports = [ ./workstation.nix ];
 
   config = lib.mkIf (cfg == "mac-workstation") {
     x.home.tools.containers.colima.enable = true;
     x.home.desktop.backend = "aerospace";
     x.home.applications.utility.caffeine.enable = true;
+    x.home.applications.utility.gitify.enable = true;
     x.home.fonts.apple-nerdfont.enable = true;
 
     x.home.theme.font.mono = "SFMono Nerd Font";
 
     home.activation = {
-      "setWallpaper" = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      "setWallpaper" = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         set -e
         echo "[+] setting wallpaper"
 
