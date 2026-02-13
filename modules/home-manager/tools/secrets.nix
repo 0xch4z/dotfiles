@@ -14,10 +14,11 @@ in {
       settings = {
         email = "charlesc.kenney@gmail.com";
         lock_timeout = 3600 * 10;
-        pinentry = with pkgs; (if pkgs.stdenv.hostPlatform.isDarwin then
-          pinentry_mac
-        else
-          pinentry);
+        pinentry = with pkgs;
+          (if pkgs.stdenv.hostPlatform.isDarwin then
+            pinentry_mac
+          else
+            pinentry-gnome3);
       };
     };
 
@@ -26,10 +27,7 @@ in {
         age
         pass
         sops
-        (if pkgs.stdenv.hostPlatform.isDarwin then
-          pinentry_mac
-        else
-          pinentry)
+        (if pkgs.stdenv.hostPlatform.isDarwin then pinentry_mac else pinentry-gnome3)
       ];
 
     };

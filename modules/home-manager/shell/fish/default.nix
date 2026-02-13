@@ -1,17 +1,16 @@
-{self, config, pkgs, ...}:
+{ self, config, pkgs, ... }:
 let
   inherit (self.lib) mkEnabledOption mkIf;
   cfg = config.x.home.shell.fish;
 in {
-  options.x.home.shell.fish = {
-    enable = mkEnabledOption "enable fish shell";
-  };
+  options.x.home.shell.fish = { enable = mkEnabledOption "enable fish shell"; };
 
   config = mkIf cfg.enable {
     programs.fish = {
       enable = true;
 
-      loginShellInit = "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/${config.home.username}/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
+      loginShellInit =
+        "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/${config.home.username}/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
 
       interactiveShellInit = ''
         set TERM "xterm-256color"
@@ -34,6 +33,9 @@ in {
 
         # krew setup
         set -q KREW_ROOT; and set -gx PATH $PATH $KREW_ROOT/.krew/bin; or set -gx PATH $PATH $HOME/.krew/bin
+
+        # fzf setup
+        fzf_configure_bindings --variables=\e\cv
       '';
 
       plugins = with pkgs.fishPlugins; [
@@ -49,10 +51,6 @@ in {
           name = "pisces";
           src = pisces.src;
         }
-        # { # clean invalid history search
-        #   name = "sponge";
-        #   src = sponge.src;
-        # }
         { # fzf search mnemonics
           name = "fzf-fish";
           src = fzf-fish.src;
@@ -68,6 +66,10 @@ in {
         { # jump around
           name = "z";
           src = z.src;
+        }
+        { # colored man-pages
+          name = "colored-man-pages";
+          src = colored-man-pages.src;
         }
       ];
 

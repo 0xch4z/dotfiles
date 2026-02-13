@@ -26,6 +26,24 @@ let
     };
   };
 
+  # cuda_compat only has redistributables for aarch64-linux (Jetson).
+  # On x86_64-linux it fails to build because $src is empty.
+  # Stub it out on non-Jetson platforms.
+  cudaCompatFixOverlay = final: prev:
+    lib.optionalAttrs (prev.stdenv.hostPlatform.system != "aarch64-linux") {
+      cudaPackages = prev.cudaPackages.overrideScope (cfinal: cprev: {
+        cuda_compat = cprev.cuda_compat.overrideAttrs (old: {
+          src = null;
+          dontUnpack = true;
+          dontPatch = true;
+          dontConfigure = true;
+          dontBuild = true;
+          dontFixup = true;
+          installPhase = "mkdir -p $out/lib";
+        });
+      });
+    };
+
   communityOverlays = [
     knsOverlay
     inputs.neovim-nightly-overlay.overlays.default
@@ -34,6 +52,7 @@ let
     inputs.nur.overlays.default
 
     lua54posixOverlay
+    cudaCompatFixOverlay
   ];
 
   customDerivationsOverlay = final: prev: {

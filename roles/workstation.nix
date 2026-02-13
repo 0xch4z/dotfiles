@@ -9,6 +9,8 @@
     };
   };
 
+  home.sessionVariables = { AVANTE_DEFAULT_PROVIDER = "claude-code"; };
+
   home.packages = with pkgs; [
     # fonts
     inter

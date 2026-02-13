@@ -1,10 +1,9 @@
 { nixpkgs, config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   nixpkgs.config.allowUnfree = true;
 
@@ -12,6 +11,33 @@
   virtualisation.docker.rootless = {
     enable = true;
     setSocketVariable = true;
+  };
+
+  services.keyd = {
+    enable = true;
+    keyboards.default = {
+      ids = [ "*" ]; # Apply to all keyboards
+      settings = {
+        alt = {
+          "left" = "C-left";
+          "right" = "C-right";
+        };
+        meta = {
+          "a" = "C-a";
+          "c" = "C-c";
+          "f" = "C-f";
+          "r" = "C-r";
+          "v" = "C-v";
+          "x" = "C-x";
+          "z" = "C-z";
+          "left" = "home";
+          "right" = "end";
+          "shift-left" = "S-home";
+          "shift-right" = "S-end";
+          "delete" = "S-home delete";
+        };
+      };
+    };
   };
 
   programs.nix-ld.enable = true;
@@ -44,14 +70,8 @@
     xorg.libXxf86vm
   ];
 
-  home-manager.users.ckenney = {
-    home.sessionVariables = {
-      LD_LIBRARY_PATH = "${pkgs.cudatoolkit}/lib64:/run/current-system/sw/share/nix-ld/lib";
-    };
-  };
-
   # themeing
-  qt5.platformTheme = "qt5ct";
+  qt.platformTheme = "qt5ct";
 
   # Additional environment variables
   environment.sessionVariables = {
@@ -63,26 +83,21 @@
   services.openssh = {
     enable = true;
     ports = [ 22 ];
-    settings = {
-      PasswordAuthentication = false;
-    };
+    settings = { PasswordAuthentication = false; };
   };
 
   services.greetd = {
     enable = true;
 
-    vt = 2;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
         user = "greeter";
       };
     };
   };
 
-  services.xserver = {
-    videoDrivers = ["nvidia"];
-  };
+  services.xserver = { videoDrivers = [ "nvidia" ]; };
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -97,16 +112,14 @@
   users.users.ckenney = {
     isNormalUser = true;
     extraGroups = [ "wheel" "audio" "docker" ];
-    packages = with pkgs; [
-      ffmpeg
-      tree
-    ];
+    packages = with pkgs; [ ffmpeg tree ];
     initialPassword = "2300";
   };
 
   # sound
-  hardware.pulseaudio.enable = false; # in favor of pipewire
-  security.rtkit.enable = true; # allows pipewire to request realtime scheduling. reduces audio latency.
+  services.pulseaudio.enable = false; # in favor of pipewire
+  security.rtkit.enable =
+    true; # allows pipewire to request realtime scheduling. reduces audio latency.
   services.pipewire = {
     enable = true;
 
@@ -118,10 +131,13 @@
     jack.enable = true;
   };
 
+  environment.pathsToLink =
+    [ "/share/applications" "/share/xdg-desktop-portal" ];
+
   environment.systemPackages = with pkgs; [
-    glxinfo
+    mesa-demos
     vulkan-tools
-    nvtopPackages.full
+    nvtopPackages.nvidia
 
     libva
     libva-utils
@@ -134,7 +150,6 @@
     pamixer
     playerctl
 
-    rofi
     mako
     wl-clipboard
     grim
@@ -151,7 +166,7 @@
     modesetting.enable = true;
 
     # Nvidia power management can cause sleep/suspend to fail.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
 
     # open-source drivers
     open = true;
@@ -174,15 +189,13 @@
   boot.blacklistedKernelModules = [ "nouveau" ];
 
   environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
-    CUDA_ROOT = "${pkgs.cudatoolkit}";
-
-    LIBVA_DRIVER_NAME = "nvidia";
-
     # NVIDIA in Wayland
+    LIBVA_DRIVER_NAME = "nvidia";
+    XDG_SESSION_TYPE = "wayland";
     WLR_NO_HARDWARE_CURSORS = "1";
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    NVIDIA_PRESERVE_VIDEO_MEMORY_ALLOCATIONS = "1";
 
     # Tell electron apps to use wayland
     NIXOS_OZONE_WL = "1";

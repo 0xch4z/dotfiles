@@ -1,10 +1,16 @@
 { config, lib, ... }:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.x.home.desktop.hyprland.hypridle;
   hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
-in {
+in
+{
   options.x.home.desktop.hyprland.hypridle = {
     enable = mkOption {
       type = types.bool;
@@ -21,28 +27,28 @@ in {
 
       settings = {
         general = {
-          lock_cmd = "pidof hyprlock || hyprlock";      # enter hyprlock
-          before_sleep_cmd = "loginctl lock-session";   # lock before suspend
+          lock_cmd = "pidof hyprlock || hyprlock"; # enter hyprlock
+          before_sleep_cmd = "loginctl lock-session"; # lock before suspend
           after_sleep_cmd = "hyprctl dispatch dpms on"; # turn screen on after key press
         };
 
         listener = [
           {
-            timeout = 60;                           # 1min
+            timeout = 60; # 1min
             on-timeout = "brightnessctl -s set 10"; # set monitor backlight to min
-            on-resume = "brightnessctl -r";         # restore monitor brightness
+            on-resume = "brightnessctl -r"; # restore monitor brightness
           }
           {
-            timeout = 300;                        # 5min
+            timeout = 300; # 5min
             on-timeout = "loginctl lock-session"; # log out
           }
           {
-            timeout = 330;                            # 5.5min
+            timeout = 330; # 5.5min
             on-timeout = "hyprctl dispatch dpms off"; # 5.5min
-            on-resume = "hyprctl dispatch dpms on";   # screen off
+            on-resume = "hyprctl dispatch dpms on"; # screen off
           }
           {
-            timeout = 1800;                   # 30min
+            timeout = 3600; # 60min
             on-timeout = "systemctl suspend"; # suspend
           }
         ];

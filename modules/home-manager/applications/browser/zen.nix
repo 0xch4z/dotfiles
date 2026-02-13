@@ -16,8 +16,8 @@ in {
       enable = true;
 
       # can't install via home-manager on darwin yet :(
-      finalPackage =
-        mkForce (mkIf pkgs.stdenv.hostPlatform.isDarwin (mkForce null));
+      # finalPackage =
+      #   mkForce (mkIf pkgs.stdenv.hostPlatform.isDarwin (mkForce null));
 
       policies = import ./firefox_policies.nix;
       profiles = import ./firefox_profile.nix args;

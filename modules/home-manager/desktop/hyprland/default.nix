@@ -50,6 +50,12 @@ in {
       xwayland.enable = cfg.xwayland.enable;
 
       settings = {
+        input = {
+          kb_layout = "us";
+          repeat_rate = 50;
+          repeat_delay = 200;
+        };
+
         general = {
           "col.active_border" = "rgb(${cfg.theme.activeBorderColor})";
           "col.inactive_border" = "rgb(${cfg.theme.inactiveBorderColor})";
@@ -70,27 +76,28 @@ in {
           "SUPER,SPACE,exec,rofi -show drun"                     # launcher
           "SUPER,RETURN,exec,alacritty"                          # terminal
           "SUPER,Q,killactive"                                   # app: quit
-          "SUPER,W,killactive"                                   # window: close
-          "SUPER,BACKSPACE,exec,wtype -k ctrl+shift+left ctrl+x" # Delete to beginning of line
-          "SUPER,DELETE,exec,wtype -k ctrl+shift+left ctrl+x"    # Delete to beginning of line
-          "SUPER,C,exec,wl-copy"                                 # copy
-          "SUPER,V,exec,wl-paste"                                # paste
+          "SUPER,W,exec,${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl"              # window: close
+          "SUPER,BACKSPACE,exec,${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x" # Delete to beginning of line
+          "SUPER,DELETE,exec,${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x"    # Delete to beginning of line
+          "SUPER,A,exec,${lib.getExe pkgs.wtype} -M ctrl -k a -m ctrl"              # select all
+          "SUPER,X,exec,${lib.getExe pkgs.wtype} -M ctrl -k x -m ctrl"              # cut
+          "SUPER,Z,exec,${lib.getExe pkgs.wtype} -M ctrl -k z -m ctrl"              # Undo
           "SUPER SHIFT,E,exit,"                                  # exit to tty
           "ALT,F,fullscreen,1"                                   # fullscreen
           "SUPER SHIFT,DELETE,exec,hyprctl dispatch dpms off"    # sleep
-          "ALT,N,cyclenext"                                      # go to next
-          "ALT,P,cyclenext,prev"                                 # go to prev
+          "ALT,L,cyclenext"                                      # go to next
+          "ALT,H,cyclenext,prev"                                 # go to prev
           "ALT SHIFT,N,swapnext"                                 # swap to next
           "ALT SHIFT,P,swapnext,prev"                            # swap to prev
         ] ++ map(n: "ALT,${n},workspace,${n}") (nStrRange 0 9)   # goto workspace N
           ++ map(n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 0 9); # move to workspace N
 
-        bindm = [
-          "SUPER,C,pass"
-          "SUPER,X,pass"
-          "SUPER,V,pass"
-          "SUPER,P,pass"
-        ];
+        # bindm = [
+        #   "SUPER,C,pass"
+        #   "SUPER,X,pass"
+        #   "SUPER,V,pass"
+        #   "SUPER,P,pass"
+        # ];
 
         workspace = map(n: "${n},monitor:HDMI-A-1") (nStrRange 0 2)
           ++ map(n: "${n},monitor:DP-4") (nStrRange 3 9);

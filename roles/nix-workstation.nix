@@ -1,20 +1,13 @@
-{lib, config, ...}:
-let
-  cfg = config.x.role;
+{ lib, config, ... }:
+let cfg = config.x.role;
 in {
-  imports = [
-    ./workstation.nix
-  ];
+  imports = [ ./workstation.nix ];
 
   config = lib.mkIf (cfg == "nix-workstation") {
     home = {
       stateVersion = "22.11";
 
-      sessionPath = [
-        "$HOME/.local/bin"
-        "/usr/local/bin"
-        "/opt/homebrew/bin"
-      ];
+      sessionPath = [ "$HOME/.local/bin" "/usr/local/bin" "/opt/homebrew/bin" ];
 
       sessionVariables = {
         EDITOR = "nvim";
@@ -29,7 +22,7 @@ in {
         backend = lib.mkDefault "hyprland";
       };
 
-      taskbar.waybar.enable = lib.mkDefault true;
+      taskbar.ashell.enable = lib.mkDefault true;
     };
   };
 }

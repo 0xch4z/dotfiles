@@ -1,6 +1,1 @@
-{
-  imports = [
-    ./sketchybar
-    ./waybar.nix
-  ];
-}
+{ imports = [ ./ashell.nix ./sketchybar ./waybar.nix ]; }
