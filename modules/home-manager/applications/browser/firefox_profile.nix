@@ -160,14 +160,16 @@ in {
      "browser.newtabpage.activity-stream.showSponsored" = false;
      "extensions.pocket.enabled" = false;
 
-     # disable prefetching
-     "network.dns.disablePrefetch" = true;
+     # disable page prefetching but keep DNS prefetch for tile loading
+     "network.dns.disablePrefetch" = false;
      "network.prefetch-next" = false;
+     "network.http.max-persistent-connections-per-server" = 10;
+     "network.http.max-connections" = 1800;
 
      # disable JS in PDFs
      "pdfjs.enableScripting" = false;
 
-     "browser.cache.disk.enable" = false;
+     "browser.cache.disk.enable" = true;
      "browser.cache.memory.enable" = true;
      "browser.cache.memory.capacity" = 131072; # 128 MB
      "browser.cache.memory.max_entry_size" = 20480; # 20 MB
@@ -178,6 +180,23 @@ in {
 
      "gfx.webrender.all" = true;
      "gfx.webrender.force-disabled" = false;
+     "media.ffmpeg.vaapi.enabled" = true;
+     "media.hardware-video-decoding.force-enabled" = true;
+     "widget.dmabuf.force-enabled" = true;
+     "layers.acceleration.force-enabled" = true;
+     "webgl.force-enabled" = true;
+     "webgl.msaa-force" = true;
+
+     # WebGL / Google Maps Street View performance
+     # Disable WebGL renderer string sanitization so sites see actual GPU
+     "webgl.sanitize-unmasked-renderer" = false;
+     "webgl.sanitize-unmasked-vendor" = false;
+     "webgl.out-of-process" = true;
+     "webgl.out-of-process.force" = true;
+     "gfx.canvas.accelerated" = true;
+     "gfx.canvas.accelerated.force-enabled" = true;
+     "dom.ipc.processCount" = 8;
+     "gfx.webrender.precache-shaders" = true;
      "layout.css.devPixelsPerPx" = config.x.home.applications.browser.firefox.devPixelsPerPx;
 
      "browser.uidensity" = 1;
