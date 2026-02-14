@@ -9,73 +9,34 @@
 
   x.home.editor.neovim.nightly = true;
 
-  programs.rofi = {
+  programs.fuzzel = {
     enable = true;
-    package = pkgs.rofi;
-
-    extraConfig = {
-      modi = "drun,run,window";
-      show-icons = true;
-      terminal = "alacritty";
-      drun-display-format = "{name}";
-      disable-history = false;
-      hide-scrollbar = true;
-      display-drun = "Apps";
-      display-run = "Run";
-      display-window = "Windows";
-      sidebar-mode = false;
-    };
-
-    theme = {
-      "*" = {
-        background-color = "transparent";
-        text-color = "#ffffff";
-        font = "JetBrains Mono 12";
-      };
-
-      window = {
-        width = "40%";
-        background-color = "rgba(0, 0, 0, 0.85)";
-        border-radius = "15px";
-        padding = "20px";
-      };
-
-      mainbox = { background-color = "transparent"; };
-
-      inputbar = {
-        background-color = "rgba(255, 255, 255, 0.1)";
-        border-radius = "8px";
-        padding = "10px";
-        margin = "0px 0px 15px 0px";
-      };
-
-      prompt = {
-        background-color = "transparent";
-        text-color = "#ffffff";
-      };
-
-      entry = {
-        background-color = "transparent";
-        text-color = "#ff00ff";
-        placeholder-color = "rgba(255, 0, 255, 0.6)";
-      };
-
-      listview = {
+    settings = {
+      main = {
+        font = "FiraCode Nerd Font:size=12";
+        terminal = "alacritty";
+        icons-enabled = "yes";
+        icon-theme = "hicolor";
         lines = 10;
-        background-color = "transparent";
-        spacing = "3px";
+        width = 40;
+        horizontal-pad = 20;
+        vertical-pad = 15;
+        layer = "overlay";
+        anchor = "top";
+        y-margin = 8;
       };
-
-      element = {
-        background-color = "transparent";
-        padding = "8px";
-        text-color = "#ffffff";
+      colors = {
+        background = "000000dd";
+        text = "ffffffff";
+        match = "ff69b4ff";
+        selection = "ff00ffff";
+        selection-text = "ffffffff";
+        selection-match = "ffffffdd";
+        border = "ff69b480";
       };
-
-      "element selected" = {
-        background-color = "#ff00ff";
-        border-radius = "5px";
-        text-color = "#ffffff";
+      border = {
+        width = 2;
+        radius = 12;
       };
     };
   };
