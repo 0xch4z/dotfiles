@@ -64,7 +64,7 @@ in {
         exec-once = [
           "hyprpaper"
           "mako"
-          "waybar"
+          "ashell"
         ];
 
         monitor = [
@@ -73,7 +73,7 @@ in {
         ];
 
         bind = [
-          "SUPER,SPACE,exec,rofi -show drun"                     # launcher
+          "SUPER,SPACE,exec,fuzzel"                               # launcher
           "SUPER,RETURN,exec,alacritty"                          # terminal
           "SUPER,Q,killactive"                                   # app: quit
           "SUPER,W,exec,${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl"              # window: close
@@ -91,6 +91,16 @@ in {
           "ALT SHIFT,P,swapnext,prev"                            # swap to prev
         ] ++ map(n: "ALT,${n},workspace,${n}") (nStrRange 0 9)   # goto workspace N
           ++ map(n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 0 9); # move to workspace N
+
+        # volume keys
+        bindl = [
+          ",XF86AudioMute,exec,pamixer -t && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"$(if [ \"$(pamixer --get-mute)\" = 'true' ]; then echo '🔇 Muted'; else echo \"🔊 Volume $(pamixer --get-volume)%\"; fi)\""
+        ];
+
+        bindle = [
+          ",XF86AudioRaiseVolume,exec,pamixer -i 5 && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"🔊 Volume $(pamixer --get-volume)%\""
+          ",XF86AudioLowerVolume,exec,pamixer -d 5 && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"🔉 Volume $(pamixer --get-volume)%\""
+        ];
 
         # bindm = [
         #   "SUPER,C,pass"
