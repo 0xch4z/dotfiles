@@ -159,6 +159,9 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+    ];
   };
 
   hardware.nvidia = {
@@ -202,6 +205,8 @@
 
     # Firefox HW acceleration
     MOZ_DISABLE_RDD_SANDBOX = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    NVD_BACKEND = "direct";
   };
 
   nix = {
