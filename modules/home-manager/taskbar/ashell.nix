@@ -8,7 +8,24 @@ in {
   config = lib.mkIf cfg.enable {
     programs.ashell = {
       enable = true;
-      settings = { };
+      settings = {
+        position = "Bottom";
+
+        modules = {
+          left = [ "Workspaces" "SystemInfo" ];
+          center = [ "WindowTitle" ];
+          right = [ "Clock" ];
+        };
+
+        system_info.indicators = [ "Cpu" "Memory" ];
+
+        clock.format = "%a %d %b  %H:%M";
+
+        appearance = {
+          style = "Islands";
+          opacity = 0.9;
+        };
+      };
     };
   };
 }
