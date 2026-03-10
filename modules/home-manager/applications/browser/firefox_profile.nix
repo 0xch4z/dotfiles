@@ -1,16 +1,14 @@
-{ self, pkgs, config, ... }:
+{ self, pkgs, config, lib, ... }:
 let
+  shared = import ./shared.nix { inherit lib; };
+  firefoxAddons = self.inputs.firefox-addons.packages."${pkgs.stdenv.hostPlatform.system}";
+
   secrets = config.x.home.secrets;
 
   extraBookmarks = [];
   # extraBookmarks = if (secrets.enable)
   #   then builtins.fromTOML (builtins.readFile config.sops.secrets.userBrowserExtraBookmarks.path)
   #   else [];
-
-  extraSearchEnginesFile = ./extra_bookmarks.json;
-  extraSearchEngines = if builtins.pathExists extraSearchEnginesFile
-    then builtins.fromJSON (builtins.readFile extraSearchEnginesFile)
-    else [];
 
   mkZenKeybind = {
     ctrl ? false,
@@ -21,46 +19,18 @@ let
   }: { inherit ctrl alt shift meta key; };
 in {
   default = {
-    extensions = with self.inputs.firefox-addons.packages."${pkgs.system}"; [
-      # https://gitlab.com/rycee/nur-expressions/-/blob/master/pkgs/firefox-addons/addons.json?ref_type=head
-      bitwarden
-      refined-github
-      sponsorblock
-      ublock-origin
-      vimium
-      youtube-shorts-block
-    ];
+    extensions.packages = shared.toFirefoxExtensions firefoxAddons;
     search = {
       default = "ddg";
       force = true;
 
-      engines = {
+      engines = shared.toFirefoxSearchEngines // {
         "amazon".metaData.hidden = true;
         "bing".metaData.hidden = true;
         "ebay".metaData.hidden = true;
 
-        "google" = {
-          urls = [{
-            template = "https://google.com/search";
-            params = [
-              { name = "q"; value = "{searchTerms}"; }
-            ];
-          }];
-          definedAliases = [ ",g" ];
-        };
-
-        "Github Code Search" = {
-          urls = [{
-            template = "https://github.com/search";
-            params = [
-              { name = "type"; value = "code"; }
-              { name = "q"; value = "{searchTerms}"; }
-            ];
-          }];
-          definedAliases = [ ",gh" ];
-        };
-
-        "IETF RFC Search" = {
+        # Firefox-only search engines
+        "ietf-rfc-search" = {
           urls = [{
             template = "https://datatracker.ietf.org/doc/search";
             params = [
@@ -71,70 +41,21 @@ in {
           definedAliases = [ ",rfc" ];
         };
 
-        "MyNix Search" = {
+        "mynix-search" = {
           urls = [{
             template = "https://mynixos.com/search";
             params = [
               { name = "q"; value = "{searchTerms}"; }
             ];
           }];
-          definedAliases = [ ",nix" ];
+          definedAliases = [ ",mnix" ];
         };
-
       };
     };
-    bookmarks = extraBookmarks ++ [
-      {
-         name = "Code";
-         bookmarks = [
-           {
-             name = "Github";
-             keyword = "gh";
-             url = "https://github.com/";
-           }
-           {
-             name = "Github Notifications";
-             keyword = "gn";
-             url = "https://github.com/notifications";
-           }
-           {
-             name = "Claude";
-             keyword = "c";
-             url = "https://claude.ai";
-           }
-        ];
-      }
-      {
-         name = "Research";
-         bookmarks = [
-           {
-             name = "RFC Search";
-             keyword = "rfcs";
-             url = "https://datatracker.ietf.org/doc/search?name=%s";
-           }
-           {
-             name = "RFC Doc";
-             keyword = "rfc";
-             url = "https://datatracker.ietf.org/doc/rfc%s/";
-           }
-         ];
-      }
-      {
-         name = "Nix";
-         bookmarks = [
-           {
-              name = "Nix Options";
-              keyword = "nix";
-              url = "https://search.nixos.org/options?size=200&type=packages&query=%s";
-           }
-           {
-              name = "Nix Packages";
-              keyword = "nixpkgs";
-              url = "https://search.nixos.org/packages?size=200&type=packages&query=%s";
-           }
-         ];
-      }
-    ];
+    bookmarks = {
+      force = true;
+      settings = extraBookmarks ++ shared.bookmarks;
+    };
     settings = {
      # zen specific
      #https://github.com/zen-browser/desktop/tree/8ef4460f0022a7f4a7211785a0174c50d7fc36a6/src/browser/app/profile

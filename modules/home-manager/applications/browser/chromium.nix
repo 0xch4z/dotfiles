@@ -2,6 +2,7 @@
 let
   inherit (self.lib) mkIf mkEnableOption;
 
+  shared = import ./shared.nix { inherit lib; };
   cfg = config.x.home.applications.browser.chromium;
 
   policies = {
@@ -19,6 +20,7 @@ let
     DefaultSearchProviderName = "Brave";
     DefaultSearchProviderSearchURL = "https://search.brave.com/search?q={searchTerms}";
     DefaultSearchProviderKeyword = "b";
+    ManagedBookmarks = shared.toChromiumBookmarks;
     ManagedSearchEngines = [
       {
         name = "Brave";
@@ -26,22 +28,7 @@ let
         search_url = "https://search.brave.com/search?q={searchTerms}";
         is_default = true;
       }
-      {
-        name = "Google";
-        keyword = "g";
-        search_url = "https://google.com/search?q={searchTerms}";
-      }
-      {
-        name = "Github Code Search";
-        keyword = "gh";
-        search_url = "https://github.com/search?type=code&q={searchTerms}";
-      }
-      {
-        name = "Nix Packages";
-        keyword = "nix";
-        search_url = "https://search.nixos.org/packages?query={searchTerms}";
-      }
-    ];
+    ] ++ shared.toChromiumSearchEngines;
   };
 in {
   options.x.home.applications.browser.chromium = {
@@ -70,15 +57,14 @@ in {
       package = pkgs.ungoogled-chromium;
 
       commandLineArgs = [
-        "--ozone-platform=wayland"
-        "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,WebRTCPipeWireCapturer"
+        "--ozone-platform=x11" # XWayland; native Wayland has WebGL artifacts on Hyprland+NVIDIA
+        "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,WebRTCPipeWireCapturer,WebUIDarkMode,SidePanelPinning"
+
         "--enable-gpu-rasterization"
-        # "--enable-zero-copy" # known issue with NVIDIA
         "--ignore-gpu-blocklist"
 
         # minimal UI
         "--force-dark-mode"
-        "--enable-features=WebUIDarkMode,SidePanelPinning"
         "--gtk-version=4"
         "--hide-sidepanel-button"
         "--remove-tabsearch-button"
@@ -88,12 +74,7 @@ in {
         pkgs.hunspellDictsChromium.en_US
       ];
 
-      extensions = [
-        { id = "ocaahdebbfolfmndjeplogmgcagdmblk"; } # chromium web store
-        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
-        { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # vimium
-        { id = "nngceckbapebfimnlniiiahkandclblb"; } # bitwarden
-      ];
+      extensions = shared.toChromiumExtensions;
     };
   };
 }
