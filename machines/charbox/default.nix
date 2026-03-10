@@ -101,7 +101,15 @@
 
   boot.loader = {
     systemd-boot.enable = true;
+    systemd-boot.configurationLimit = 10;
     efi.canTouchEfiVariables = true;
+    systemd-boot.extraEntries = {
+      "windows.conf" = ''
+        title Windows
+        efi /EFI/Microsoft/Boot/bootmgfw.efi
+      '';
+    };
+    timeout = 3;
   };
 
   networking.hostName = "charbox"; # Define your hostname.
@@ -183,7 +191,7 @@
     #   settingsSha256 = "sha256-9rtqh64TyhDF5fFAYiWl3oDHzKJqyOW3abpcf2iNRT8=";
     #   usePersistenced = false;
     # };
-    forceFullCompositionPipeline = true;
+    # forceFullCompositionPipeline; unnecessary on Wayland
     nvidiaPersistenced = true; # keeps driver persistent, perf
     nvidiaSettings = true;
   };
