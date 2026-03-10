@@ -1,13 +1,27 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.tools.file;
-in {
-  options.x.home.tools.file = { enable = mkEnableOption "enable file tools"; };
+in
+{
+  options.x.home.tools.file = {
+    enable = mkEnableOption "enable file tools";
+  };
 
   config = mkIf cfg.enable {
-    home = { packages = with pkgs; [ xz fzf ]; };
+    home = {
+      packages = with pkgs; [
+        xz
+        fzf
+        zoekt
+      ];
+    };
 
     programs.yazi = {
       enable = true;
@@ -15,8 +29,12 @@ in {
 
       enableFishIntegration = true;
 
-      settings = { mgr.show_hidden = true; };
-      plugins = { smart-enter = pkgs.unstable.yaziPlugins.smart-enter; };
+      settings = {
+        mgr.show_hidden = true;
+      };
+      plugins = {
+        smart-enter = pkgs.unstable.yaziPlugins.smart-enter;
+      };
       keymap = {
         mgr.prepend_keymap = [
           {
@@ -35,7 +53,10 @@ in {
             desc = "toggle hidden files";
           }
           {
-            on = [ "c" "c" ];
+            on = [
+              "c"
+              "c"
+            ];
             run = "copy path";
             desc = "copy absolute path";
           }
