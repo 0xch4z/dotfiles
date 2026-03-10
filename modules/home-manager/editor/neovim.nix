@@ -13,40 +13,41 @@ let
   # lazy config in neovim will use this path
   localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
 
-  # install treesitter with the following grammars
-  treesitterWithGrammars = (
-    pkgs.vimPlugins.nvim-treesitter.withPlugins (
-      plugins: with plugins; [
-        bash
-        comment
-        css
-        dockerfile
-        elixir
-        fish
-        gitattributes
-        gitignore
-        go
-        gomod
-        gowork
-        hcl
-        javascript
-        jq
-        json5
-        json
-        lua
-        make
-        markdown
-        nix
-        python
-        ruby
-        rust
-        toml
-        typescript
-        vue
-        yaml
-      ]
-    )
-  );
+  treesitterGrammars = with pkgs.unstable.vimPlugins.nvim-treesitter-parsers; [
+    bash
+    comment
+    css
+    dockerfile
+    elixir
+    fish
+    gitattributes
+    gitignore
+    go
+    gomod
+    gowork
+    hcl
+    javascript
+    jq
+    json5
+    json
+    lua
+    make
+    markdown
+    nix
+    python
+    ruby
+    rust
+    toml
+    typescript
+    vue
+    yaml
+  ];
+
+  # combine grammar .so files into a single directory
+  treesitterGrammarsJoined = pkgs.symlinkJoin {
+    name = "nvim-treesitter-grammars";
+    paths = treesitterGrammars;
+  };
 in
 {
   options.x.home.editor.neovim = {
@@ -107,7 +108,7 @@ in
     # we hardcode a symlink here so that we can refer to it in our lazy config
     home.file."./${localTreesitterPath}" = {
       recursive = true;
-      source = treesitterWithGrammars;
+      source = treesitterGrammarsJoined;
     };
   };
 }
