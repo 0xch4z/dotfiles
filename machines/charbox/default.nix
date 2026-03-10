@@ -8,10 +8,6 @@
   nixpkgs.config.allowUnfree = true;
 
   virtualisation.docker.enable = true;
-  virtualisation.docker.rootless = {
-    enable = true;
-    setSocketVariable = true;
-  };
 
   services.keyd = {
     enable = true;
@@ -113,6 +109,15 @@
   };
 
   networking.hostName = "charbox"; # Define your hostname.
+  networking.nameservers = [ "8.8.8.8" ];
+  networking.defaultGateway = {
+    address = "192.168.100.1";
+    interface = "enp12s0";
+  };
+  networking.interfaces.enp12s0.ipv4.addresses = [{
+    address = "192.168.100.69";
+    prefixLength = 24;
+  }];
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
