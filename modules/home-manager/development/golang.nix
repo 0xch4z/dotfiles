@@ -1,4 +1,11 @@
-{ pkgs, config, lib, ... }: {
+{
+  pkgs,
+  config,
+  lib,
+  homeDir,
+  ...
+}:
+{
   config = lib.mkIf config.x.home.development.enable {
     home.packages = with pkgs; [
       delve
@@ -15,8 +22,12 @@
       protoc-gen-go
       protoc-gen-go-grpc
     ];
-    home.sessionPath = [ "$HOME/${config.programs.go.env.GOPATH}/bin" ];
+    home.sessionPath = [ "${homeDir}/go/bin" ];
 
-    programs = { go = { enable = true; }; };
+    programs = {
+      go = {
+        enable = true;
+      };
+    };
   };
 }
