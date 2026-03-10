@@ -10,10 +10,12 @@
       with pkgs;
       [
         actionlint
+        autotools-language-server
+        x.actions-languageserver
         buildpack
         clang
-        (lib.hiPrio gcc)
         cmake
+        (lib.hiPrio gcc)
         envsubst
         gnumake
         go-task
