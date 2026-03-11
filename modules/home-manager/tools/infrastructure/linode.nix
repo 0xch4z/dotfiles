@@ -1,8 +1,9 @@
-{pkgs, config, lib, ...}: {
+{self, pkgs, config, lib, ...}: {
   config = lib.mkIf config.x.home.tools.infrastructure.enable {
     home = {
-      packages = with pkgs; [
-        linode-cli
+      packages = [
+        pkgs.linode-cli
+        self.inputs.linodectl.packages.${pkgs.system}.default
       ];
     };
   };

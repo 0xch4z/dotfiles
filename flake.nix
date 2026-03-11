@@ -67,6 +67,9 @@
     gauntlet.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprcursor-phinger.url = "github:jappie3/hyprcursor-phinger";
+
+    linodectl.url = "github:0xch4z/linodectl";
+    linodectl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, ... }: {
