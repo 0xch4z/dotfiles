@@ -6,6 +6,10 @@
 }: {
   ids.uids.nixbld = 300;
 
+  networking.hostName = "charbook";
+  networking.computerName = "charbook";
+  networking.localHostName = "charbook";
+
   system.primaryUser = "char";
 
   # environment.shells = [pkgs.fish];
@@ -59,6 +63,8 @@
       };
     };
   };
+
+  services.openssh.enable = true;
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
