@@ -1,8 +1,21 @@
-self @ { lib, inputs, constants, ... }:
+self@{
+  lib,
+  inputs,
+  constants,
+  ...
+}:
 let
   inherit (builtins) attrNames attrValues elemAt;
   inherit (constants) allPlatforms defaultNixpkgsConfig;
-  inherit (lib) lists literalExpression types readFile mapAttrs strings mkOption;
+  inherit (lib)
+    lists
+    literalExpression
+    types
+    readFile
+    mapAttrs
+    strings
+    mkOption
+    ;
   inherit (lists) foldl';
   inherit (strings) hasInfix replaceStrings;
 
@@ -13,7 +26,8 @@ let
     self.outputs.roles
   ];
 
-  mkDesktopEnabledOption = config: description:
+  mkDesktopEnabledOption =
+    config: description:
     mkOption {
       inherit description;
       type = types.bool;
@@ -21,30 +35,38 @@ let
       defaultText = literalExpression "config.desktop.hyprland.enable";
     };
 
-  mkEnabledOption = description:
+  mkEnabledOption =
+    description:
     mkOption {
       inherit description;
       type = types.bool;
       default = true;
     };
 
+  mkIntOption =
+    description: default:
+    mkOption {
+      inherit description default;
+      type = types.bool;
+    };
+
   # determines whether the given system is darwin.
-  isDarwin = system:
-    hasInfix "darwin" system;
+  isDarwin = system: hasInfix "darwin" system;
 
   # pkgsFor gets the packages for the given (platform) system.
-  pkgsFor = system:
+  pkgsFor =
+    system:
     let
       pkgs = if (isDarwin system) then inputs.nixpkgs-darwin else inputs.nixpkgs;
     in
-      import pkgs {
-        inherit system;
-        config = {
-          allowBroken = true;
-          allowUnfree = true;
-        };
-        overlays = [self.overlays];
+    import pkgs {
+      inherit system;
+      config = {
+        allowBroken = true;
+        allowUnfree = true;
       };
+      overlays = [ self.overlays ];
+    };
 
   # systemFactories contain OS-specific system factories.
   # key: os
@@ -65,19 +87,18 @@ let
     darwin = "/Users";
   };
 
-  homeDirFor = { variant, user }:
-    "${(systemHomePrefix.${variant})}/${user}";
+  homeDirFor = { variant, user }: "${(systemHomePrefix.${variant})}/${user}";
 
   # osSpecificSystemModules contain OS-specific module lists.
   # key: os
   osSpecificSystemModules = {
-    linux  = [];
+    linux = [ ];
     darwin = [
     ];
   };
 
   osSpecificHomeModules = {
-    linux  = [];
+    linux = [ ];
     darwin = [
       # link applications to "/Applications" dir for macos
       inputs.mac-app-util.homeManagerModules.default
@@ -85,10 +106,12 @@ let
   };
 
   # nixpkgsModuleFactory
-  nixpkgsModuleFactory = {
+  nixpkgsModuleFactory =
+    {
       system,
       config ? defaultNixpkgsConfig,
-    }: {
+    }:
+    {
       nixpkgs.config = config;
       nixpkgs.hostPlatform = {
         inherit system;
@@ -97,9 +120,17 @@ let
     };
 
   # machineConfigurationFactory builds the given machine's system configuration.
-  machineConfigurationFactory = machine:
+  machineConfigurationFactory =
+    machine:
     let
-      inherit (machine) hostname os system users variant wsl;
+      inherit (machine)
+        hostname
+        os
+        system
+        users
+        variant
+        wsl
+        ;
 
       user = elemAt users 0;
       userhost = "${user}@${hostname}";
@@ -114,87 +145,152 @@ let
     in
     systemFactories.${variant} {
       specialArgs = {
-        inherit system inputs lib hostname os self machine homeDir;
+        inherit
+          system
+          inputs
+          lib
+          hostname
+          os
+          self
+          machine
+          homeDir
+          ;
         nixpkgs = inputs.nixpkgs;
       };
       modules = [
         nixpkgsModule
         machineModule
-        homeManagerFactory {
+        homeManagerFactory
+        {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit variant userhost homeDir self; };
-          home-manager.users.${user}.imports = baseModules ++ osSpecificHomeModules.${os} ++ [
-            ({config, lib, ...}: import homeModule {
-              inherit self user inputs config lib pkgs homeDir;
-              nixpkgs = inputs.nixpkgs;
-            })
-          ];
+          home-manager.extraSpecialArgs = {
+            inherit
+              variant
+              userhost
+              homeDir
+              self
+              ;
+          };
+          home-manager.users.${user}.imports =
+            baseModules
+            ++ osSpecificHomeModules.${os}
+            ++ [
+              (
+                { config, lib, ... }:
+                import homeModule {
+                  inherit
+                    self
+                    user
+                    inputs
+                    config
+                    lib
+                    pkgs
+                    homeDir
+                    ;
+                  nixpkgs = inputs.nixpkgs;
+                }
+              )
+            ];
         }
-      ] ++ lib.optionals wsl [
+      ]
+      ++ lib.optionals wsl [
         inputs.wsl.nixosModules.wsl
       ];
     };
 
   # homeConfigurationFactory builds the given user's home configuration.
-  homeConfigurationFactory = home:
+  homeConfigurationFactory =
+    home:
     let
-      inherit (home) variant system user userhost os;
+      inherit (home)
+        variant
+        system
+        user
+        userhost
+        os
+        ;
 
       homeDir = homeDirFor { inherit user variant; };
-      homeUserModule = { home.username = "${user}"; };
+      homeUserModule = {
+        home.username = "${user}";
+      };
       homeModule = ./home/${userhost};
-      nixpkgsModule = { nixpkgs.config = defaultNixpkgsConfig; };
+      nixpkgsModule = {
+        nixpkgs.config = defaultNixpkgsConfig;
+      };
 
       pkgs = pkgsFor system;
 
       extraSpecialArgs = {
-        inherit self home system user userhost homeDir;
+        inherit
+          self
+          home
+          system
+          user
+          userhost
+          homeDir
+          ;
 
         nixpkgs = inputs.nixpkgs;
       };
     in
     inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs extraSpecialArgs;
-      modules = baseModules ++ osSpecificHomeModules.${os} ++ [
-        nixpkgsModule
-        homeUserModule
-        homeModule
-      ];
+      modules =
+        baseModules
+        ++ osSpecificHomeModules.${os}
+        ++ [
+          nixpkgsModule
+          homeUserModule
+          homeModule
+        ];
     };
 
-  templateFile = { file, data }:
+  templateFile =
+    { file, data }:
     let
       fileContent = readFile file;
 
-      placeholders =
-        map (name: "{{ " + name + " }}") (attrNames data);
-      newValues =
-        attrValues data;
+      placeholders = map (name: "{{ " + name + " }}") (attrNames data);
+      newValues = attrValues data;
     in
-      replaceStrings placeholders newValues fileContent;
+    replaceStrings placeholders newValues fileContent;
 in
-inputs.nixpkgs.lib.extend (_: _: {
-  inherit isDarwin pkgsFor systemFactories homeConfigurationFactory machineConfigurationFactory
-  templateFile mkEnabledOption mkDesktopEnabledOption;
+inputs.nixpkgs.lib.extend (
+  _: _: {
+    inherit
+      isDarwin
+      pkgsFor
+      systemFactories
+      homeConfigurationFactory
+      machineConfigurationFactory
+      templateFile
+      mkIntOption
+      mkEnabledOption
+      mkDesktopEnabledOption
+      ;
 
-  # forAllSystems builds an attribute set for each platform.
-  forAllPlatforms = lib.genAttrs allPlatforms;
+    # forAllSystems builds an attribute set for each platform.
+    forAllPlatforms = lib.genAttrs allPlatforms;
 
-  # filterHosts filters hosts by the given predicate.
-  filterHosts = predicate: builtins.filter predicate machineList;
+    # filterHosts filters hosts by the given predicate.
+    filterHosts = predicate: builtins.filter predicate machineList;
 
-  # e.g. darwinConfigurations = <{ "${HOSTNAME}" = { ... } }>
-  buildMachinesForOS = variant:
-    let
-      matchesOS = _: mach: mach.variant == variant;
-      machines = lib.filterAttrs matchesOS self.machines;
-    in
-    mapAttrs (_: mach: mach.configuration) machines;
+    # e.g. darwinConfigurations = <{ "${HOSTNAME}" = { ... } }>
+    buildMachinesForOS =
+      variant:
+      let
+        matchesOS = _: mach: mach.variant == variant;
+        machines = lib.filterAttrs matchesOS self.machines;
+      in
+      mapAttrs (_: mach: mach.configuration) machines;
 
-  # e.g. homeConfigurations = <{ "${USER}@${HOSTNAME}" = { ... } }>
-  buildHomeConfigurations = {}:
-    mapAttrs (_: home: home.configuration)
-      (foldl' (acc: users: acc // users) {}
-        (map (mach: mach.homes) (lib.attrValues self.machines)));
-})
+    # e.g. homeConfigurations = <{ "${USER}@${HOSTNAME}" = { ... } }>
+    buildHomeConfigurations =
+      { }:
+      mapAttrs (_: home: home.configuration) (
+        foldl' (acc: users: acc // users) { } (map (mach: mach.homes) (lib.attrValues self.machines))
+      );
+  }
+)

@@ -1,4 +1,5 @@
 {pkgs}: with pkgs; {
+  agentgateway = callPackage ./development/agentgateway.nix {};
   apple-nerdfont = callPackage ./fonts/apple-nerdfont.nix {};
   caffeine-bin = callPackage ./darwin/utility/caffine.nix {};
   actions-languageserver = callPackage ./development/actions-languageserver.nix {};

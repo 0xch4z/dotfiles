@@ -4,6 +4,7 @@
   };
 
   imports = [
+    ./agentgateway.nix
     ./ansible.nix
     ./aws.nix
     ./cloudflare.nix
