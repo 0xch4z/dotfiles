@@ -15,7 +15,9 @@
         buildpack
         clang
         cmake
+        codespell
         (lib.hiPrio gcc)
+        editorconfig-core-c
         envsubst
         gnumake
         go-task
@@ -23,6 +25,7 @@
         openssl.dev
         pkg-config
         plantuml
+        tree-sitter
         gemini-cli
       ]
       ++ lib.optionals stdenv.hostPlatform.isLinux [

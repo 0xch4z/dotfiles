@@ -1,5 +1,5 @@
 {self, pkgs, config, lib, ...}: {
-  config = lib.mkIf config.x.home.tools.infrastructure.enable {
+  config = lib.mkIf config.x.home.tools.infrastructure.linode.enable {
     home = {
       packages = [
         pkgs.linode-cli

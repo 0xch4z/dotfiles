@@ -1,5 +1,7 @@
-{ homeDir, config, pkgs, lib, user, ... }: {
-  x.role = "mac-workstation";
+{ lib, user, ... }: {
+  x.profile.workstation = true;
+  x.profile.work = true;
+
   x.home.applications.passwords._1pass.enable = true;
   x.home.editor.neovim.nightly = true;
   x.home.secrets.enable = true;

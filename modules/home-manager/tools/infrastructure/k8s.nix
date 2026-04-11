@@ -1,5 +1,5 @@
 { pkgs, config, lib, ... }: {
-  config = lib.mkIf config.x.home.tools.infrastructure.enable {
+  config = lib.mkIf config.x.home.tools.infrastructure.k8s.enable {
     home.shellAliases = { k = "kubectl"; };
     home.packages = with pkgs; [
       argocd

@@ -1,90 +1,28 @@
-{ nixpkgs, config, lib, pkgs, ... }:
-
+{ config, pkgs, ... }:
 {
-  imports = [ # Include the results of the hardware scan.
+  imports = [
     ./hardware-configuration.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
 
+  x.hardware.nvidia.enable = true;
+  x.hardware.audio.enable = true;
+  x.hardware.keyd.enable = true;
+  x.programs.nix-ld.enable = true;
+  x.desktop.wayland.enable = true;
+
   virtualisation.docker.enable = true;
 
-  services.keyd = {
-    enable = true;
-    keyboards.default = {
-      ids = [ "*" ]; # Apply to all keyboards
-      settings = {
-        alt = {
-          "left" = "C-left";
-          "right" = "C-right";
-        };
-        meta = {
-          "a" = "C-a";
-          "c" = "C-c";
-          "f" = "C-f";
-          "r" = "C-r";
-          "v" = "C-v";
-          "x" = "C-x";
-          "z" = "C-z";
-          "left" = "home";
-          "right" = "end";
-          "shift-left" = "S-home";
-          "shift-right" = "S-end";
-          "delete" = "S-home delete";
-        };
-      };
-    };
-  };
-
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    stdenv.cc.cc.lib
-    zlib
-    libpng
-    libjpeg
-    openssl
-    bzip2
-    xz
-    ncurses
-    readline
-    sqlite
-    libffi
-    expat
-    libxml2
-    libxslt
-    libGL
-    mesa
-    glib
-    gtk3
-    xorg.libX11
-    xorg.libXext
-    xorg.libXrender
-    xorg.libXi
-    xorg.libXrandr
-    xorg.libXcursor
-    xorg.libXinerama
-    xorg.libXxf86vm
-  ];
-
-  # themeing
-  qt.platformTheme = "qt5ct";
-
-  # Additional environment variables
-  environment.sessionVariables = {
-    QT_QPA_PLATFORM = "wayland;xcb";
-    QT_QPA_PLATFORMTHEME = "qt5ct";
-    NIXOS_OZONE_WL = "1";
-  };
-
   services.openssh = {
-    enable = true;
     ports = [ 22 ];
-    settings = { PasswordAuthentication = false; };
+    settings = {
+      PasswordAuthentication = false;
+    };
   };
 
   services.greetd = {
     enable = true;
-
     settings = {
       default_session = {
         command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
@@ -93,12 +31,8 @@
     };
   };
 
-  services.xserver = { videoDrivers = [ "nvidia" ]; };
-
   boot.loader = {
-    systemd-boot.enable = true;
     systemd-boot.configurationLimit = 10;
-    efi.canTouchEfiVariables = true;
     systemd-boot.extraEntries = {
       "windows.conf" = ''
         title Windows
@@ -108,124 +42,31 @@
     timeout = 3;
   };
 
-  networking.hostName = "charbox"; # Define your hostname.
+  networking.hostName = "charbox";
   networking.nameservers = [ "8.8.8.8" ];
   networking.defaultGateway = {
     address = "192.168.100.1";
     interface = "enp12s0";
   };
-  networking.interfaces.enp12s0.ipv4.addresses = [{
-    address = "192.168.100.69";
-    prefixLength = 24;
-  }];
-
-  time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
+  networking.interfaces.enp12s0.ipv4.addresses = [
+    {
+      address = "192.168.100.69";
+      prefixLength = 24;
+    }
+  ];
 
   users.users.ckenney = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" "docker" ];
-    packages = with pkgs; [ ffmpeg tree ];
-    initialPassword = "2300";
-  };
-
-  # sound
-  services.pulseaudio.enable = false; # in favor of pipewire
-  security.rtkit.enable =
-    true; # allows pipewire to request realtime scheduling. reduces audio latency.
-  services.pipewire = {
-    enable = true;
-
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  environment.pathsToLink =
-    [ "/share/applications" "/share/xdg-desktop-portal" ];
-
-  environment.systemPackages = with pkgs; [
-    mesa-demos
-    vulkan-tools
-    nvtopPackages.nvidia
-
-    libva
-    libva-utils
-
-    wget
-    alacritty
-
-    # sound
-    pavucontrol
-    pamixer
-    playerctl
-
-    mako
-    wl-clipboard
-    grim
-    slurp
-  ];
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver
+    extraGroups = [
+      "wheel"
+      "audio"
+      "docker"
     ];
-  };
-
-  hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management can cause sleep/suspend to fail.
-    powerManagement.enable = true;
-
-    # open-source drivers
-    open = true;
-
-    # latest stable
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-    #   version = "570.86.16"; # use new 570 drivers
-    #   sha256_64bit = "sha256-RWPqS7ZUJH9JEAWlfHLGdqrNlavhaR1xMyzs8lJhy9U=";
-    #   openSha256 = "sha256-DuVNA63+pJ8IB7Tw2gM4HbwlOh1bcDg2AN2mbEU9VPE=";
-    #   settingsSha256 = "sha256-9rtqh64TyhDF5fFAYiWl3oDHzKJqyOW3abpcf2iNRT8=";
-    #   usePersistenced = false;
-    # };
-    # forceFullCompositionPipeline; unnecessary on Wayland
-    nvidiaPersistenced = true; # keeps driver persistent, perf
-    nvidiaSettings = true;
-  };
-
-  # disable default driver in favor of nvidia
-  boot.blacklistedKernelModules = [ "nouveau" ];
-
-  environment.variables = {
-    # NVIDIA in Wayland
-    LIBVA_DRIVER_NAME = "nvidia";
-    XDG_SESSION_TYPE = "wayland";
-    WLR_NO_HARDWARE_CURSORS = "1";
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    NVIDIA_PRESERVE_VIDEO_MEMORY_ALLOCATIONS = "1";
-
-    # Tell electron apps to use wayland
-    NIXOS_OZONE_WL = "1";
-
-    # Firefox HW acceleration
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-    MOZ_ENABLE_WAYLAND = "1";
-    NVD_BACKEND = "direct";
-  };
-
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
+    packages = with pkgs; [
+      ffmpeg
+      tree
+    ];
+    initialPassword = "2300";
   };
 
   system.stateVersion = "24.11";

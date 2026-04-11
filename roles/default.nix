@@ -1,15 +1,15 @@
-{ config, lib, ... }:
-let
-  inherit (lib) mkIf mkOption types;
-
-in {
-  options.x.role = mkOption {
-    type = types.enum ["workstation" "nix-workstation" "mac-workstation" "none"];
-    default = "none";
+{ lib, ... }: {
+  options.x.profile = {
+    workstation = lib.mkEnableOption "workstation profile";
+    personal = lib.mkEnableOption "personal profile";
+    work = lib.mkEnableOption "work profile";
   };
 
   imports = [
+    ./workstation.nix
     ./mac-workstation.nix
     ./nix-workstation.nix
+    ./personal.nix
+    ./work.nix
   ];
 }

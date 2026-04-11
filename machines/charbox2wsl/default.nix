@@ -1,5 +1,4 @@
 {
-  lib,
   inputs,
   nixpkgs,
   pkgs,
@@ -9,8 +8,6 @@
   imports = [
     inputs.wsl.nixosModules.default
   ];
-
-  programs.fish.enable = true;
 
   users.users.char = {
     name = "char";
@@ -60,7 +57,6 @@
     ];
 
     package = pkgs.nixVersions.latest;
-    extraOptions = ''experimental-features = nix-command flakes'';
 
     gc = {
       automatic = true;
@@ -68,7 +64,5 @@
     };
   };
 
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
   system.stateVersion = "24.05";
 }

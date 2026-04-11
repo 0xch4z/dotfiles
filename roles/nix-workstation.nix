@@ -1,9 +1,5 @@
-{ lib, config, ... }:
-let cfg = config.x.role;
-in {
-  imports = [ ./workstation.nix ];
-
-  config = lib.mkIf (cfg == "nix-workstation") {
+{ pkgs, lib, config, ... }: {
+  config = lib.mkIf (config.x.profile.workstation && pkgs.stdenv.hostPlatform.isLinux) {
     home = {
       stateVersion = "22.11";
 

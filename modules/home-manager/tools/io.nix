@@ -17,11 +17,12 @@ in
   config = mkIf cfg.enable {
     home = {
       packages = with pkgs; [
-        hexdump
-        pv
-        iotop
         dool
+        hexdump
+        htop
+        iotop
         lsof
+        pv
         #strace #broken?
         hwatch
         watch

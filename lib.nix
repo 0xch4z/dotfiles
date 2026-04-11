@@ -68,12 +68,10 @@ let
   homeDirFor = { variant, user }:
     "${(systemHomePrefix.${variant})}/${user}";
 
-  # osSpecificSystemModules contain OS-specific module lists.
-  # key: os
-  osSpecificSystemModules = {
-    linux  = [];
-    darwin = [
-    ];
+  # variantSpecificSystemModules contain variant-specific system module lists.
+  variantSpecificSystemModules = {
+    nixos  = [ ./modules/linux ];
+    darwin = [ ./modules/darwin ];
   };
 
   osSpecificHomeModules = {
@@ -117,7 +115,7 @@ let
         inherit system inputs lib hostname os self machine homeDir;
         nixpkgs = inputs.nixpkgs;
       };
-      modules = [
+      modules = variantSpecificSystemModules.${variant} ++ [
         nixpkgsModule
         machineModule
         homeManagerFactory {

@@ -6,6 +6,12 @@ in {
   options.x.home.shell.fish = { enable = mkEnabledOption "enable fish shell"; };
 
   config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      bat
+      eza
+      grc
+    ];
+
     programs.fish = {
       enable = true;
 
