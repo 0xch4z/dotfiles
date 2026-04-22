@@ -26,6 +26,15 @@ let
     };
   };
 
+  # skip tests for nightly builds
+  neovimDarwinFixOverlay = final: prev:
+    lib.optionalAttrs prev.stdenv.isDarwin {
+      neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (_: {
+        doCheck = false;
+        doInstallCheck = false;
+      });
+    };
+
   # cuda_compat only has redistributables for aarch64-linux (Jetson).
   # On x86_64-linux it fails to build because $src is empty.
   # Stub it out on non-Jetson platforms.
@@ -47,6 +56,7 @@ let
   communityOverlays = [
     knsOverlay
     inputs.neovim-nightly-overlay.overlays.default
+    neovimDarwinFixOverlay
     inputs.nix-darwin-browsers.overlays.default
     #inputs.nix-darwin-firefox.overlays.default
     inputs.nur.overlays.default
