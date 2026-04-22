@@ -40,6 +40,10 @@
         + lib.optionalString pkgs.stdenv.hostPlatform.isLinux ":${
           lib.makeSearchPath "lib/pkgconfig" [ pkgs.dbus.dev ]
         }";
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      # make nix-managed clang search macOS SDK lib paths
+      CGO_LDFLAGS = "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib";
     };
   };
 }
