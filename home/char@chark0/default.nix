@@ -3,9 +3,11 @@
     ../../profiles/nixos
   ];
 
-  x.profile.workstation = true;
   x.profile.personal = true;
+  x.profile.workstation = true;
 
-  home.stateVersion = lib.mkForce "22.11";
+  x.home.desktop.enable = false;
+
+  home.stateVersion = lib.mkForce "24.11";
   home.homeDirectory = "/home/char";
 }

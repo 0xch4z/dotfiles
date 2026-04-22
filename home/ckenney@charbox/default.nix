@@ -1,11 +1,10 @@
 { lib, self, pkgs, ... }: {
   imports = [
     ../../profiles/nixos
-
-    self.outputs.modules
   ];
 
-  x.role = "nix-workstation";
+  x.profile.workstation = true;
+  x.profile.personal = true;
 
   x.home.editor.neovim.nightly = true;
 

@@ -59,4 +59,5 @@ in
     charbox2wsl = { os = "linux"; arch = "x86_64"; variant = "nixos"; wsl = true; };
     charbox = { os = "linux"; arch = "x86_64"; variant = "nixos"; };
     charbit = { os = "linux"; arch = "x86_64"; variant = "nixos"; };
+    chark0 = { os = "linux"; arch = "x86_64"; variant = "nixos"; };
   }

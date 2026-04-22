@@ -1,9 +1,5 @@
-{ lib, config, homeDir, ... }:
-let cfg = config.x.role;
-in {
-  imports = [ ./workstation.nix ];
-
-  config = lib.mkIf (cfg == "mac-workstation") {
+{ pkgs, lib, config, homeDir, ... }: {
+  config = lib.mkIf (config.x.profile.workstation && pkgs.stdenv.hostPlatform.isDarwin) {
     x.home.tools.containers.colima.enable = true;
     x.home.desktop.backend = "aerospace";
     x.home.applications.utility.caffeine.enable = true;

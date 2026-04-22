@@ -17,8 +17,10 @@ in
   config = mkIf cfg.enable {
     home = {
       packages = with pkgs; [
-        xz
+        file
         fzf
+        glow
+        xz
         zoekt
       ];
     };

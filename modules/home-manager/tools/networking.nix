@@ -22,8 +22,10 @@ in {
           mtr
           netcat
           nghttp2
+          rsync
           socat
           trippy
+          wget
           wrk
         ]
         ++ (if pkgs.stdenv.hostPlatform.isDarwin then [ iproute2mac ] else [ ]);

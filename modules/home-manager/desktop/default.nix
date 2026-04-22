@@ -1,6 +1,6 @@
-{ self, ... }:
+{ self, config, pkgs, ... }:
 let
-  inherit (self.lib) mkEnabledOption mkOption types;
+  inherit (self.lib) mkEnabledOption mkIf mkOption types;
 in {
   options.x.home.desktop = {
     enable = mkEnabledOption "enable desktop";
@@ -15,4 +15,10 @@ in {
     ./aerospace.nix
     ./hyprland
   ];
+
+  config = mkIf config.x.home.desktop.enable {
+    home.packages = with pkgs; [
+      xdg-utils
+    ];
+  };
 }
