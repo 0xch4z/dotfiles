@@ -14,33 +14,69 @@ let
   localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
 
   treesitterGrammars = with pkgs.unstable.vimPlugins.nvim-treesitter-parsers; [
+    awk
     bash
     comment
+    c
+    cpp
     css
+    csv
+    cue
+    cuda
     dockerfile
     elixir
+    erlang
     fish
     gitattributes
+    gitcommit
     gitignore
+    git_config
     go
     gomod
+    gosum
     gowork
     hcl
+    ini
     javascript
     jq
+    jsdoc
     json5
     json
     lua
+    luadoc
+    luap
     make
     markdown
+    mermaid
     nix
+    objc
+    ocaml
+    perl
+    php
+    phpdoc
+    promql
     python
+    regex
+    rst
     ruby
     rust
+    scala
+    scheme
+    scss
+    starlark
+    svelte
+    swift
+    ssh_config
+    terraform
     toml
     typescript
+    vhs
+    vim
+    vimdoc
     vue
+    xml
     yaml
+    zig
   ];
 
   # combine grammar .so files into a single directory
