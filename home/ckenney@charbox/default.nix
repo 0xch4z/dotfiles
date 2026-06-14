@@ -6,7 +6,7 @@
   x.profile.workstation = true;
   x.profile.personal = true;
 
-  x.home.editor.neovim.nightly = true;
+  x.home.editor.neovim.nightly = false;
 
   programs.fuzzel = {
     enable = true;

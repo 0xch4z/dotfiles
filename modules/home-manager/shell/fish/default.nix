@@ -1,9 +1,17 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkEnabledOption mkIf;
   cfg = config.x.home.shell.fish;
-in {
-  options.x.home.shell.fish = { enable = mkEnabledOption "enable fish shell"; };
+in
+{
+  options.x.home.shell.fish = {
+    enable = mkEnabledOption "enable fish shell";
+  };
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
@@ -15,8 +23,7 @@ in {
     programs.fish = {
       enable = true;
 
-      loginShellInit =
-        "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/${config.home.username}/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
+      loginShellInit = "fish_add_path --move --prepend --path $HOME/.nix-profile/bin /run/wrappers/bin /etc/profiles/per-user/${config.home.username}/bin /run/current-system/sw/bin /nix/var/nix/profiles/default/bin";
 
       interactiveShellInit = ''
         set TERM "xterm-256color"
@@ -32,7 +39,7 @@ in {
         end
 
         # automatic devenv
-        # direnv hook fish | source
+        direnv hook fish | source
 
         # fifc setup
         set -x fifc_editor ${config.home.sessionVariables."EDITOR"}
@@ -45,7 +52,8 @@ in {
       '';
 
       plugins = with pkgs.fishPlugins; [
-        { # prompt
+        {
+          # prompt
           name = "hydro";
           src = hydro.src;
         }
@@ -53,27 +61,33 @@ in {
           name = "grc";
           src = grc.src;
         }
-        { # auto-match symbols
+        {
+          # auto-match symbols
           name = "pisces";
           src = pisces.src;
         }
-        { # fzf search mnemonics
+        {
+          # fzf search mnemonics
           name = "fzf-fish";
           src = fzf-fish.src;
         }
-        { # bash "compat"
+        {
+          # bash "compat"
           name = "bass";
           src = bass.src;
         }
-        { # completion
+        {
+          # completion
           name = "fifc";
           src = fifc.src;
         }
-        { # jump around
+        {
+          # jump around
           name = "z";
           src = z.src;
         }
-        { # colored man-pages
+        {
+          # colored man-pages
           name = "colored-man-pages";
           src = colored-man-pages.src;
         }

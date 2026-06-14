@@ -2,20 +2,22 @@
   description = "0xch4z's systems configurations";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
-    nixpkgs-darwin = { url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin"; };
+    nixpkgs-darwin = {
+      url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+    };
 
     # community
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
-      url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -24,9 +26,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops = { url = "github:Mic92/sops-nix"; };
+    sops = {
+      url = "github:Mic92/sops-nix";
+    };
 
-    nur = { url = "github:nix-community/nur"; };
+    nur = {
+      url = "github:nix-community/nur";
+    };
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -57,8 +63,7 @@
     # necessary for linking per-user apps to /Applications directory on MacOS
     mac-app-util.url = "github:hraban/mac-app-util";
 
-    ashell.url =
-      "github:MalpenZibo/ashell/220c7e06da3c6dc2cba7d256566771da3a81ece6";
+    ashell.url = "github:MalpenZibo/ashell/220c7e06da3c6dc2cba7d256566771da3a81ece6";
 
     # custom
     nixpkgs-kns-fork.url = "github:0xch4z/nixpkgs/kns-unix-support";
@@ -72,17 +77,19 @@
     linodectl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, ... }: {
-    constants = import ./constants.nix self;
-    overlays = import ./overlays.nix self;
-    lib = import ./lib.nix self;
-    users = import ./home self;
-    machines = import ./machines self;
-    modules = import ./modules;
-    roles = import ./roles;
+  outputs =
+    { self, ... }:
+    {
+      constants = import ./constants.nix self;
+      overlays = import ./overlays.nix self;
+      lib = import ./lib.nix self;
+      users = import ./home self;
+      machines = import ./machines self;
+      modules = import ./modules;
+      roles = import ./roles;
 
-    nixosConfigurations = self.lib.buildMachinesForOS "nixos";
-    darwinConfigurations = self.lib.buildMachinesForOS "darwin";
-    homeConfigurations = self.lib.buildHomeConfigurations { };
-  };
+      nixosConfigurations = self.lib.buildMachinesForOS "nixos";
+      darwinConfigurations = self.lib.buildMachinesForOS "darwin";
+      homeConfigurations = self.lib.buildHomeConfigurations { };
+    };
 }

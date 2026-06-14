@@ -55,7 +55,6 @@ let
 
   communityOverlays = [
     knsOverlay
-    inputs.neovim-nightly-overlay.overlays.default
     neovimDarwinFixOverlay
     inputs.nix-darwin-browsers.overlays.default
     #inputs.nix-darwin-firefox.overlays.default

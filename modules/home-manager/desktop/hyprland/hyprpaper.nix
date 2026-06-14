@@ -1,4 +1,9 @@
-{ config, lib, homeDir, ... }:
+{
+  config,
+  lib,
+  homeDir,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
@@ -22,11 +27,10 @@ in
       enable = true;
       settings = {
         ipc = "on";
-        splash = false;
-        splash_offset = 2.0;
+        splash = true;
 
         preload = [ wallpaper ];
-        wallpaper = [ ", ${wallpaper}" ];
+        wallpaper = [ ",${wallpaper}" ];
       };
     };
   };

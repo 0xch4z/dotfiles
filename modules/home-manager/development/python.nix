@@ -9,7 +9,7 @@
     home = {
       packages = with pkgs; [
         black
-        jupyter
+        #jupyter
         pyright
         pipenv
         #python3

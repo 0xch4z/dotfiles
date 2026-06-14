@@ -107,7 +107,7 @@ in
         if cfg.nightly then
           (self.inputs.neovim-nightly-overlay.packages.${pkgs.system}.default)
         else
-          pkgs.unstable.neovim;
+          self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim-unwrapped;
 
       viAlias = true;
       vimAlias = true;
@@ -115,6 +115,7 @@ in
       coc.enable = false;
       withNodeJs = true;
       defaultEditor = true;
+      sideloadInitLua = true;
     };
 
     # Symlink actual neovim lua config source.

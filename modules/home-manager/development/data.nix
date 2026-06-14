@@ -1,8 +1,14 @@
-{pkgs, config, lib, ...}: {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
   config = lib.mkIf config.x.home.development.enable {
     home.packages = with pkgs; [
       # protobuf
-      buf
+      # buf # buf is broken on latest nixpkgs
       protolint
 
       # csv
@@ -23,7 +29,7 @@
       yq-go
 
       # sql
-      nodePackages.sql-formatter
+      sql-formatter
       sqlite
     ];
   };

@@ -1,11 +1,19 @@
-{ pkgs, config, lib, ... }: {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
   config = lib.mkIf config.x.home.tools.infrastructure.k8s.enable {
-    home.shellAliases = { k = "kubectl"; };
+    home.shellAliases = {
+      k = "kubectl";
+    };
     home.packages = with pkgs; [
       argocd
       clusterctl
       helm-ls
-      kdash
+      #kdash # kdash is broken on latest nixpkgs (hash mismatch)
       kns
       #kubetrim
       krew

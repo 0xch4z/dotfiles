@@ -42,7 +42,7 @@ let
       };
     };
     typescript = {
-      command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
+      command = "${pkgs.typescript-language-server}/bin/typescript-language-server";
       args = [ "--stdio" ];
       extensionToLanguage = {
         ".ts" = "typescript";
@@ -97,7 +97,7 @@ let
       };
     };
     tailwindcss = {
-      command = "${pkgs.nodePackages."@tailwindcss/language-server"}/bin/tailwindcss-language-server";
+      command = "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
       args = [ "--stdio" ];
       extensionToLanguage = {
         ".css" = "tailwindcss";
