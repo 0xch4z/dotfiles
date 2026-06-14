@@ -1,4 +1,10 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  self,
+  ...
+}:
 let
   inherit (lib)
     literalExpression
@@ -7,8 +13,29 @@ let
     types
     ;
 
+  suspendTimeout = 3600;
   cfg = config.x.home.desktop.hyprland.hypridle;
   hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
+
+  suspendGuard = pkgs.writeShellApplication {
+    name = "hypridle-suspend-guard";
+    runtimeInputs = with pkgs; [
+      coreutils
+      systemd
+    ];
+    text = builtins.readFile ./hypridle-suspend-guard.sh;
+  };
+
+  idleCtl = pkgs.writeShellApplication {
+    name = "idle-ctl";
+    runtimeInputs = with pkgs; [ coreutils ];
+    text = self.lib.templateFile {
+      file = ./idle-ctl.sh;
+      data = {
+        IDLE_SECONDS = toString suspendTimeout;
+      };
+    };
+  };
 in
 {
   options.x.home.desktop.hyprland.hypridle = {
@@ -21,6 +48,8 @@ in
   };
 
   config = lib.mkIf (hyprlandEnabled && cfg.enable) {
+    home.packages = [ idleCtl ];
+
     # See: https://wiki.hyprland.org/Hypr-Ecosystem/hypridle
     services.hypridle = {
       enable = true;
@@ -49,7 +78,7 @@ in
           }
           {
             timeout = 3600; # 60min
-            on-timeout = "systemctl suspend"; # suspend
+            on-timeout = "${suspendGuard}/bin/hypridle-suspend-guard"; # guarded by idle-ctl
           }
         ];
       };
