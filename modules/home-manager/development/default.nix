@@ -10,6 +10,7 @@ in
   imports = [
     ./ai
     ./build.nix
+    ./c.nix
     ./data.nix
     ./elixir.nix
     ./git.nix
