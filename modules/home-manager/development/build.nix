@@ -12,6 +12,7 @@
         actionlint
         autotools-language-server
         x.actions-languageserver
+        bazelisk
         buildpack
         clang
         cmake
