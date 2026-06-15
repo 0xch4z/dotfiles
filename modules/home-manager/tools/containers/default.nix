@@ -1,7 +1,8 @@
 { self, ... }:
 let
   inherit (self.lib) mkEnableOption;
-in {
+in
+{
   options.x.home.tools.containers = {
     enable = mkEnableOption "enable container tools";
   };

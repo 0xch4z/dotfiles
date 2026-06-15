@@ -1,4 +1,4 @@
-{  pkgs, ... }: {
+{ pkgs, ... }: {
   ids.uids.nixbld = 300;
 
   networking.hostName = "charbook";
@@ -20,6 +20,9 @@
 
   nix = {
     enable = false;
-    settings.trusted-users = ["root" "char"];
+    settings.trusted-users = [
+      "root"
+      "char"
+    ];
   };
 }

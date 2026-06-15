@@ -11,13 +11,11 @@ let
   cfg = config.x.home.applications.messaging;
 
   slack-wayland = pkgs.unstable.slack.overrideAttrs (prev: {
-    installPhase =
-      (prev.installPhase or "")
-      + ''
-        wrapProgram $out/bin/slack \
-          --add-flags "--enable-features=UseOzonePlatform,WaylandWindowDecorations" \
-          --add-flags "--ozone-platform=wayland"
-      '';
+    installPhase = (prev.installPhase or "") + ''
+      wrapProgram $out/bin/slack \
+        --add-flags "--enable-features=UseOzonePlatform,WaylandWindowDecorations" \
+        --add-flags "--ozone-platform=wayland"
+    '';
   });
 in
 {

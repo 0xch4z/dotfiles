@@ -1,10 +1,16 @@
-args@{ config, self, pkgs, ... }:
+args@{
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkIf mkEnableOption mkForce;
   inherit (self.inputs) zen-browser;
 
   cfg = config.x.home.applications.browser.zen;
-in {
+in
+{
   imports = [ zen-browser.homeModules.beta ];
 
   options.x.home.applications.browser.zen = {

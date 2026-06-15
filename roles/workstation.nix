@@ -1,6 +1,8 @@
 { lib, config, ... }: {
   config = lib.mkIf config.x.profile.workstation {
-    home.sessionVariables = { AVANTE_DEFAULT_PROVIDER = "claude-code"; };
+    home.sessionVariables = {
+      AVANTE_DEFAULT_PROVIDER = "claude-code";
+    };
 
     programs.home-manager.enable = lib.mkDefault true;
 
@@ -14,8 +16,12 @@
           firefox.enable = lib.mkDefault true;
           zen.enable = lib.mkDefault true;
         };
-        music = { spotify.enable = lib.mkDefault true; };
-        passwords = { bitwarden.enable = lib.mkDefault true; };
+        music = {
+          spotify.enable = lib.mkDefault true;
+        };
+        passwords = {
+          bitwarden.enable = lib.mkDefault true;
+        };
         terminal.alacritty.enable = lib.mkDefault true;
         terminal.kitty.enable = lib.mkDefault true;
       };

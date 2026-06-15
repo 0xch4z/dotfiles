@@ -1,7 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.x.hardware.audio;
-in {
+in
+{
   options.x.hardware.audio = {
     enable = lib.mkEnableOption "Pipewire audio";
   };

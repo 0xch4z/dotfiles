@@ -1,6 +1,8 @@
 # default.nix for building the is-macbook-display Swift CLI tool
 
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 pkgs.swiftPackages.stdenv.mkDerivation rec {
   pname = "is-macbook-display-only";
@@ -27,8 +29,7 @@ pkgs.swiftPackages.stdenv.mkDerivation rec {
   system = pkgs.stdenv.system;
 
   meta = with pkgs.lib; {
-    description =
-      "CLI tool to check MacBook display configuration and notch presence.";
+    description = "CLI tool to check MacBook display configuration and notch presence.";
     platforms = platforms.darwin;
   };
 }

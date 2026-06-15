@@ -1,7 +1,8 @@
 { pkgs, ... }:
 let
   lua = pkgs.lua5_4_compat;
-in pkgs.stdenv.mkDerivation {
+in
+pkgs.stdenv.mkDerivation {
   pname = "sbarlua";
   version = "0.1";
 

@@ -1,9 +1,15 @@
-{ config, pkgs, self, ... }:
+{
+  config,
+  pkgs,
+  self,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.applications.terminal.kitty;
-in {
+in
+{
   options.x.home.applications.terminal.kitty = {
     enable = mkEnableOption "Enable kitty module.";
   };

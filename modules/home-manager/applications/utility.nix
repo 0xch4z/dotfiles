@@ -1,9 +1,15 @@
-{ config, self, pkgs, ... }:
+{
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkIf mkEnableOption;
 
   cfg = config.x.home.applications.utility;
-in {
+in
+{
   options.x.home.applications.utility = {
     caffeine.enable = mkEnableOption "Enable caffeine app";
   };
@@ -13,10 +19,9 @@ in {
   };
 
   config = {
-    home.packages = with pkgs;
-      [
-        #(mkIf cfg.caffeine.enable x.caffeine-bin)
-        gitify
-      ];
+    home.packages = with pkgs; [
+      #(mkIf cfg.caffeine.enable x.caffeine-bin)
+      gitify
+    ];
   };
 }

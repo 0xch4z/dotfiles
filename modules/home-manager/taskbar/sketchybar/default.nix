@@ -1,7 +1,14 @@
-{pkgs, config, lib, homeDir, ...}:
+{
+  pkgs,
+  config,
+  lib,
+  homeDir,
+  ...
+}:
 let
   cfg = config.x.home.taskbar.sketchybar;
-in {
+in
+{
   options.x.home.taskbar.sketchybar = {
     enable = lib.mkEnableOption "enable sketchybar";
 
@@ -17,45 +24,46 @@ in {
       sketchybar-app-font
     ];
 
-    xdg.configFile."sketchybar/.luarc.json" = let 
-      config = {
-        runtime.version = "LuaJIT";
-        runtime.path = [
-          "lua"
-          "sketchybarrc"
-          "config/init.lua"
-          "config/?/init.lua"
-          "?.lua"
-          "?/init.lua"
-        ];
-        workspace = {
-          checkThirdParty = false;
-          library = [
-            "${pkgs.lua54Packages.cjson}/lib/lua/5.4"
-            "${pkgs.lua54Packages.luaposix}/lib/lua/5.4"
-            "${pkgs.x.sbarlua}/lua"
+    xdg.configFile."sketchybar/.luarc.json" =
+      let
+        config = {
+          runtime.version = "LuaJIT";
+          runtime.path = [
+            "lua"
+            "sketchybarrc"
+            "config/init.lua"
+            "config/?/init.lua"
+            "?.lua"
+            "?/init.lua"
           ];
+          workspace = {
+            checkThirdParty = false;
+            library = [
+              "${pkgs.lua54Packages.cjson}/lib/lua/5.4"
+              "${pkgs.lua54Packages.luaposix}/lib/lua/5.4"
+              "${pkgs.x.sbarlua}/lua"
+            ];
+          };
         };
+      in
+      {
+        text = builtins.toJSON config;
       };
-    in {
-      text = builtins.toJSON config;
-    };
 
     xdg.configFile."sketchybar/sketchybarrc" = {
-      text =
-        ''
-          #! ${pkgs.lua5_4_compat}/bin/lua
-          package.cpath = package.cpath
-            .. ";${pkgs.lua54Packages.cjson}/lib/lua/5.4/?.so"
-            .. ";${pkgs.lua54Packages.luaposix}/lib/lua/5.4/?.so"
-            .. ";${pkgs.x.sbarlua}/lib/?.so"
+      text = ''
+        #! ${pkgs.lua5_4_compat}/bin/lua
+        package.cpath = package.cpath
+          .. ";${pkgs.lua54Packages.cjson}/lib/lua/5.4/?.so"
+          .. ";${pkgs.lua54Packages.luaposix}/lib/lua/5.4/?.so"
+          .. ";${pkgs.x.sbarlua}/lib/?.so"
 
-          package.path = package.path
-            .. ";${config.xdg.configHome}/sketchybar/?/init.lua"
-            .. ";${config.xdg.configHome}/sketchybar/config/?.lua"
+        package.path = package.path
+          .. ";${config.xdg.configHome}/sketchybar/?/init.lua"
+          .. ";${config.xdg.configHome}/sketchybar/config/?.lua"
 
-          require("config")
-        '';
+        require("config")
+      '';
       executable = true;
     };
 
@@ -70,8 +78,7 @@ in {
     xdg.configFile.sketchybar = {
       enable = true;
       recursive = true;
-      source = config.lib.file.mkOutOfStoreSymlink
-        "${homeDir}/.dotfiles/modules/home-manager/taskbar/sketchybar/config";
+      source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/.dotfiles/modules/home-manager/taskbar/sketchybar/config";
       target = "sketchybar/config";
     };
   };

@@ -1,13 +1,19 @@
-{ pkgs ? import <nixpkgs> {} }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 let
   version = "1.1.3";
-in pkgs.stdenv.mkDerivation rec {
+in
+pkgs.stdenv.mkDerivation rec {
   inherit version;
   pname = "signal";
 
   buildInputs = [ pkgs.undmg ];
   sourceRoot = ".";
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     mkdir -p $out/Applications
     cp -r Caffeine.app $out/Applications/Caffeine.app

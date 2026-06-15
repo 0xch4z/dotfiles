@@ -4,13 +4,24 @@
 #
 # The sops encrypted file is at ${ROOT}/home/${USER}@${HOST}/secrets.enc.yaml.
 
-{ self, config, lib, userhost, user, homeDir, ... }:
+{
+  self,
+  config,
+  lib,
+  userhost,
+  user,
+  homeDir,
+  ...
+}:
 let
   dotfilesDir = "${homeDir}/.dotfiles";
 
-  mkSecret = dir: filename:
-    let sopsFile = "${dir}/${filename}.enc.yaml";
-    in {
+  mkSecret =
+    dir: filename:
+    let
+      sopsFile = "${dir}/${filename}.enc.yaml";
+    in
+    {
       inherit sopsFile;
       #owner = builtins.trace "owner: ${user}" user;
       format = "yaml";
@@ -23,7 +34,8 @@ let
   #   (mkSecret  filename);
 
   cfg = config.x.home.secrets;
-in {
+in
+{
   options.x.home.secrets = {
     enable = lib.mkEnableOption "enable sops integration";
     keyFile = lib.mkOption {

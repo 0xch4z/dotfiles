@@ -1,4 +1,11 @@
-{self, pkgs, config, lib, ...}: {
+{
+  self,
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
   config = lib.mkIf config.x.home.tools.infrastructure.linode.enable {
     home = {
       packages = [

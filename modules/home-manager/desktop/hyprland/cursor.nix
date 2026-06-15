@@ -1,7 +1,13 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.x.home.desktop;
-in {
+in
+{
   config = lib.mkIf (cfg.backend == "hyprland") {
     home.packages = with pkgs; [
       capitaine-cursors

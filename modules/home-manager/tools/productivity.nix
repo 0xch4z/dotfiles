@@ -1,9 +1,15 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.tools.productivity;
-in {
+in
+{
   options.x.home.tools.productivity = {
     enable = mkEnableOption "enable productivity tools";
   };

@@ -1,8 +1,14 @@
-{ lib, nixpkgs, pkgs, ... }: {
+{
+  lib,
+  nixpkgs,
+  pkgs,
+  ...
+}:
+{
   programs.fish.enable = true;
 
   fonts = {
-    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix {}) ];
+    packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix { }) ];
   };
 
   system = {

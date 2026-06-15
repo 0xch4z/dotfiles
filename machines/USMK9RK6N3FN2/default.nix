@@ -7,7 +7,7 @@
     shell = pkgs.fish;
   };
 
-  nix.settings.trusted-users = ["ckenney"];
+  nix.settings.trusted-users = [ "ckenney" ];
 
   services.nix-daemon.enable = true;
 }

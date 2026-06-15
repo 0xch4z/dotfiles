@@ -1,12 +1,22 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkIf mkOption mkEnableOption;
 
   cfg = config.x.home.tools;
-in {
+in
+{
   options.x.home.tools = {
     coreutils = mkOption {
-      type = self.lib.types.enum ["essential" "full" "none"];
+      type = self.lib.types.enum [
+        "essential"
+        "full"
+        "none"
+      ];
       default = "none";
     };
   };

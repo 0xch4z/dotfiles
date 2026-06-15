@@ -1,7 +1,13 @@
-{ self, config, lib, ... }:
+{
+  self,
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.x.home.tools.infrastructure;
-in {
+in
+{
   options.x.home.tools.infrastructure = {
     enable = self.lib.mkEnableOption "enable infrastructure tools";
 

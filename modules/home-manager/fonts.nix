@@ -1,9 +1,16 @@
-{ self, config, pkgs, lib, ... }:
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.fonts;
-in {
+in
+{
   options.x.home.fonts = {
     enable = mkEnableOption "enable fonts";
     apple-nerdfont.enable = mkEnableOption "enable apple-nerdfont";

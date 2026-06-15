@@ -1,4 +1,4 @@
-{lib, ...}: {
+{ lib, ... }: {
   options.x.home.theme = {
     font.mono = lib.mkOption {
       type = lib.types.str;

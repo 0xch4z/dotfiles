@@ -1,7 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.x.desktop.wayland;
-in {
+in
+{
   options.x.desktop.wayland = {
     enable = lib.mkEnableOption "Wayland desktop session";
   };

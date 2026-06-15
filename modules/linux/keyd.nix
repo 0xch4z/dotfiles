@@ -1,7 +1,8 @@
 { config, lib, ... }:
 let
   cfg = config.x.hardware.keyd;
-in {
+in
+{
   options.x.hardware.keyd = {
     enable = lib.mkEnableOption "keyd keyboard remapping (Mac-style bindings)";
   };

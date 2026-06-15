@@ -1,7 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.x.programs.nix-ld;
-in {
+in
+{
   options.x.programs.nix-ld = {
     enable = lib.mkEnableOption "nix-ld with common libraries";
   };

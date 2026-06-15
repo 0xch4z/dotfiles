@@ -15,10 +15,11 @@ let
     lua54Packages = prev.lua54Packages // {
       luaposix = prev.lua54Packages.luaposix.overrideAttrs (old: {
         version = "36.3";
-        knownRockspec = (prev.fetchurl {
-          url = "mirror://luarocks/luaposix-36.3-1.rockspec";
-          sha256 = "6/sAsOWrrXjdzPlAp/Z5FetQfzrkrf6TmOz3FZaBiks=";
-        }).outPath;
+        knownRockspec =
+          (prev.fetchurl {
+            url = "mirror://luarocks/luaposix-36.3-1.rockspec";
+            sha256 = "6/sAsOWrrXjdzPlAp/Z5FetQfzrkrf6TmOz3FZaBiks=";
+          }).outPath;
         src = prev.fetchzip {
           url = "http://github.com/luaposix/luaposix/archive/v36.3.zip";
           sha256 = "RKDH1sB7r7xDqueByWwps5fBfl5GBL9L86FjzfStBUw=";
@@ -28,7 +29,8 @@ let
   };
 
   # skip tests for nightly builds
-  neovimDarwinFixOverlay = final: prev:
+  neovimDarwinFixOverlay =
+    final: prev:
     lib.optionalAttrs prev.stdenv.isDarwin {
       neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (_: {
         doCheck = false;
@@ -39,19 +41,22 @@ let
   # cuda_compat only has redistributables for aarch64-linux (Jetson).
   # On x86_64-linux it fails to build because $src is empty.
   # Stub it out on non-Jetson platforms.
-  cudaCompatFixOverlay = final: prev:
+  cudaCompatFixOverlay =
+    final: prev:
     lib.optionalAttrs (prev.stdenv.hostPlatform.system != "aarch64-linux") {
-      cudaPackages = prev.cudaPackages.overrideScope (cfinal: cprev: {
-        cuda_compat = cprev.cuda_compat.overrideAttrs (old: {
-          src = null;
-          dontUnpack = true;
-          dontPatch = true;
-          dontConfigure = true;
-          dontBuild = true;
-          dontFixup = true;
-          installPhase = "mkdir -p $out/lib";
-        });
-      });
+      cudaPackages = prev.cudaPackages.overrideScope (
+        cfinal: cprev: {
+          cuda_compat = cprev.cuda_compat.overrideAttrs (old: {
+            src = null;
+            dontUnpack = true;
+            dontPatch = true;
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = "mkdir -p $out/lib";
+          });
+        }
+      );
     };
 
   communityOverlays = [
@@ -69,8 +74,10 @@ let
     x = import ./pkgs { pkgs = prev; };
   };
 
-in lib.composeManyExtensions (
-  communityOverlays ++ [
+in
+lib.composeManyExtensions (
+  communityOverlays
+  ++ [
     unstableOverlay
     customDerivationsOverlay
   ]

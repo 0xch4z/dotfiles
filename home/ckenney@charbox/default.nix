@@ -1,4 +1,10 @@
-{ lib, self, pkgs, ... }: {
+{
+  lib,
+  self,
+  pkgs,
+  ...
+}:
+{
   imports = [
     ../../profiles/nixos
   ];

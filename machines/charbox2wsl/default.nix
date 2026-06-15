@@ -4,7 +4,8 @@
   pkgs,
   hostname,
   ...
-}: {
+}:
+{
   imports = [
     inputs.wsl.nixosModules.default
   ];
@@ -36,11 +37,11 @@
   };
 
   hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = [pkgs.mesa.drivers];
+  hardware.graphics.extraPackages = [ pkgs.mesa.drivers ];
 
   nix = {
     settings = {
-      trusted-users = ["char"];
+      trusted-users = [ "char" ];
       accept-flake-config = true;
     };
 

@@ -1,7 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.x.hardware.nvidia;
-in {
+in
+{
   options.x.hardware.nvidia = {
     enable = lib.mkEnableOption "NVIDIA GPU support";
 

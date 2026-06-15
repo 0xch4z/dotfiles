@@ -1,9 +1,15 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.tools.containers.colima;
-in {
+in
+{
   options.x.home.tools.containers.colima = {
     enable = mkEnableOption "enable colima";
   };

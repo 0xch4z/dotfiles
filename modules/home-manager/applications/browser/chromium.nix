@@ -1,4 +1,10 @@
-{ config, self, pkgs, lib, ... }:
+{
+  config,
+  self,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (self.lib) mkIf mkEnableOption;
 
@@ -28,9 +34,11 @@ let
         search_url = "https://search.brave.com/search?q={searchTerms}";
         is_default = true;
       }
-    ] ++ shared.toChromiumSearchEngines;
+    ]
+    ++ shared.toChromiumSearchEngines;
   };
-in {
+in
+{
   options.x.home.applications.browser.chromium = {
     enable = mkEnableOption "Enable Ungoogled Chromium home-manager module.";
   };
@@ -49,8 +57,7 @@ in {
 
     xdg.configFile."mimeapps.list".force = true;
 
-    xdg.configFile."chromium/policies/managed/policies.json".text =
-      builtins.toJSON policies;
+    xdg.configFile."chromium/policies/managed/policies.json".text = builtins.toJSON policies;
 
     programs.chromium = {
       enable = true;

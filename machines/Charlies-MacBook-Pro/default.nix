@@ -9,7 +9,10 @@
 
   system.defaults.dock.tilesize = 75;
 
-  nix.settings.trusted-users = ["root" "char"];
+  nix.settings.trusted-users = [
+    "root"
+    "char"
+  ];
 
   services.nix-daemon.enable = true;
 }

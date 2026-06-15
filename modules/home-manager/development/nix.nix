@@ -1,4 +1,10 @@
-{pkgs, config, lib, ...}: {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
   config = lib.mkIf config.x.home.development.enable {
     # TODO: re-enable when devenv patch is fixed
     # programs.direnv = {

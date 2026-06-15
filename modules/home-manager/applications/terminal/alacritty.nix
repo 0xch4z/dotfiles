@@ -1,9 +1,10 @@
-{config, self, ...}:
+{ config, self, ... }:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
   cfg = config.x.home.applications.terminal.alacritty;
-in {
+in
+{
   options.x.home.applications.terminal.alacritty = {
     enable = mkEnableOption "Enable alacritty module.";
   };
@@ -17,7 +18,10 @@ in {
           title = "Terminal";
           opacity = 0.94;
 
-          padding = { y = 16; x = 18; };
+          padding = {
+            y = 16;
+            x = 18;
+          };
           dynamic_padding = false;
           decorations = "buttonless";
         };

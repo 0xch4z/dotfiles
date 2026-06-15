@@ -1,4 +1,11 @@
-{ pkgs, lib, config, homeDir, ... }: {
+{
+  pkgs,
+  lib,
+  config,
+  homeDir,
+  ...
+}:
+{
   config = lib.mkIf (config.x.profile.workstation && pkgs.stdenv.hostPlatform.isDarwin) {
     x.home.tools.containers.colima.enable = true;
     x.home.desktop.backend = "aerospace";

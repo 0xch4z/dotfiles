@@ -1,4 +1,10 @@
-{ pkgs, lib, stdenvNoCC, fetchurl, p7zip }:
+{
+  pkgs,
+  lib,
+  stdenvNoCC,
+  fetchurl,
+  p7zip,
+}:
 
 stdenvNoCC.mkDerivation rec {
   pname = "apple-fonts";
@@ -24,7 +30,11 @@ stdenvNoCC.mkDerivation rec {
     sha256 = "sha256-HC7ttFJswPMm+Lfql49aQzdWR2osjFYHJTdgjtuI+PQ=";
   };
 
-  nativeBuildInputs = [ p7zip pkgs.parallel (pkgs.callPackage ./nerdfont-patcher.nix {}) ];
+  nativeBuildInputs = [
+    p7zip
+    pkgs.parallel
+    (pkgs.callPackage ./nerdfont-patcher.nix { })
+  ];
 
   sourceRoot = ".";
 

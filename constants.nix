@@ -4,9 +4,15 @@ let
   inherit (lib) lists recursiveUpdate;
   inherit (lists) flatten foldl';
 
-  allCPUArchs = [ "aarch64" "x86_64" ];
+  allCPUArchs = [
+    "aarch64"
+    "x86_64"
+  ];
 
-  allOSes = [ "darwin" "linux" ];
+  allOSes = [
+    "darwin"
+    "linux"
+  ];
 
   # platformStr builds a platform string (e.g. "x86_64-darwin").
   platformStr = os: arch: "${arch}-${os}";
@@ -14,7 +20,7 @@ let
   # platformStrs returns all platform strings for the given os.
   platformStrs = os: map (platformStr os) allCPUArchs;
 
-  platforms = foldl' (acc: os: recursiveUpdate acc {"${os}" = (platformStrs os);}) {} allOSes;
+  platforms = foldl' (acc: os: recursiveUpdate acc { "${os}" = (platformStrs os); }) { } allOSes;
 in
 rec {
   inherit allCPUArchs allOSes platforms;
@@ -30,5 +36,5 @@ rec {
     overlays = (import ./overlays.nix).all;
   };
 
-  allPlatforms = flatten (map attrValues platforms);
+  allPlatforms = flatten (attrValues platforms);
 }

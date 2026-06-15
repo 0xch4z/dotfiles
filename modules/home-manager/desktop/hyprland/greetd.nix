@@ -1,10 +1,21 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.x.home.desktop.hyprland;
   hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
-in {
+in
+{
 
   options.x.home.desktop.hyprland.greetdIntegration = {
     enable = mkOption {
@@ -30,4 +41,3 @@ in {
     # };
   };
 }
-

@@ -1,12 +1,27 @@
-{ self, config, pkgs, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
-  inherit (self.lib) mkEnabledOption mkIf mkOption types;
-in {
+  inherit (self.lib)
+    mkEnabledOption
+    mkIf
+    mkOption
+    types
+    ;
+in
+{
   options.x.home.desktop = {
     enable = mkEnabledOption "enable desktop";
 
     backend = mkOption {
-      type = types.enum [ "hyprland" "aerospace" "none" ];
+      type = types.enum [
+        "hyprland"
+        "aerospace"
+        "none"
+      ];
       default = "none";
     };
   };
