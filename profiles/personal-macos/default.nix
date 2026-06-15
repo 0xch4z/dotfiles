@@ -1,6 +1,6 @@
-{ config, ... }: {
+_: {
   programs.git = {
-    userEmail = "me@ch4z.io";
-    userName = "Charlie Kenney";
+    settings.user.email = "me@ch4z.io";
+    settings.user.name = "Charlie Kenney";
   };
 }
