@@ -109,6 +109,10 @@ in
         else
           self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
 
+      # keep legacy defaults; stateVersion < 26.05 changed these from true to false
+      withRuby = true;
+      withPython3 = true;
+
       viAlias = true;
       vimAlias = true;
 
