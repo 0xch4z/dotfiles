@@ -6,6 +6,7 @@
     "helpers:pinGitHubActionDigests"
   ],
   "timezone": "America/New_York",
+  "semanticCommits": "enabled",
   "nix": {
     "enabled": true
   },
