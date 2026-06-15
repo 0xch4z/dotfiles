@@ -1,13 +1,23 @@
-args@{ config, self, pkgs, ... }:
+args@{
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
-  inherit (self.lib) types mkIf mkDesktopEnabledOption mkOption;
+  inherit (self.lib)
+    types
+    mkIf
+    mkDesktopEnabledOption
+    mkOption
+    ;
 
   cfg = config.x.home.applications.browser.firefox;
-in {
+in
+{
   options.x.home.applications.browser.firefox = {
-    enable =
-      mkDesktopEnabledOption config "Enable Firefox home-manager module.";
+    enable = mkDesktopEnabledOption config "Enable Firefox home-manager module.";
 
     devPixelsPerPx = mkOption {
       type = types.str;
@@ -18,6 +28,9 @@ in {
   config = mkIf cfg.enable {
     programs.firefox = {
       enable = true;
+
+      # pre-26.05 legacy, non-XDG path
+      configPath = ".mozilla/firefox";
 
       package = if isDarwin then pkgs.firefox-bin else pkgs.firefox;
 
