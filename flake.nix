@@ -60,6 +60,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # necessary for linking per-user apps to /Applications directory on MacOS
     mac-app-util.url = "github:hraban/mac-app-util";
 
@@ -92,5 +97,10 @@
       darwinConfigurations = self.lib.buildMachinesForOS "darwin";
       homeConfigurations = self.lib.buildHomeConfigurations { };
       checks = self.lib.buildChecks;
+      formatter = self.lib.forAllPlatforms (
+        system:
+        (self.inputs.treefmt-nix.lib.evalModule (self.lib.pkgsFor system) ./treefmt.nix)
+        .config.build.wrapper
+      );
     };
 }
