@@ -83,8 +83,13 @@ in
           # systemd.enable) so it auto-restarts after suspend/resume.
         ];
 
+        # was using IDs (e.g. HDMI-A-1) but found this to be non-determistic.
+        # on boot, if amdgpu (igpu) kernel module loads before nvidia, it gets
+        # addressed first (-A-1/-A-2). using desc to filter for the correct
+        # monitor instead of disabling igpu on boot in case its needed in the
+        # future.
         monitor = [
-          "HDMI-A-2,3840x2160@144,0x0,1" # Samsung Odyssey G8 32"
+          "desc:Samsung Electric Company Odyssey G80SD H1AK500000,3840x2160@144,0x0,1" # Samsung Odyssey G8 32"
           "DP-4,3840x2160@144,0x-2160,1" # Samsung Odyssey G5 27"
         ];
 
@@ -127,7 +132,8 @@ in
         # ];
 
         workspace =
-          map (n: "${n},monitor:HDMI-A-2") (nStrRange 0 2) ++ map (n: "${n},monitor:DP-4") (nStrRange 3 9);
+          map (n: "${n},monitor:desc:Samsung Electric Company Odyssey G80SD H1AK500000") (nStrRange 0 2)
+          ++ map (n: "${n},monitor:DP-4") (nStrRange 3 9);
 
         decoration = {
           rounding = 3;
