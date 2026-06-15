@@ -65,6 +65,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # necessary for linking per-user apps to /Applications directory on MacOS
     mac-app-util.url = "github:hraban/mac-app-util";
 

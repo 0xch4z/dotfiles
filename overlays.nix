@@ -65,6 +65,7 @@ let
     inputs.nix-darwin-browsers.overlays.default
     #inputs.nix-darwin-firefox.overlays.default
     inputs.nur.overlays.default
+    inputs.rust-overlay.overlays.default
 
     lua54posixOverlay
     cudaCompatFixOverlay

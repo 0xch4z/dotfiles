@@ -758,6 +758,7 @@
         "nixpkgs-kns-fork": "nixpkgs-kns-fork",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
+        "rust-overlay": "rust-overlay_2",
         "sops": "sops",
         "treefmt-nix": "treefmt-nix_3",
         "wsl": "wsl",
@@ -777,6 +778,26 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "27b7e78c6935293ee868469cc4172e9b8b17823b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781493707,
+        "narHash": "sha256-lzf7qdQWuiY0T9VEbfH2CmP1LZQAYooU/sZuSgEJEBk=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "06f25b8e40805beb2121a4dae4cc37d6f981800f",
         "type": "github"
       },
       "original": {
