@@ -87,8 +87,10 @@ in
   config = lib.mkIf (config.x.home.desktop.backend == "aerospace") {
     programs.aerospace = {
       package = pkgs.unstable.aerospace;
-
       enable = true;
+
+      launchd.enable = true;
+
       userSettings = {
         start-at-login = true;
 
