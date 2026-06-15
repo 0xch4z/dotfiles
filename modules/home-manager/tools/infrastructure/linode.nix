@@ -3,7 +3,7 @@
     home = {
       packages = [
         pkgs.linode-cli
-        self.inputs.linodectl.packages.${pkgs.system}.default
+        self.inputs.linodectl.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];
     };
   };

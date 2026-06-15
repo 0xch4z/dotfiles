@@ -105,9 +105,9 @@ in
 
       package =
         if cfg.nightly then
-          (self.inputs.neovim-nightly-overlay.packages.${pkgs.system}.default)
+          (self.inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default)
         else
-          self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim-unwrapped;
+          self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
 
       viAlias = true;
       vimAlias = true;

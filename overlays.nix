@@ -2,12 +2,13 @@ self@{ inputs, lib, ... }:
 let
   unstableOverlay = final: _: {
     unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system overlays config;
+      inherit (final) overlays config;
+      inherit (final.stdenv.hostPlatform) system;
     };
   };
 
   knsOverlay = final: prev: {
-    kns-fork = inputs.nixpkgs-kns-fork.legacyPackages.${prev.system};
+    kns-fork = inputs.nixpkgs-kns-fork.legacyPackages.${prev.stdenv.hostPlatform.system};
   };
 
   lua54posixOverlay = final: prev: {
