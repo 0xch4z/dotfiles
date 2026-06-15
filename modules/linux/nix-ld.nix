@@ -27,14 +27,14 @@ in {
       mesa
       glib
       gtk3
-      xorg.libX11
-      xorg.libXext
-      xorg.libXrender
-      xorg.libXi
-      xorg.libXrandr
-      xorg.libXcursor
-      xorg.libXinerama
-      xorg.libXxf86vm
+      libx11
+      libxext
+      libxrender
+      libxi
+      libxrandr
+      libxcursor
+      libxinerama
+      libxxf86vm
     ];
   };
 }
