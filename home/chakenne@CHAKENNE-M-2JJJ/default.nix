@@ -1,4 +1,4 @@
-{ lib, user, ... }: {
+{ user, ... }: {
   x.profile.workstation = true;
   x.profile.work = true;
 
@@ -7,6 +7,6 @@
   x.home.secrets.enable = true;
   x.home.taskbar.sketchybar.enable = true;
 
-  home.stateVersion = lib.mkForce "22.11";
+  home.stateVersion = "22.11";
   home.homeDirectory = "/Users/${user}";
 }

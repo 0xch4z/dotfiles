@@ -7,8 +7,6 @@
 {
   config = lib.mkIf (config.x.profile.workstation && pkgs.stdenv.hostPlatform.isLinux) {
     home = {
-      stateVersion = "22.11";
-
       sessionPath = [
         "$HOME/.local/bin"
         "/usr/local/bin"
