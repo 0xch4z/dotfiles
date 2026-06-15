@@ -1,6 +1,8 @@
 { pkgs, ... }: {
   ids.uids.nixbld = 300;
 
+  system.primaryUser = "char";
+
   users.users.char = {
     name = "char";
     home = "/Users/char";
@@ -13,6 +15,4 @@
     "root"
     "char"
   ];
-
-  services.nix-daemon.enable = true;
 }

@@ -1,6 +1,8 @@
 { pkgs, ... }: {
   ids.uids.nixbld = 300;
 
+  system.primaryUser = "ckenney";
+
   users.users.ckenney = {
     name = "ckenney";
     home = "/Users/ckenney";
@@ -8,6 +10,4 @@
   };
 
   nix.settings.trusted-users = [ "ckenney" ];
-
-  services.nix-daemon.enable = true;
 }
