@@ -15,7 +15,7 @@ jobs:
     name: nix eval (all configs)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: cachix/install-nix-action@v30
         with:
@@ -34,3 +34,18 @@ jobs:
                 ) (builtins.attrNames checks)
               )
           '
+
+  format:
+    name: treefmt (formatting)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: check formatting
+        run: nix fmt -- --ci
