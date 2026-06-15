@@ -91,7 +91,7 @@ in
 
       launchd.enable = true;
 
-      userSettings = {
+      settings = {
         start-at-login = true;
 
         after-startup-command = [
