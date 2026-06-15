@@ -91,5 +91,6 @@
       nixosConfigurations = self.lib.buildMachinesForOS "nixos";
       darwinConfigurations = self.lib.buildMachinesForOS "darwin";
       homeConfigurations = self.lib.buildHomeConfigurations { };
+      checks = self.lib.buildChecks;
     };
 }
