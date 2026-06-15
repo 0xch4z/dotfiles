@@ -3,12 +3,15 @@
   nixpkgs,
   pkgs,
   hostname,
+  lib,
   ...
 }:
 {
   imports = [
     inputs.wsl.nixosModules.default
   ];
+
+  boot.loader.systemd-boot.enable = lib.mkForce false;
 
   users.users.char = {
     name = "char";
