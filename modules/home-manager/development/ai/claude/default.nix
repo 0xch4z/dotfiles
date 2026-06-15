@@ -189,7 +189,7 @@ in
       # don't install the cli; managed externally
       package = null;
 
-      memory.text = ''
+      context = ''
         # Language Servers
 
         This system uses nix home-manager to manage language servers. The following
