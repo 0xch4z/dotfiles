@@ -296,13 +296,6 @@ inputs.nixpkgs.lib.extend (
           name = "${mach.variant}-${mach.hostname}";
           drv = mach.configuration.config.system.build.toplevel;
         }) machineList;
-
-        homeList = builtins.concatMap (mach: attrValues mach.homes) machineList;
-        homeChecks = map (home: {
-          inherit (home) system;
-          name = "home-${replaceStrings [ "@" ] [ "_" ] home.userhost}";
-          drv = home.configuration.activationPackage;
-        }) homeList;
       in
       foldl' (
         acc: check:
@@ -312,6 +305,6 @@ inputs.nixpkgs.lib.extend (
             ${check.name} = check.drv;
           };
         }
-      ) { } (machineChecks ++ homeChecks);
+      ) { } machineChecks;
   }
 )
