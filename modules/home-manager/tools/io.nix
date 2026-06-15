@@ -23,6 +23,7 @@ in
         iotop
         lsof
         pv
+        unixtools.xxd
         #strace #broken?
         hwatch
         watch
