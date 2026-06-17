@@ -10,6 +10,7 @@
     ./desktop
     ./development
     ./editor
+    ./games
     ./shell
     ./taskbar
     ./tools

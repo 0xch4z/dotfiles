@@ -10,6 +10,7 @@
   x.hardware.audio.enable = true;
   x.hardware.keyd.enable = true;
   x.programs.nix-ld.enable = true;
+  x.programs.gaming.enable = true;
   x.desktop.wayland.enable = true;
 
   virtualisation.docker.enable = true;

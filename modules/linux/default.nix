@@ -1,6 +1,7 @@
 { lib, ... }: {
   imports = [
     ./audio.nix
+    ./gaming.nix
     ./keyd.nix
     ./nix-ld.nix
     ./nvidia.nix
