@@ -13,6 +13,11 @@
   x.programs.gaming.enable = true;
   x.desktop.wayland.enable = true;
 
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
   virtualisation.docker.enable = true;
 
   services.openssh = {
@@ -44,17 +49,21 @@
   };
 
   networking.hostName = "charbox";
-  networking.nameservers = [ "8.8.8.8" ];
-  networking.defaultGateway = {
-    address = "192.168.100.1";
-    interface = "enp12s0";
+  networking.networkmanager.enable = true;
+  networking.networkmanager.ensureProfiles.profiles.charbox-lan = {
+    connection = {
+      id = "charbox-lan";
+      type = "ethernet";
+      interface-name = "enp12s0";
+      autoconnect = true;
+    };
+    ipv4 = {
+      method = "manual";
+      address1 = "192.168.100.69/24,192.168.100.1";
+      dns = "8.8.8.8;";
+    };
+    ipv6.method = "disabled";
   };
-  networking.interfaces.enp12s0.ipv4.addresses = [
-    {
-      address = "192.168.100.69";
-      prefixLength = 24;
-    }
-  ];
 
   users.users.ckenney = {
     isNormalUser = true;
@@ -62,6 +71,7 @@
       "wheel"
       "audio"
       "docker"
+      "networkmanager"
     ];
     packages = with pkgs; [
       ffmpeg
