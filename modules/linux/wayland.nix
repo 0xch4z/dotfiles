@@ -33,8 +33,8 @@ in
     ];
 
     environment.systemPackages = with pkgs; [
-      mako
       wl-clipboard
+      libnotify
       grim
       slurp
     ];

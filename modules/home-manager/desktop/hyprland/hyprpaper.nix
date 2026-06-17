@@ -9,6 +9,8 @@ let
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
+  g8 = "desc:Samsung Electric Company Odyssey G80SD H1AK500000";
+
   cfg = config.x.home.desktop.hyprland.hyprpaper;
   hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
 in
@@ -27,10 +29,10 @@ in
       enable = true;
       settings = {
         ipc = "on";
-        splash = true;
+        splash = false;
 
         preload = [ wallpaper ];
-        wallpaper = [ ",${wallpaper}" ];
+        wallpaper = [ "${g8},${wallpaper}" ];
       };
     };
   };

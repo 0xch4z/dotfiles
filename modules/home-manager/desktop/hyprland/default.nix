@@ -133,17 +133,16 @@ in
           "ALT SHIFT,N,swapnext" # swap to next
           "ALT SHIFT,P,swapnext,prev" # swap to prev
         ]
-        ++ map (n: "ALT,${n},workspace,${n}") (nStrRange 0 9) # goto workspace N
-        ++ map (n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 0 9); # move to workspace N
+        ++ map (n: "ALT,${n},workspace,${n}") (nStrRange 1 9) # goto workspace N
+        ++ map (n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 1 9); # move to workspace N
 
-        # volume keys
         bindl = [
-          ",XF86AudioMute,exec,pamixer -t && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"$(if [ \"$(pamixer --get-mute)\" = 'true' ]; then echo '🔇 Muted'; else echo \"🔊 Volume $(pamixer --get-volume)%\"; fi)\""
+          ",XF86AudioMute,exec,ashell msg volume-toggle-mute"
         ];
 
         bindle = [
-          ",XF86AudioRaiseVolume,exec,pamixer -i 5 && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"🔊 Volume $(pamixer --get-volume)%\""
-          ",XF86AudioLowerVolume,exec,pamixer -d 5 && ${pkgs.libnotify}/bin/notify-send -t 1500 -h string:x-canonical-private-synchronous:volume -h int:value:$(pamixer --get-volume) \"🔉 Volume $(pamixer --get-volume)%\""
+          ",XF86AudioRaiseVolume,exec,ashell msg volume-up"
+          ",XF86AudioLowerVolume,exec,ashell msg volume-down"
         ];
 
         # bindm = [
