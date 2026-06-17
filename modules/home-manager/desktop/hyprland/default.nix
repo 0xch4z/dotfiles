@@ -3,6 +3,7 @@
   config,
   pkgs,
   lib,
+  homeDir,
   ...
 }:
 let
@@ -12,12 +13,33 @@ let
     lists
     types
     mkEnabledOption
-    mkEnableOption
     mkOption
     ;
   inherit (lists) map range;
 
   nStrRange = lower: upper: map (n: toString n) (range lower upper);
+
+  g8 = "desc:Samsung Electric Company Odyssey G80SD H1AK500000";
+
+  wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
+
+  applyWallpaper = pkgs.writeShellApplication {
+    name = "hyprpaper-apply-wallpaper";
+    runtimeInputs = [
+      pkgs.hyprland
+      pkgs.coreutils
+      pkgs.gnugrep
+    ];
+    text = ''
+      for _ in $(seq 1 60); do
+        hyprctl hyprpaper wallpaper "${g8},${wallpaper}" 2>/dev/null || true
+        if hyprctl hyprpaper listactive 2>/dev/null | grep -qF "${wallpaper}"; then
+          exit 0
+        fi
+        sleep 0.5
+      done
+    '';
+  };
 in
 {
   options.x.home.desktop.hyprland = {
@@ -78,7 +100,7 @@ in
 
         exec-once = [
           "hyprpaper"
-          "mako"
+          "${lib.getExe applyWallpaper}"
           # ashell is started via its systemd user service (programs.ashell.
           # systemd.enable) so it auto-restarts after suspend/resume.
         ];
@@ -89,7 +111,7 @@ in
         # monitor instead of disabling igpu on boot in case its needed in the
         # future.
         monitor = [
-          "desc:Samsung Electric Company Odyssey G80SD H1AK500000,3840x2160@240,0x0,1" # Samsung Odyssey G8 32"
+          "${g8},3840x2160@240,0x0,1" # Samsung Odyssey G8 32"
           "DP-4,3840x2160@144,0x-2160,1" # Samsung Odyssey G5 27"
         ];
 
@@ -131,9 +153,12 @@ in
         #   "SUPER,P,pass"
         # ];
 
-        workspace =
-          map (n: "${n},monitor:desc:Samsung Electric Company Odyssey G80SD H1AK500000") (nStrRange 0 2)
-          ++ map (n: "${n},monitor:DP-4") (nStrRange 3 9);
+        workspace = [
+          "1,monitor:${g8},default:true"
+        ]
+        ++ map (n: "${n},monitor:${g8}") (nStrRange 2 3)
+        ++ [ "4,monitor:DP-4,default:true" ]
+        ++ map (n: "${n},monitor:DP-4") (nStrRange 5 9);
 
         decoration = {
           rounding = 3;
@@ -151,6 +176,7 @@ in
         misc = {
           # disable stupid default background
           disable_hyprland_logo = true;
+          disable_splash_rendering = true;
           force_default_wallpaper = 0;
         };
       };
