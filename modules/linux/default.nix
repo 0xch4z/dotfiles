@@ -5,6 +5,7 @@
     ./keyd.nix
     ./nix-ld.nix
     ./nvidia.nix
+    ./peripherals.nix
     ./wayland.nix
   ];
 

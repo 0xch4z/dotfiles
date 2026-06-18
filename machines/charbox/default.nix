@@ -9,6 +9,19 @@
   x.hardware.nvidia.enable = true;
   x.hardware.audio.enable = true;
   x.hardware.keyd.enable = true;
+  x.hardware.peripherals.enable = true;
+  x.hardware.peripherals.motherboard = "amd";
+  x.hardware.peripherals.colors =
+    let
+      ram = builtins.genList (i: if (i / 2) * 2 == i then "006BB6" else "FFFFFF") 12;
+    in
+    [
+      ram
+      ram
+      [ "F58426" ]
+      [ "006BB6" ]
+      [ "F58426" ]
+    ];
   x.programs.nix-ld.enable = true;
   x.programs.gaming.enable = true;
   x.desktop.wayland.enable = true;
