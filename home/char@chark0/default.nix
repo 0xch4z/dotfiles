@@ -1,13 +1,15 @@
-{ ... }: {
-  imports = [
-    ../../profiles/nixos
-  ];
+{ den, ... }:
+{
+  den.aspects.chark0.char = {
+    includes = [
+      den.aspects.workstation
+      (den.batteries.user-shell "fish")
+      den.batteries.primary-user
+    ];
 
-  x.profile.personal = true;
-  x.profile.workstation = true;
-
-  x.home.desktop.enable = false;
-
-  home.stateVersion = "24.11";
-  home.homeDirectory = "/home/char";
+    homeManager = {
+      home.stateVersion = "24.11";
+      home.homeDirectory = "/home/char";
+    };
+  };
 }

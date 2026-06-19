@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-system}"
+host="$(hostname)"
+user="$(whoami)"
+
+case "$mode" in
+  system)
+    prior="${2:-$(readlink -f /run/current-system)}"
+    installable="${3:-.#nixosConfigurations.$host.config.system.build.toplevel}"
+    ;;
+  home)
+    prior="${2:-$(readlink -f "${XDG_STATE_HOME:-$HOME/.local/state}/nix/profiles/home-manager")}"
+    installable="${3:-.#nixosConfigurations.$host.config.home-manager.users.$user.home.activationPackage}"
+    ;;
+  *)
+    echo "usage: ./diff [system|home] [prior-store-path=installed] [installable=current]" >&2
+    exit 2
+    ;;
+esac
+
+current="$(nix build --no-link --print-out-paths "$installable")"
+
+echo "prior:   $prior"
+echo "current: $current"
+echo
+
+if command -v nvd >/dev/null 2>&1; then
+  nvd diff "$prior" "$current"
+else
+  nix run "nixpkgs#nvd" -- diff "$prior" "$current"
+fi
+
+echo
+echo "added paths:"
+comm -13 <(nix-store -qR "$prior" | sort) <(nix-store -qR "$current" | sort) | sed 's/^/  + /'
+echo "removed paths:"
+comm -23 <(nix-store -qR "$prior" | sort) <(nix-store -qR "$current" | sort) | sed 's/^/  - /'
+echo
+
+if [[ "$(nix-store -q --hash "$prior")" == "$(nix-store -q --hash "$current")" ]]; then
+  echo "RESULT: byte-identical"
+  exit 0
+else
+  echo "RESULT: differ"
+  exit 1
+fi

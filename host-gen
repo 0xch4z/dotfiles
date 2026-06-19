@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+host="${1:-$(hostname)}"
+dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+out="$dir/hosts/$host/facter.json"
+
+mkdir -p "$dir/hosts/$host"
+sudo nix run nixpkgs#nixos-facter -- -o "$out"
+sudo chown "$(id -u):$(id -g)" "$out"
+git -C "$dir" add "$out"
+echo "Generated $out"

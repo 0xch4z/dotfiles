@@ -85,27 +85,60 @@
 
     linodectl.url = "github:0xch4z/linodectl";
     linodectl.inputs.nixpkgs.follows = "nixpkgs";
+
+    den.url = "github:denful/den";
+    import-tree.url = "github:vic/import-tree";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
   };
 
   outputs =
     { self, ... }:
+    let
+      denFlake =
+        (self.inputs.nixpkgs.lib.evalModules {
+          modules = [
+            (self.inputs.import-tree ./modules)
+            (self.inputs.import-tree ./hosts)
+            (self.inputs.import-tree ./home)
+          ];
+          specialArgs = {
+            inherit self;
+            inputs = self.inputs // {
+              inherit self;
+            };
+          };
+        }).config.flake;
+    in
     {
-      constants = import ./constants.nix self;
-      overlays = import ./overlays.nix self;
-      lib = import ./lib.nix self;
-      users = import ./home self;
-      machines = import ./machines self;
-      modules = import ./modules;
-      roles = import ./roles;
-
-      nixosConfigurations = self.lib.buildMachinesForOS "nixos";
-      darwinConfigurations = self.lib.buildMachinesForOS "darwin";
-      homeConfigurations = self.lib.buildHomeConfigurations { };
-      checks = self.lib.buildChecks;
-      formatter = self.lib.forAllPlatforms (
-        system:
-        (self.inputs.treefmt-nix.lib.evalModule (self.lib.pkgsFor system) ./treefmt.nix)
-        .config.build.wrapper
+      lib = self.inputs.nixpkgs.lib.extend (
+        _: prev: {
+          mkEnabledOption =
+            description:
+            prev.mkOption {
+              inherit description;
+              type = prev.types.bool;
+              default = true;
+            };
+          mkDesktopEnabledOption =
+            config: description:
+            prev.mkOption {
+              inherit description;
+              type = prev.types.bool;
+              default = config.x.home.desktop.enable;
+            };
+          templateFile =
+            { file, data }:
+            builtins.replaceStrings (map (name: "{{ " + name + " }}") (builtins.attrNames data)) (
+              builtins.attrValues data
+            ) (builtins.readFile file);
+        }
       );
+
+      overlays = import ./overlays.nix {
+        inherit (self) inputs;
+        lib = self.inputs.nixpkgs.lib;
+      };
+
+      nixosConfigurations = denFlake.nixosConfigurations;
     };
 }

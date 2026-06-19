@@ -1,0 +1,83 @@
+{ ... }:
+{
+  den.aspects.sketchybar.homeManager =
+    {
+      pkgs,
+      config,
+      lib,
+      ...
+    }:
+    {
+      options.x.home.taskbar.sketchybar = {
+        autoHideSystemMenubar = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+        };
+      };
+
+      config = {
+        home.packages = with pkgs; [
+          sketchybar
+          sketchybar-app-font
+        ];
+
+        xdg.configFile."sketchybar/.luarc.json" =
+          let
+            config = {
+              runtime.version = "LuaJIT";
+              runtime.path = [
+                "lua"
+                "sketchybarrc"
+                "config/init.lua"
+                "config/?/init.lua"
+                "?.lua"
+                "?/init.lua"
+              ];
+              workspace = {
+                checkThirdParty = false;
+                library = [
+                  "${pkgs.lua54Packages.cjson}/lib/lua/5.4"
+                  "${pkgs.lua54Packages.luaposix}/lib/lua/5.4"
+                  "${pkgs.x.sbarlua}/lua"
+                ];
+              };
+            };
+          in
+          {
+            text = builtins.toJSON config;
+          };
+
+        xdg.configFile."sketchybar/sketchybarrc" = {
+          text = ''
+            #! ${pkgs.lua5_4_compat}/bin/lua
+            package.cpath = package.cpath
+              .. ";${pkgs.lua54Packages.cjson}/lib/lua/5.4/?.so"
+              .. ";${pkgs.lua54Packages.luaposix}/lib/lua/5.4/?.so"
+              .. ";${pkgs.x.sbarlua}/lib/?.so"
+
+            package.path = package.path
+              .. ";${config.xdg.configHome}/sketchybar/?/init.lua"
+              .. ";${config.xdg.configHome}/sketchybar/config/?.lua"
+
+            require("config")
+          '';
+          executable = true;
+        };
+
+        xdg.configFile."sketchybar/nix_bridge.lua".text = ''
+          return {
+            cmds = {
+              is-macbook-display-only = "${pkgs.x.is-macbook-display-only}/bin/is-macbook-display-only"
+            }
+          }
+        '';
+
+        xdg.configFile.sketchybar = {
+          enable = true;
+          recursive = true;
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/modules/taskbar/sketchybar/config";
+          target = "sketchybar/config";
+        };
+      };
+    };
+}

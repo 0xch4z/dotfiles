@@ -1,11 +1,15 @@
-{ ... }: {
-  imports = [
-    ../../profiles/nixos
-  ];
+{ den, ... }:
+{
+  den.aspects.charbit.char = {
+    includes = [
+      den.aspects.workstation
+      den.aspects.nix-workstation
+      (den.batteries.user-shell "fish")
+    ];
 
-  x.profile.workstation = true;
-  x.profile.personal = true;
-
-  home.stateVersion = "22.11";
-  home.homeDirectory = "/home/char";
+    homeManager = {
+      home.stateVersion = "22.11";
+      home.homeDirectory = "/home/char";
+    };
+  };
 }

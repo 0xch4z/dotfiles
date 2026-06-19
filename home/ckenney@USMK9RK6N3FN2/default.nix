@@ -1,11 +1,15 @@
-{ user, ... }: {
-  imports = [
-    ../../profiles/work-macos
-  ];
+{ den, ... }:
+{
+  den.aspects."USMK9RK6N3FN2".ckenney = {
+    includes = [
+      den.aspects.workstation
+      den.aspects.work
+      den.aspects.mac-workstation
+    ];
 
-  x.profile.workstation = true;
-  x.profile.work = true;
-
-  home.stateVersion = "22.11";
-  home.homeDirectory = "/Users/${user}";
+    homeManager = {
+      home.stateVersion = "22.11";
+      home.homeDirectory = "/Users/ckenney";
+    };
+  };
 }

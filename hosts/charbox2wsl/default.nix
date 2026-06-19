@@ -1,0 +1,65 @@
+{ inputs, den, ... }:
+{
+  den.hosts.x86_64-linux.charbox2wsl.users.char = { };
+
+  den.aspects.charbox2wsl.nixos =
+    { pkgs, lib, ... }:
+    {
+      imports = [ inputs.wsl.nixosModules.default ];
+
+      boot.loader.systemd-boot.enable = lib.mkForce false;
+
+      wsl = {
+        enable = true;
+        defaultUser = "char";
+        startMenuLaunchers = true;
+        useWindowsDriver = true;
+        wslConf = {
+          automount.root = "/mnt";
+          interop.appendWindowsPath = true;
+          network.generateHosts = false;
+        };
+      };
+
+      services.xserver.enable = true;
+      services.xserver.windowManager.xmonad = {
+        enable = true;
+        enableContribAndExtras = true;
+      };
+
+      hardware.graphics.enable = true;
+      hardware.graphics.extraPackages = [ pkgs.mesa ];
+
+      nix = {
+        settings = {
+          trusted-users = [ "char" ];
+          accept-flake-config = true;
+        };
+
+        registry = {
+          nixpkgs = {
+            flake = inputs.nixpkgs;
+          };
+        };
+
+        nixPath = [
+          "nixpkgs=${inputs.nixpkgs}"
+          "nixos-config=/etc/nixos/configuration.nix"
+          "/nix/var/nix/profiles/per-user/root/channels"
+        ];
+
+        package = pkgs.nixVersions.latest;
+
+        gc = {
+          automatic = true;
+          options = "--delete-older-than-7d";
+        };
+      };
+
+      system.stateVersion = "24.05";
+
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = { inherit inputs; };
+    };
+}

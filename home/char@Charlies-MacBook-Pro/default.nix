@@ -1,11 +1,14 @@
-{ user, ... }: {
-  imports = [
-    ../../profiles/personal-macos
-  ];
+{ den, ... }:
+{
+  den.aspects.Charlies-MacBook-Pro.char = {
+    includes = [
+      den.aspects.workstation
+      den.aspects.mac-workstation
+    ];
 
-  x.profile.workstation = true;
-  x.profile.personal = true;
-
-  home.stateVersion = "22.11";
-  home.homeDirectory = "/Users/${user}";
+    homeManager = {
+      home.stateVersion = "22.11";
+      home.homeDirectory = "/Users/char";
+    };
+  };
 }
