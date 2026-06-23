@@ -1,4 +1,4 @@
-{ config, self, ... }:
+{ config, self, pkgs, ... }:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
@@ -14,6 +14,11 @@ in
       enable = true;
 
       settings = {
+        terminal.shell = {
+          program = "${pkgs.fish}/bin/fish";
+          args = [ "--login" ];
+        };
+
         window = {
           title = "Terminal";
           opacity = 0.94;
