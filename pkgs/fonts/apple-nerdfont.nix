@@ -12,12 +12,12 @@ stdenvNoCC.mkDerivation rec {
 
   pro = fetchurl {
     url = "https://devimages-cdn.apple.com/design/resources/download/SF-Pro.dmg";
-    sha256 = "sha256-090HwtgILtK/KGoOzcwz1iAtoiShKAVjiNhUDQtO+gQ=";
+    sha256 = "sha256-YxGk8IQ6TS5hagsFx3US0x0uqVBFnPUmzbW5CZageU8=";
   };
 
   compact = fetchurl {
     url = "https://devimages-cdn.apple.com/design/resources/download/SF-Compact.dmg";
-    sha256 = "sha256-z70mts7oFaMTt4q7p6M7PzSw4auOEaiaJPItYqUpN0A=";
+    sha256 = "sha256-/lF6UYS+KQ5m/om4tLbqGFSPztGuFTlJmnEmXjMXJJ8=";
   };
 
   mono = fetchurl {
