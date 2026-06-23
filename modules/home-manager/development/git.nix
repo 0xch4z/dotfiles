@@ -60,6 +60,7 @@ in
         ".nvim.lua"
         ".zoekt"
         ".agent*.md"
+        ".claude/settings.local.json"
       ];
 
       settings = {
