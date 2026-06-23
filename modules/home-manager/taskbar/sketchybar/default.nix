@@ -81,5 +81,20 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${homeDir}/.dotfiles/modules/home-manager/taskbar/sketchybar/config";
       target = "sketchybar/config";
     };
+
+    launchd.agents.sketchybar = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      enable = true;
+      config = {
+        ProgramArguments = [ "${lib.getExe pkgs.sketchybar}" ];
+        KeepAlive = true;
+        RunAtLoad = true;
+        ProcessType = "Interactive";
+        EnvironmentVariables = {
+          PATH = "${pkgs.sketchybar}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+        };
+        StandardOutPath = "${homeDir}/Library/Logs/sketchybar/stdout";
+        StandardErrorPath = "${homeDir}/Library/Logs/sketchybar/stderr";
+      };
+    };
   };
 }

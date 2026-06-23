@@ -96,7 +96,6 @@ in
 
         after-startup-command = [
           "exec-and-forget ${lib.getExe pkgs.jankyborders}"
-          "exec-and-forget ${lib.getExe pkgs.sketchybar}"
         ];
 
         on-window-detected = [ { run = [ "layout floating" ]; } ];
