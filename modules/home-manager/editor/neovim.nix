@@ -104,10 +104,23 @@ in
       enable = true;
 
       package =
+        let
+          unstablePkgs = self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+          skipDarwinChecks =
+            drv:
+            if pkgs.stdenv.isDarwin then
+              drv.overrideAttrs (_: {
+                doCheck = false;
+                doInstallCheck = false;
+              })
+            else
+              drv;
+        in
         if cfg.nightly then
-          (self.inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default)
+          skipDarwinChecks
+            self.inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
         else
-          self.inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
+          skipDarwinChecks unstablePkgs.neovim-unwrapped;
 
       withRuby = true;
       withPython3 = true;
