@@ -80,9 +80,7 @@ let
     darwin = "/Users";
   };
 
-  homeDirFor =
-    { variant, user }:
-    "${(systemHomePrefix.${variant})}/${user}";
+  homeDirFor = { variant, user }: "${(systemHomePrefix.${variant})}/${user}";
 
   # variantSpecificSystemModules contain variant-specific system module lists.
   variantSpecificSystemModules = {
@@ -172,7 +170,12 @@ let
               ++ osSpecificHomeModules.${os}
               ++ [
                 (
-                  { config, lib, ... }:
+                  {
+                    config,
+                    lib,
+                    pkgs,
+                    ...
+                  }:
                   import homeModule {
                     inherit
                       self
