@@ -41,6 +41,17 @@ in
 {
   options.x.home.applications.browser.chromium = {
     enable = mkEnableOption "Enable Ungoogled Chromium home-manager module.";
+
+    ozonePlatform = lib.mkOption {
+      type = lib.types.enum [
+        "wayland"
+        "x11"
+      ];
+      default = "wayland";
+      description = "Chromium Ozone platform.";
+    };
+
+    nvidiaWorkarounds.enable = mkEnableOption "NVIDIA-specific Chromium GPU workarounds";
   };
 
   config = mkIf (cfg.enable && !pkgs.stdenv.hostPlatform.isDarwin) {
@@ -61,11 +72,28 @@ in
 
     programs.chromium = {
       enable = true;
-      package = pkgs.ungoogled-chromium;
+      package = config.x.home.graphics.wrapPackage pkgs.ungoogled-chromium;
 
       commandLineArgs = [
-        "--ozone-platform=x11" # XWayland; native Wayland has WebGL artifacts on Hyprland+NVIDIA
-        "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,WebRTCPipeWireCapturer,WebUIDarkMode,SidePanelPinning"
+        "--ozone-platform=${cfg.ozonePlatform}"
+        "--enable-features=${
+          lib.concatStringsSep "," (
+            [
+              "VaapiVideoDecoder"
+              "VaapiVideoEncoder"
+              "WebRTCPipeWireCapturer"
+              "WebUIDarkMode"
+              "SidePanelPinning"
+            ]
+            ++ lib.optionals cfg.nvidiaWorkarounds.enable [
+              "VaapiOnNvidiaGPUs"
+              "VaapiIgnoreDriverChecks"
+              "Vulkan"
+              "DefaultANGLEVulkan"
+              "VulkanFromANGLE"
+            ]
+          )
+        }"
 
         "--enable-gpu-rasterization"
         "--ignore-gpu-blocklist"

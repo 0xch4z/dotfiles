@@ -17,6 +17,8 @@ in
   config = mkIf cfg.enable {
     programs.kitty = {
       enable = true;
+      package = config.x.home.graphics.wrapPackage pkgs.kitty;
+
       settings = {
         background_opacity = "0.9";
         dynamic_background_opacity = "yes";

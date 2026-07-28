@@ -15,8 +15,8 @@ in
   };
 
   config = {
-    home.packages = with pkgs; [
-      (mkIf cfg.spotify.enable spotify)
+    home.packages = [
+      (mkIf cfg.spotify.enable (config.x.home.graphics.wrapPackage pkgs.spotify))
     ];
   };
 }

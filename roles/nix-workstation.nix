@@ -20,6 +20,11 @@
       };
     };
 
+    programs.fuzzel = {
+      enable = lib.mkDefault true;
+      package = lib.mkDefault (config.x.home.graphics.wrapPackage pkgs.fuzzel);
+    };
+
     x.home = {
       desktop = {
         enable = lib.mkDefault true;

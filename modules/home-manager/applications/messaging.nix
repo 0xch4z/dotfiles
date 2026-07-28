@@ -1,8 +1,7 @@
-args@{
+{
   config,
   self,
   pkgs,
-  lib,
   ...
 }:
 let
@@ -24,7 +23,7 @@ in
   };
 
   config = mkIf (cfg.slack.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = [ slack-wayland ];
+    home.packages = [ (config.x.home.graphics.wrapPackage slack-wayland) ];
 
     # Local Slack settings: hide menu bar, dark theme
     xdg.configFile."Slack/local-settings.json".text = builtins.toJSON {

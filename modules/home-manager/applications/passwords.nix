@@ -17,7 +17,7 @@ in
 
   config = {
     home.packages = [
-      (mkIf cfg._1pass.enable pkgs._1password-gui)
+      (mkIf cfg._1pass.enable (config.x.home.graphics.wrapPackage pkgs._1password-gui))
       # built on electron 39.8.10 (insecure)
       #(mkIf cfg.bitwarden.enable pkgs.unstable.bitwarden-desktop)
     ];
