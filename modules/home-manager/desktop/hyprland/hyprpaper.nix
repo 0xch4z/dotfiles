@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   homeDir,
   ...
 }:
@@ -9,16 +10,15 @@ let
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
-  g8 = "desc:Samsung Electric Company Odyssey G80SD H1AK500000";
-
-  cfg = config.x.home.desktop.hyprland.hyprpaper;
+  hyprlandCfg = config.x.home.desktop.hyprland;
+  cfg = hyprlandCfg.hyprpaper;
   hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
 in
 {
   options.x.home.desktop.hyprland.hyprpaper = {
     enable = mkOption {
       type = types.bool;
-      default = builtins.trace "hyprlandEnabled: ${builtins.toString hyprlandEnabled}" hyprlandEnabled;
+      default = hyprlandEnabled;
       defaultText = lib.literalExpression "config.desktop.hyprland.enable";
       description = "enable hyprpaper wallpaper daemon";
     };
@@ -27,12 +27,14 @@ in
   config = mkIf (hyprlandEnabled && cfg.enable) {
     services.hyprpaper = {
       enable = true;
+      package = config.x.home.graphics.wrapPackage pkgs.hyprpaper;
+
       settings = {
         ipc = "on";
         splash = false;
 
         preload = [ wallpaper ];
-        wallpaper = [ "${g8},${wallpaper}" ];
+        wallpaper = [ "${hyprlandCfg.wallpaperMonitor},${wallpaper}" ];
       };
     };
   };

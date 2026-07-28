@@ -32,7 +32,7 @@ in
       # pre-26.05 legacy, non-XDG path
       configPath = ".mozilla/firefox";
 
-      package = if isDarwin then pkgs.firefox-bin else pkgs.firefox;
+      package = config.x.home.graphics.wrapPackage (if isDarwin then pkgs.firefox-bin else pkgs.firefox);
 
       policies = import ./firefox_policies.nix;
       profiles = import ./firefox_profile.nix args;

@@ -78,6 +78,7 @@ let
   systemHomePrefix = {
     nixos = "/home";
     darwin = "/Users";
+    home = "/home";
   };
 
   homeDirFor = { variant, user }: "${(systemHomePrefix.${variant})}/${user}";
@@ -228,6 +229,7 @@ let
           user
           userhost
           homeDir
+          variant
           ;
 
         nixpkgs = inputs.nixpkgs;

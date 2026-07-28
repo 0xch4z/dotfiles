@@ -107,4 +107,9 @@ lib.mapAttrs buildMachine {
     arch = "x86_64";
     variant = "nixos";
   };
+  chakenne-l-pf5xn5fk = {
+    os = "linux";
+    arch = "x86_64";
+    variant = "home";
+  };
 }

@@ -11,12 +11,16 @@ in
 {
   options.x.home.taskbar.ashell = {
     enable = lib.mkEnableOption "Enable ashell home-manager module.";
+
+    nvidiaEnvironment.enable = lib.mkEnableOption "NVIDIA-specific OpenGL/Vulkan environment for ashell";
   };
 
   config = lib.mkIf cfg.enable {
     programs.ashell = {
       enable = true;
-      package = self.inputs.ashell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package =
+        config.x.home.graphics.wrapPackage
+          self.inputs.ashell.packages.${pkgs.stdenv.hostPlatform.system}.default;
       systemd.enable = true;
       settings = {
         position = "Bottom";
@@ -103,7 +107,7 @@ in
       Service = {
         Restart = lib.mkForce "always";
         RestartSec = 1;
-        Environment = [
+        Environment = lib.optionals cfg.nvidiaEnvironment.enable [
           "LD_LIBRARY_PATH=/run/opengl-driver/lib"
           "__EGL_VENDOR_LIBRARY_DIRS=/run/opengl-driver/share/glvnd/egl_vendor.d"
           "VK_DRIVER_FILES=/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json"

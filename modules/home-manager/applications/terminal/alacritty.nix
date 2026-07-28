@@ -1,4 +1,9 @@
-{ config, self, pkgs, ... }:
+{
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
   inherit (self.lib) mkEnableOption mkIf;
 
@@ -12,6 +17,7 @@ in
   config = mkIf cfg.enable {
     programs.alacritty = {
       enable = true;
+      package = config.x.home.graphics.wrapPackage pkgs.alacritty;
 
       settings = {
         terminal.shell = {
