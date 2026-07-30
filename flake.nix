@@ -1,6 +1,11 @@
 {
   description = "0xch4z's systems configurations";
 
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -18,6 +23,18 @@
 
     nixgl = {
       url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    system-manager = {
+      url = "github:numtide/system-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
+    mcp-servers = {
+      url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -103,9 +120,16 @@
       modules = import ./modules;
       roles = import ./roles;
 
+      systemConfigs = self.lib.buildMachinesForOS "linux" // self.lib.buildMachinesForOSBySystem "linux";
       nixosConfigurations = self.lib.buildMachinesForOS "nixos";
       darwinConfigurations = self.lib.buildMachinesForOS "darwin";
       homeConfigurations = self.lib.buildHomeConfigurations { };
+      apps = self.lib.genAttrs self.constants.platforms.linux (system: {
+        system-manager = {
+          type = "app";
+          program = "${self.inputs.system-manager.packages.${system}.default}/bin/system-manager";
+        };
+      });
       checks = self.lib.buildChecks;
       formatter = self.lib.forAllPlatforms (
         system:

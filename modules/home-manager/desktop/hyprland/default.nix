@@ -21,6 +21,22 @@ let
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
+  workspaceAnimation =
+    let
+      workspace = cfg.animations.workspace;
+    in
+    if workspace.enabled == false then
+      "workspaces, 0"
+    else
+      "workspaces, 1, ${toString workspace.speed}, ${workspace.curve}"
+      + lib.optionalString (workspace.style != null) ", ${workspace.style}";
+
+  animationRules =
+    cfg.animations.rules
+    ++ lib.optionals (cfg.animations.workspace.enabled != null) [
+      workspaceAnimation
+    ];
+
   applyWallpaper = pkgs.writeShellApplication {
     name = "hyprpaper-apply-wallpaper";
     runtimeInputs = [
@@ -37,6 +53,24 @@ let
         sleep 0.5
       done
     '';
+  };
+
+  handleLidSwitch = pkgs.writeShellApplication {
+    name = "hyprland-lid-switch";
+    runtimeInputs = [
+      pkgs.hyprland
+      pkgs.coreutils
+      pkgs.gnugrep
+      pkgs.jq
+    ];
+    text = self.lib.templateFile {
+      file = ./lid-switch.sh;
+      data = {
+        INTERNAL_MONITOR = lib.escapeShellArg cfg.lidSwitch.internalMonitor;
+        INTERNAL_MONITOR_RULE = lib.escapeShellArg cfg.lidSwitch.internalMonitorRule;
+        PREFERRED_EXTERNAL_MONITOR = lib.escapeShellArg cfg.lidSwitch.preferredExternalMonitor;
+      };
+    };
   };
 in
 {
@@ -86,7 +120,158 @@ in
       description = "Hyprland workspace rules.";
     };
 
-    # TODO: hookup
+    decoration = {
+      rounding = mkOption {
+        type = types.int;
+        default = 3;
+        description = "Window corner rounding radius.";
+      };
+
+      activeOpacity = mkOption {
+        type = types.number;
+        default = 1.0;
+        description = "Opacity for active windows.";
+      };
+
+      inactiveOpacity = mkOption {
+        type = types.number;
+        default = 1.0;
+        description = "Opacity for inactive windows.";
+      };
+
+      fullscreenOpacity = mkOption {
+        type = types.number;
+        default = 1.0;
+        description = "Opacity for fullscreen windows.";
+      };
+
+      blur = {
+        enable = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Enable Hyprland window background blur.";
+        };
+
+        size = mkOption {
+          type = types.int;
+          default = 16;
+          description = "Hyprland blur size.";
+        };
+
+        passes = mkOption {
+          type = types.int;
+          default = 3;
+          description = "Hyprland blur pass count.";
+        };
+
+        newOptimizations = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Enable Hyprland's optimized blur path.";
+        };
+
+        xray = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Allow floating window blur to ignore tiled windows.";
+        };
+      };
+    };
+
+    render.newRenderScheduling = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable Hyprland's new render scheduling path.";
+    };
+
+    animations = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Hyprland animations.";
+      };
+
+      workspaceWraparound = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable wraparound behavior for directional workspace animations.";
+      };
+
+      bezier = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Custom Hyprland animation bezier definitions.";
+      };
+
+      rules = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Additional raw Hyprland animation rules.";
+      };
+
+      workspace = {
+        enabled = mkOption {
+          type = types.nullOr types.bool;
+          default = null;
+          description = "Workspace animation state; null leaves Hyprland's default rule in place.";
+        };
+
+        speed = mkOption {
+          type = types.int;
+          default = 8;
+          description = "Workspace animation duration in deciseconds.";
+        };
+
+        curve = mkOption {
+          type = types.str;
+          default = "default";
+          description = "Workspace animation bezier curve name.";
+        };
+
+        style = mkOption {
+          type = types.nullOr (
+            types.enum [
+              "slide"
+              "slidevert"
+              "fade"
+              "slidefade"
+              "slidefadevert"
+            ]
+          );
+          default = null;
+          description = "Workspace animation style; null uses Hyprland's default style.";
+        };
+      };
+    };
+
+    lidSwitch = {
+      enable = lib.mkEnableOption "external-monitor laptop lid handling";
+
+      switchName = mkOption {
+        type = types.str;
+        default = "Lid Switch";
+        description = "Hyprland switch device name for the laptop lid.";
+      };
+
+      internalMonitor = mkOption {
+        type = types.str;
+        default = "eDP-1";
+        description = "Internal laptop monitor name.";
+      };
+
+      internalMonitorRule = mkOption {
+        type = types.str;
+        default = "eDP-1,preferred,auto,1";
+        description = "Monitor rule used to re-enable the internal laptop panel.";
+      };
+
+      preferredExternalMonitor = mkOption {
+        type = types.str;
+        default = "";
+        description = "External monitor to prefer when the lid closes; empty uses the first active external output.";
+      };
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -153,6 +338,9 @@ in
           "${lib.getExe applyWallpaper}"
           # ashell is started via its systemd user service (programs.ashell.
           # systemd.enable) so it auto-restarts after suspend/resume.
+        ]
+        ++ lib.optionals cfg.lidSwitch.enable [
+          "${lib.getExe handleLidSwitch} reconcile"
         ];
 
         monitor = cfg.monitors;
@@ -178,9 +366,14 @@ in
         ++ map (n: "ALT,${n},workspace,${n}") (nStrRange 1 9) # goto workspace N
         ++ map (n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 1 9); # move to workspace N
 
-        bindl = [
-          ",XF86AudioMute,exec,ashell msg volume-toggle-mute"
-        ];
+        bindl =
+          lib.optionals cfg.lidSwitch.enable [
+            ",switch:on:${cfg.lidSwitch.switchName},exec,${lib.getExe handleLidSwitch} closed"
+            ",switch:off:${cfg.lidSwitch.switchName},exec,${lib.getExe handleLidSwitch} open"
+          ]
+          ++ [
+            ",XF86AudioMute,exec,ashell msg volume-toggle-mute"
+          ];
 
         bindle = [
           ",XF86AudioRaiseVolume,exec,ashell msg volume-up"
@@ -197,16 +390,27 @@ in
         workspace = cfg.workspaces;
 
         decoration = {
-          rounding = 3;
-          active_opacity = 1.0;
-          inactive_opacity = 1.0;
-          fullscreen_opacity = 1.0;
+          rounding = cfg.decoration.rounding;
+          active_opacity = cfg.decoration.activeOpacity;
+          inactive_opacity = cfg.decoration.inactiveOpacity;
+          fullscreen_opacity = cfg.decoration.fullscreenOpacity;
 
           blur = {
-            enabled = true;
-            passes = 3;
-            size = 16;
+            enabled = cfg.decoration.blur.enable;
+            passes = cfg.decoration.blur.passes;
+            size = cfg.decoration.blur.size;
+            new_optimizations = cfg.decoration.blur.newOptimizations;
+            xray = cfg.decoration.blur.xray;
           };
+        };
+
+        render = {
+          new_render_scheduling = cfg.render.newRenderScheduling;
+        };
+
+        animations = {
+          enabled = cfg.animations.enable;
+          workspace_wraparound = cfg.animations.workspaceWraparound;
         };
 
         env = [
@@ -220,6 +424,12 @@ in
           disable_splash_rendering = true;
           force_default_wallpaper = 0;
         };
+      }
+      // lib.optionalAttrs (cfg.animations.bezier != [ ]) {
+        bezier = cfg.animations.bezier;
+      }
+      // lib.optionalAttrs (animationRules != [ ]) {
+        animation = animationRules;
       };
 
       extraConfig = cfg.extraConfig;
