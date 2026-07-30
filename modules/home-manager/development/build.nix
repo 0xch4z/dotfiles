@@ -19,7 +19,7 @@
         codespell
         (lib.hiPrio gcc)
         editorconfig-core-c
-        envsubst
+        (lib.hiPrio envsubst)
         gnumake
         go-task
         graphviz

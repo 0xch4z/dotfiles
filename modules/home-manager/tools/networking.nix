@@ -29,6 +29,7 @@ in
           mtr
           netcat
           nghttp2
+          openssl
           rsync
           socat
           trippy

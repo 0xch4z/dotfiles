@@ -11,6 +11,8 @@ in
   };
 
   home.packages = with pkgs; [
+    bats
+    bash-language-server
     shelp
   ];
 }

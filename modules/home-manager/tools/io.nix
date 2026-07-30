@@ -18,6 +18,7 @@ in
     home = {
       packages = with pkgs; [
         dool
+        gettext
         hexdump
         htop
         iotop

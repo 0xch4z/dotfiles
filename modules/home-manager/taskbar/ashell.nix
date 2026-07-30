@@ -61,7 +61,7 @@ in
           grouped = true;
           toast = true;
           toast_position = "bottom_right";
-          toast_timeout = 5000;
+          toast_timeout = 2000;
           toast_limit = 5;
           toast_max_height = 150;
         };
