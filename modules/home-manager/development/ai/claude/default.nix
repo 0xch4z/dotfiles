@@ -8,6 +8,7 @@
 let
   inherit (self.lib) mkEnabledOption;
   cfg = config.x.home.development.ai.claude;
+  mcpCfg = config.x.home.development.ai.mcpServers;
 
   notifyCmd = (
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -156,24 +157,7 @@ in
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf lib.types.anything;
       description = "MCP servers merged into ~/.claude.json on activation.";
-      default = {
-        filesystem = {
-          type = "stdio";
-          command = "${pkgs.nodejs}/bin/npx";
-          args = [
-            "-y"
-            "@modelcontextprotocol/server-filesystem"
-            "${config.home.homeDirectory}/work"
-            "${config.home.homeDirectory}/.dotfiles"
-            "${config.home.homeDirectory}/tmp"
-          ];
-        };
-        context7 = {
-          type = "http";
-          url = "https://mcp.context7.com/mcp";
-        };
-      }
-      // lspMcpServers;
+      default = lib.optionalAttrs mcpCfg.enable mcpCfg.servers // lspMcpServers;
     };
   };
 
@@ -186,8 +170,7 @@ in
 
     programs.claude-code = {
       enable = true;
-      # don't install the cli; managed externally
-      package = null;
+      package = self.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
 
       context = ''
         # Language Servers

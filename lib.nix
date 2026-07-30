@@ -5,7 +5,12 @@ self@{
   ...
 }:
 let
-  inherit (builtins) attrNames attrValues elemAt;
+  inherit (builtins)
+    attrNames
+    attrValues
+    elemAt
+    hasAttr
+    ;
   inherit (constants) allPlatforms defaultNixpkgsConfig;
   inherit (lib)
     lists
@@ -66,6 +71,11 @@ let
   systemFactories = {
     nixos = inputs.nixpkgs.lib.nixosSystem;
     darwin = inputs.darwin.lib.darwinSystem;
+    linux =
+      { modules, specialArgs }:
+      inputs.system-manager.lib.makeSystemConfig {
+        inherit modules specialArgs;
+      };
   };
 
   # systemHomeManagerFactories contain OS-specific home-manager factories.
@@ -79,6 +89,7 @@ let
     nixos = "/home";
     darwin = "/Users";
     home = "/home";
+    linux = "/home";
   };
 
   homeDirFor = { variant, user }: "${(systemHomePrefix.${variant})}/${user}";
@@ -87,6 +98,7 @@ let
   variantSpecificSystemModules = {
     nixos = [ ./modules/linux ];
     darwin = [ ./modules/darwin ];
+    linux = [ ./modules/system-manager ];
   };
 
   osSpecificHomeModules = {
@@ -102,13 +114,19 @@ let
     {
       system,
       config ? defaultNixpkgsConfig,
+      hostPlatformAsString ? false,
+      overlays ? [ self.overlays ],
     }:
     {
       nixpkgs.config = config;
-      nixpkgs.hostPlatform = {
-        inherit system;
-      };
-      nixpkgs.overlays = [ self.overlays ];
+      nixpkgs.hostPlatform =
+        if hostPlatformAsString then
+          system
+        else
+          {
+            inherit system;
+          };
+      nixpkgs.overlays = overlays;
     };
 
   # machineConfigurationFactory builds the given machine's system configuration.
@@ -128,14 +146,19 @@ let
       userhost = "${user}@${hostname}";
       homeDir = homeDirFor { inherit user variant; };
 
-      pkgs = pkgsFor system;
-      homeManagerFactory = systemHomeManagerFactories.${variant};
-
-      nixpkgsModule = nixpkgsModuleFactory { inherit system; };
+      nixpkgsModule = nixpkgsModuleFactory {
+        inherit system;
+        config =
+          if variant == "linux" then
+            builtins.removeAttrs defaultNixpkgsConfig [ "overlays" ]
+          else
+            defaultNixpkgsConfig;
+        hostPlatformAsString = variant == "linux";
+        overlays = lib.optionals (variant != "linux") [ self.overlays ];
+      };
       machineModule = ./machines/${hostname};
       homeModule = ./home/${userhost};
-    in
-    systemFactories.${variant} {
+      hasIntegratedHomeManager = hasAttr variant systemHomeManagerFactories;
       specialArgs = {
         inherit
           system
@@ -146,15 +169,21 @@ let
           self
           machine
           homeDir
+          user
           ;
         nixpkgs = inputs.nixpkgs;
       };
+    in
+    systemFactories.${variant} {
+      inherit specialArgs;
       modules =
         variantSpecificSystemModules.${variant}
         ++ [
           nixpkgsModule
           machineModule
-          homeManagerFactory
+        ]
+        ++ lib.optionals hasIntegratedHomeManager [
+          systemHomeManagerFactories.${variant}
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -193,7 +222,7 @@ let
               ];
           }
         ]
-        ++ lib.optionals wsl [
+        ++ lib.optionals (wsl && variant == "nixos") [
           inputs.wsl.nixosModules.wsl
         ];
     };
@@ -276,6 +305,22 @@ inputs.nixpkgs.lib.extend (
     # filterHosts filters hosts by the given predicate.
     filterHosts = predicate: builtins.filter predicate machineList;
 
+    buildMachinesForOSBySystem =
+      variant:
+      let
+        matchesOS = _: mach: mach.variant == variant;
+        machines = lib.filterAttrs matchesOS self.machines;
+      in
+      foldl' (
+        acc: mach:
+        acc
+        // {
+          ${mach.system} = (acc.${mach.system} or { }) // {
+            ${mach.hostname} = mach.configuration;
+          };
+        }
+      ) { } (attrValues machines);
+
     # e.g. darwinConfigurations = <{ "${HOSTNAME}" = { ... } }>
     buildMachinesForOS =
       variant:
@@ -299,7 +344,11 @@ inputs.nixpkgs.lib.extend (
         machineChecks = map (mach: {
           inherit (mach) system;
           name = "${mach.variant}-${mach.hostname}";
-          drv = mach.configuration.config.system.build.toplevel;
+          drv =
+            if mach.variant == "linux" then
+              mach.configuration
+            else
+              mach.configuration.config.system.build.toplevel;
         }) machineList;
       in
       foldl' (
