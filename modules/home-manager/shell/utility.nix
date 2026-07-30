@@ -10,12 +10,7 @@ in
     enable = true;
   };
 
-  programs.bash = {
-    enable = true;
-  };
-
   home.packages = with pkgs; [
     shelp
-    bash-language-server
   ];
 }
