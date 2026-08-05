@@ -12,6 +12,14 @@
     #   nix-direnv.enable = true;
     # };
 
+    x.home.development.lsp.servers.nix = {
+      package = pkgs.nixd;
+      opencode = "nixd";
+      extensionToLanguage = {
+        ".nix" = "nix";
+      };
+    };
+
     home.packages = with pkgs; [
       nixfmt
       nixd

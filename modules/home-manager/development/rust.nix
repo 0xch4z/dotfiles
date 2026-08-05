@@ -22,5 +22,15 @@
         CARGO_HOME = "${config.xdg.configHome}/cargo";
       };
     };
+
+    # the pinned package is only a fallback — the shim prefers whatever
+    # rust-analyzer the project's toolchain puts on $PATH.
+    x.home.development.lsp.servers.rust = {
+      package = pkgs.rust-analyzer;
+      opencode = "rust";
+      extensionToLanguage = {
+        ".rs" = "rust";
+      };
+    };
   };
 }

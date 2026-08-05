@@ -15,6 +15,32 @@
       tailwindcss-language-server
       typescript-language-server
     ];
+    x.home.development.lsp.servers = {
+      typescript = {
+        package = pkgs.typescript-language-server;
+        args = [ "--stdio" ];
+        opencode = "typescript";
+        extensionToLanguage = {
+          ".ts" = "typescript";
+          ".mts" = "typescript";
+          ".cts" = "typescript";
+          ".tsx" = "typescriptreact";
+          ".js" = "javascript";
+          ".mjs" = "javascript";
+          ".cjs" = "javascript";
+          ".jsx" = "javascriptreact";
+        };
+      };
+
+      tailwindcss = {
+        package = pkgs.tailwindcss-language-server;
+        args = [ "--stdio" ];
+        extensionToLanguage = {
+          ".css" = "css";
+        };
+      };
+    };
+
     home.sessionVariables = {
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
     };

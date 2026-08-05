@@ -24,6 +24,15 @@
     ];
     home.sessionPath = [ "${homeDir}/go/bin" ];
 
+    x.home.development.lsp.servers.go = {
+      package = pkgs.gopls;
+      args = [ "serve" ];
+      opencode = "gopls";
+      extensionToLanguage = {
+        ".go" = "go";
+      };
+    };
+
     programs = {
       go = {
         enable = true;

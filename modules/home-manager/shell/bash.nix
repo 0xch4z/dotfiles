@@ -16,6 +16,16 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    x.home.development.lsp.servers.bash = {
+      package = pkgs.bash-language-server;
+      args = [ "start" ];
+      opencode = "bash";
+      extensionToLanguage = {
+        ".sh" = "shellscript";
+        ".bash" = "shellscript";
+      };
+    };
+
     home.packages = with pkgs; [
       bash-language-server
       bat

@@ -96,7 +96,6 @@ in
       nil # nil language server
       fzf # several plugins depend on native fzf install
       ripgrep # ^ same with ripgrep
-      marksman # markdown language server
       #python3Packages.esbonio # rst language server
     ];
 

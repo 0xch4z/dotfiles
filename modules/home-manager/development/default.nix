@@ -16,7 +16,9 @@ in
     ./git.nix
     ./golang.nix
     ./javascript.nix
+    ./lsp.nix
     ./lua.nix
+    ./markdown.nix
     ./nix.nix
     ./python.nix
     ./rust.nix

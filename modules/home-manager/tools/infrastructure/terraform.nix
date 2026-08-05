@@ -10,5 +10,15 @@
       terraform
       terraform-ls
     ];
+
+    x.home.development.lsp.servers.terraform = {
+      package = pkgs.terraform-ls;
+      args = [ "serve" ];
+      opencode = "terraform";
+      extensionToLanguage = {
+        ".tf" = "terraform";
+        ".tfvars" = "terraform";
+      };
+    };
   };
 }
