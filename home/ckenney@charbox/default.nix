@@ -32,7 +32,7 @@ in
     # monitor by description and keep these desktop-only rules off laptops.
     wallpaperMonitor = g8;
     monitors = [
-      "${g8},3840x2160@240,0x0,1" # Samsung Odyssey G8 32"
+      "${g8},3840x2160@144,0x0,1" # Samsung Odyssey G8 32"
       "DP-4,3840x2160@144,0x-2160,1" # Samsung Odyssey G5 27"
     ];
     workspaces = [
