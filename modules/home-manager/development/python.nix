@@ -24,6 +24,7 @@
         pyright
         pipenv
         #python3
+        ruff
         uv
       ];
     };
