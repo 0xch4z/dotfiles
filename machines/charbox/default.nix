@@ -5,23 +5,36 @@
   ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    (_final: prev: {
+      hyprland = prev.hyprland.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [
+          (prev.fetchpatch {
+            url = "https://github.com/hyprwm/Hyprland/commit/c34580167ab8a756ee7b6c8e440dab9aa38c4edb.patch";
+            hash = "sha256-NV+TTlpTQKb7r1LeDsM94m+iux3amekI++P/tlWFzzA=";
+          })
+        ];
+      });
+    })
+  ];
 
   x.hardware.nvidia.enable = true;
   x.hardware.audio.enable = true;
   x.hardware.keyd.enable = true;
   x.hardware.peripherals.enable = true;
   x.hardware.peripherals.motherboard = "amd";
-  x.hardware.peripherals.colors =
-    let
-      ram = builtins.genList (i: if (i / 2) * 2 == i then "006BB6" else "FFFFFF") 12;
-    in
-    [
-      ram
-      ram
-      [ "F58426" ]
-      [ "006BB6" ]
-      [ "F58426" ]
-    ];
+  # not working right now
+  # x.hardware.peripherals.colors =
+  #   let
+  #     ram = builtins.genList (i: if (i / 2) * 2 == i then "006BB6" else "FFFFFF") 12;
+  #   in
+  #   [
+  #     ram
+  #     ram
+  #     [ "F58426" ]
+  #     [ "006BB6" ]
+  #     [ "F58426" ]
+  #   ];
   x.programs.nix-ld.enable = true;
   x.programs.gaming.enable = true;
   x.desktop.wayland.enable = true;
@@ -44,11 +57,13 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd start-hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland.desktop'";
         user = "greeter";
       };
     };
   };
+
+  programs.hyprland.withUWSM = true;
 
   boot.loader = {
     systemd-boot.configurationLimit = 10;
