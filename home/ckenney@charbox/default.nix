@@ -27,6 +27,8 @@ in
   };
 
   x.home.desktop.hyprland = {
+    uwsm.enable = true;
+
     # Was using IDs (e.g. HDMI-A-1), but those are non-deterministic when the
     # AMD iGPU and NVIDIA dGPU load in different orders. Match the primary
     # monitor by description and keep these desktop-only rules off laptops.
@@ -49,6 +51,7 @@ in
       main = {
         font = "FiraCode Nerd Font:size=12";
         terminal = "alacritty";
+        "launch-prefix" = "uwsm app --";
         icons-enabled = "yes";
         icon-theme = "hicolor";
         lines = 10;

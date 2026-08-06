@@ -103,7 +103,11 @@ in
     };
 
     systemd.user.services.ashell = {
-      Unit.StartLimitIntervalSec = 0;
+      Unit = {
+        StartLimitIntervalSec = 0;
+        PartOf = [ "graphical-session.target" ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
+      };
       Service = {
         Restart = lib.mkForce "always";
         RestartSec = 1;

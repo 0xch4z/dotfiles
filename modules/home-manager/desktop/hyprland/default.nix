@@ -18,6 +18,7 @@ let
   inherit (lists) map range;
 
   nStrRange = lower: upper: map (n: toString n) (range lower upper);
+  uwsmApp = lib.optionalString cfg.uwsm.enable "uwsm app -- ";
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
@@ -76,6 +77,11 @@ in
 {
   options.x.home.desktop.hyprland = {
     xwayland.enable = mkEnabledOption "enable Hyprland xwayland support.";
+    uwsm.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Run Hyprland through UWSM.";
+    };
 
     wallpaperMonitor = mkOption {
       type = types.str;
@@ -300,6 +306,10 @@ in
   ];
 
   config = lib.mkIf (config.x.home.desktop.backend == "hyprland") {
+    systemd.user.services.hyprpaper = lib.mkIf cfg.hyprpaper.enable {
+      Service.ExecStartPost = lib.getExe applyWallpaper;
+    };
+
     wayland.windowManager.hyprland = {
       enable = true;
 
@@ -307,7 +317,8 @@ in
       package = config.x.home.graphics.wrapPackage pkgs.hyprland;
 
       systemd = {
-        enable = true;
+        # UWSM owns the graphical session and conflicts with this integration.
+        enable = !cfg.uwsm.enable;
         variables = [ "all" ];
       };
 
@@ -333,21 +344,19 @@ in
           "col.inactive_border" = "rgb(${cfg.theme.inactiveBorderColor})";
         };
 
-        exec-once = [
-          "hyprpaper"
-          "${lib.getExe applyWallpaper}"
-          # ashell is started via its systemd user service (programs.ashell.
-          # systemd.enable) so it auto-restarts after suspend/resume.
-        ]
-        ++ lib.optionals cfg.lidSwitch.enable [
+        debug = lib.optionalAttrs cfg.uwsm.enable {
+          disable_logs = false;
+        };
+
+        exec-once = lib.optionals cfg.lidSwitch.enable [
           "${lib.getExe handleLidSwitch} reconcile"
         ];
 
         monitor = cfg.monitors;
 
         bind = [
-          "SUPER,SPACE,exec,fuzzel" # launcher
-          "SUPER,RETURN,exec,alacritty" # terminal
+          "SUPER,SPACE,exec,${uwsmApp}fuzzel" # launcher
+          "SUPER,RETURN,exec,${uwsmApp}alacritty" # terminal
           "SUPER,Q,killactive" # app: quit
           "SUPER,W,exec,${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl" # window: close
           "SUPER,BACKSPACE,exec,${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x" # Delete to beginning of line
