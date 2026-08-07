@@ -32,6 +32,14 @@ let
         exit 127
       fi
 
+      # unset NIXGL settings
+      unset \
+        GBM_BACKENDS_PATH \
+        LIBGL_DRIVERS_PATH \
+        LIBVA_DRIVERS_PATH \
+        __EGL_VENDOR_LIBRARY_FILENAMES \
+        LD_LIBRARY_PATH
+
       if /usr/bin/hyprlock "$@"; then
         exit 0
       else
