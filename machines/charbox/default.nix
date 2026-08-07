@@ -1,22 +1,17 @@
-{ config, pkgs, ... }:
+{
+  self,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.overlays = [
-    (_final: prev: {
-      hyprland = prev.hyprland.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [
-          (prev.fetchpatch {
-            url = "https://github.com/hyprwm/Hyprland/commit/c34580167ab8a756ee7b6c8e440dab9aa38c4edb.patch";
-            hash = "sha256-NV+TTlpTQKb7r1LeDsM94m+iux3amekI++P/tlWFzzA=";
-          })
-        ];
-      });
-    })
-  ];
+  nix.settings = {
+    trusted-users = [ "ckenney" ];
+  };
 
   x.hardware.nvidia.enable = true;
   x.hardware.audio.enable = true;
@@ -39,6 +34,8 @@
   x.programs.gaming.enable = true;
   x.desktop.wayland.enable = true;
 
+  programs.hyprlock.enable = true;
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -52,18 +49,6 @@
       PasswordAuthentication = false;
     };
   };
-
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland.desktop'";
-        user = "greeter";
-      };
-    };
-  };
-
-  programs.hyprland.withUWSM = true;
 
   boot.loader = {
     systemd-boot.configurationLimit = 10;

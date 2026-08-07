@@ -4,6 +4,7 @@
   caffeine-bin = callPackage ./darwin/utility/caffine.nix { };
   actions-languageserver = callPackage ./development/actions-languageserver.nix { };
   is-macbook-display-only = callPackage ./darwin/utility/is-macbook-display-only { };
+  hypr-persist = callPackage ./utility/hypr-persist.nix { };
   sbarlua = callPackage ./darwin/utility/sbarlua.nix { };
   tmux-picker = callPackage ./terminal/tmux/tmux-picker.nix { };
 }

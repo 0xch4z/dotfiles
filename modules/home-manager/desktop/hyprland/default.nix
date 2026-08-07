@@ -10,15 +10,17 @@ let
   cfg = config.x.home.desktop.hyprland;
 
   inherit (self.lib)
-    lists
     types
     mkEnabledOption
     mkOption
     ;
-  inherit (lists) map range;
 
-  nStrRange = lower: upper: map (n: toString n) (range lower upper);
   uwsmApp = lib.optionalString cfg.uwsm.enable "uwsm app -- ";
+  displayConfigurator = config.x.home.graphics.wrapPackage pkgs.wdisplays;
+  whichKey = config.x.home.graphics.wrapPackage pkgs.wlr-which-key;
+  hyprPersist = pkgs.x.hypr-persist;
+  yamlFormat = pkgs.formats.yaml { };
+  tomlFormat = pkgs.formats.toml { };
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
@@ -73,6 +75,58 @@ let
       };
     };
   };
+
+  powerAction = pkgs.writeShellApplication {
+    name = "hyprland-power-action";
+    runtimeInputs = [
+      pkgs.hyprland
+      pkgs.systemd
+    ];
+    text = ''
+      action="$1"
+
+      run_after_save() {
+        ${lib.getExe hyprPersist} save
+        systemctl --user stop hypr-persist.service
+        if ! "$@"; then
+          systemctl --user start hypr-persist.service
+          return 1
+        fi
+      }
+
+      case "$action" in
+        logout)
+          run_after_save hyprctl dispatch exit
+          ;;
+        sleep)
+          systemctl suspend
+          ;;
+        shutdown)
+          run_after_save systemctl poweroff
+          ;;
+        reboot)
+          run_after_save systemctl reboot
+          ;;
+        *)
+          echo "Usage: hyprland-power-action {logout|sleep|shutdown|reboot}" >&2
+          exit 2
+          ;;
+      esac
+    '';
+  };
+
+  confirmPowerAction = action: [
+    {
+      key = "y";
+      desc = "Yes";
+      cmd = "${lib.getExe powerAction} ${action}";
+    }
+    {
+      key = "n";
+      desc = "No";
+      cmd = "${lib.getExe' pkgs.coreutils "true"}";
+    }
+  ];
 in
 {
   options.x.home.desktop.hyprland = {
@@ -303,9 +357,102 @@ in
     ./greetd.nix
     ./hypridle.nix
     ./hyprpaper.nix
+    ./monitor-profiles.nix
   ];
 
   config = lib.mkIf (config.x.home.desktop.backend == "hyprland") {
+    home.packages = [
+      displayConfigurator
+      hyprPersist
+      whichKey
+    ];
+
+    xdg.configFile."hypr/hypr-persist.toml".source = tomlFormat.generate "hypr-persist.toml" {
+      general = {
+        save_interval = 120;
+        session_dir = "~/.local/share/hypr-persist";
+        restore_on_start = true;
+        per_window_launch = true;
+        restore_geometry = true;
+        restore_layout = true;
+      };
+      rules.exclude = [
+        "^xdg-desktop-portal.*"
+        "^org\\.kde\\.polkit.*"
+      ];
+    };
+
+    xdg.configFile."wlr-which-key/config.yaml".source =
+      yamlFormat.generate "wlr-which-key-config.yaml"
+        {
+          font = "FiraCode Nerd Font 14";
+          background = "#1A426Eee";
+          color = "#ffffffff";
+          border = "#ff69b4ff";
+          border_width = 2;
+          corner_r = 12;
+          padding = 20;
+          column_padding = 28;
+          separator = " -> ";
+          anchor = "center";
+          inhibit_compositor_keyboard_shortcuts = true;
+          auto_kbd_layout = true;
+          menu = [
+            {
+              key = "d";
+              desc = "Displays";
+              cmd = "${uwsmApp}${lib.getExe displayConfigurator}";
+            }
+            {
+              key = "p";
+              desc = "Power";
+              submenu = [
+                {
+                  key = "o";
+                  desc = "Logout";
+                  submenu = confirmPowerAction "logout";
+                }
+                {
+                  key = "s";
+                  desc = "Sleep";
+                  submenu = confirmPowerAction "sleep";
+                }
+                {
+                  key = "l";
+                  desc = "Lock";
+                  cmd = "${lib.getExe' pkgs.systemd "loginctl"} lock-session";
+                }
+                {
+                  key = "q";
+                  desc = "Shutdown";
+                  submenu = confirmPowerAction "shutdown";
+                }
+                {
+                  key = "r";
+                  desc = "Reboot";
+                  submenu = confirmPowerAction "reboot";
+                }
+              ];
+            }
+          ];
+        };
+
+    systemd.user.services.hypr-persist = {
+      Unit = {
+        Description = "Hyprland session persistence";
+        After = [ "hyprland-session.target" ];
+        PartOf = [ "hyprland-session.target" ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
+      };
+      Service = {
+        ExecStart = lib.getExe hyprPersist;
+        Restart = "on-failure";
+        RestartSec = 2;
+        TimeoutStopSec = 30;
+      };
+      Install.WantedBy = [ "hyprland-session.target" ];
+    };
+
     systemd.user.services.hyprpaper = lib.mkIf cfg.hyprpaper.enable {
       Service.ExecStartPost = lib.getExe applyWallpaper;
     };
@@ -342,7 +489,10 @@ in
         general = {
           "col.active_border" = "rgb(${cfg.theme.activeBorderColor})";
           "col.inactive_border" = "rgb(${cfg.theme.inactiveBorderColor})";
+          resize_on_border = true;
         };
+
+        dwindle.preserve_split = true;
 
         debug = lib.optionalAttrs cfg.uwsm.enable {
           disable_logs = false;
@@ -365,16 +515,17 @@ in
           "SUPER,A,exec,${lib.getExe pkgs.wtype} -M ctrl -k a -m ctrl" # select all
           "SUPER,X,exec,${lib.getExe pkgs.wtype} -M ctrl -k x -m ctrl" # cut
           "SUPER,Z,exec,${lib.getExe pkgs.wtype} -M ctrl -k z -m ctrl" # Undo
-          "SUPER SHIFT,E,exit," # exit to tty
-          "ALT,F,fullscreen,1" # fullscreen
+          "SUPER SHIFT,E,exec,${lib.getExe powerAction} logout" # exit to greeter
+          "CTRL,grave,exec,${uwsmApp}${lib.getExe whichKey}" # command palette
+          "ALT,F,togglefloating" # toggle tiled/floating
           "SUPER SHIFT,DELETE,exec,hyprctl dispatch dpms off" # sleep
           "ALT,L,cyclenext" # go to next
+          "ALT,L,alterzorder,top" # raise focused floating window
           "ALT,H,cyclenext,prev" # go to prev
+          "ALT,H,alterzorder,top" # raise focused floating window
           "ALT SHIFT,N,swapnext" # swap to next
           "ALT SHIFT,P,swapnext,prev" # swap to prev
-        ]
-        ++ map (n: "ALT,${n},workspace,${n}") (nStrRange 1 9) # goto workspace N
-        ++ map (n: "ALT SHIFT,${n},movetoworkspacesilent,${n}") (nStrRange 1 9); # move to workspace N
+        ];
 
         bindl =
           lib.optionals cfg.lidSwitch.enable [
@@ -390,12 +541,7 @@ in
           ",XF86AudioLowerVolume,exec,ashell msg volume-down"
         ];
 
-        # bindm = [
-        #   "SUPER,C,pass"
-        #   "SUPER,X,pass"
-        #   "SUPER,V,pass"
-        #   "SUPER,P,pass"
-        # ];
+        bindm = [ "ALT,mouse:272,movewindow" ];
 
         workspace = cfg.workspaces;
 

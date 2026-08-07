@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ self, lib, ... }:
+{
   imports = [
     ./audio.nix
     ./gaming.nix
@@ -6,6 +7,7 @@
     ./nix-ld.nix
     ./nvidia.nix
     ./peripherals.nix
+    ./regreet.nix
     ./wayland.nix
   ];
 
