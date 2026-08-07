@@ -355,7 +355,8 @@ in
         monitor = cfg.monitors;
 
         bind = [
-          "SUPER,SPACE,exec,${uwsmApp}fuzzel" # launcher
+          "SUPER,SPACE,exec,${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} toggle" # launcher
+          "SUPER,P,exec,${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'" # Bitwarden
           "SUPER,RETURN,exec,${uwsmApp}alacritty" # terminal
           "SUPER,Q,killactive" # app: quit
           "SUPER,W,exec,${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl" # window: close

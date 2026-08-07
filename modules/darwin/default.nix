@@ -8,6 +8,11 @@
 {
   programs.fish.enable = true;
 
+  homebrew = {
+    enable = true;
+    casks = [ "vicinae" ];
+  };
+
   fonts = {
     packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix { }) ];
   };
@@ -19,6 +24,8 @@
     };
 
     defaults = {
+      CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."64".enabled = false;
+
       dock = {
         autohide = true;
         autohide-delay = 0.0;
