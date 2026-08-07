@@ -2,8 +2,14 @@
   description = "0xch4z's systems configurations";
 
   nixConfig = {
-    extra-substituters = [ "https://cache.numtide.com" ];
-    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+    extra-substituters = [
+      "https://hyprland.cachix.org"
+      "https://cache.numtide.com"
+    ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+    ];
   };
 
   inputs = {
@@ -104,6 +110,8 @@
     gauntlet.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprcursor-phinger.url = "github:jappie3/hyprcursor-phinger";
+
+    hyprland.url = "github:hyprwm/Hyprland/v0.56.1";
 
     linodectl.url = "github:0xch4z/linodectl";
     linodectl.inputs.nixpkgs.follows = "nixpkgs";

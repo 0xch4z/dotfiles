@@ -1,4 +1,5 @@
 {
+  self,
   lib,
   nixpkgs,
   pkgs,
@@ -52,6 +53,13 @@
   nix = {
     nixPath = lib.mkForce [ "nixpkgs=${nixpkgs}" ];
     package = pkgs.nixVersions.latest;
+    settings = {
+      substituters = self.constants.nixCaches.substituters ++ [ "https://cache.nixos.org/" ];
+      trusted-substituters = self.constants.nixCaches.substituters;
+      trusted-public-keys = self.constants.nixCaches.trustedPublicKeys ++ [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      ];
+    };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

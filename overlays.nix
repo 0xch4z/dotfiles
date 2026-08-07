@@ -38,6 +38,13 @@ let
       });
     };
 
+  hyprlandOverlay = final: prev: {
+    inherit (inputs.hyprland.packages.x86_64-linux)
+      hyprland
+      xdg-desktop-portal-hyprland
+      ;
+  };
+
   # cuda_compat only has redistributables for aarch64-linux (Jetson).
   # On x86_64-linux it fails to build because $src is empty.
   # Stub it out on non-Jetson platforms.
@@ -60,6 +67,7 @@ let
     };
 
   communityOverlays = [
+    hyprlandOverlay
     knsOverlay
     neovimDarwinFixOverlay
     inputs.nix-darwin-browsers.overlays.default

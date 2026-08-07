@@ -25,6 +25,11 @@
   services.openssh.enable = lib.mkDefault true;
 
   nix = {
+    settings = {
+      inherit (self.constants.nixCaches) substituters;
+      trusted-substituters = self.constants.nixCaches.substituters;
+      trusted-public-keys = self.constants.nixCaches.trustedPublicKeys;
+    };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

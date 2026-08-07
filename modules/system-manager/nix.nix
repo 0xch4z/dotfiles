@@ -1,4 +1,5 @@
 {
+  self,
   config,
   lib,
   ...
@@ -18,13 +19,13 @@ in
 
     extraSubstituters = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = self.constants.nixCaches.substituters;
       description = "Extra binary caches to add to the Nix daemon.";
     };
 
     extraTrustedPublicKeys = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = self.constants.nixCaches.trustedPublicKeys;
       description = "Trusted public keys for extra binary caches.";
     };
   };
