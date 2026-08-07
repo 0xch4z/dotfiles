@@ -477,7 +477,17 @@ in
       systemd = {
         # UWSM owns the graphical session and conflicts with this integration.
         enable = !cfg.uwsm.enable;
-        variables = [ "all" ];
+        variables = [
+          "DISPLAY"
+          "GDK_SCALE"
+          "HYPRLAND_INSTANCE_SIGNATURE"
+          "WAYLAND_DISPLAY"
+          "XCURSOR_PATH"
+          "XCURSOR_SIZE"
+          "XCURSOR_THEME"
+          "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
+        ];
       };
 
       xwayland.enable = cfg.xwayland.enable;

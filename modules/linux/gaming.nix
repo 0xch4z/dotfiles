@@ -14,6 +14,9 @@ let
     postBuild = ''
       rm $out/bin/bolt-launcher
       makeWrapper ${pkgs.mangohud}/bin/mangohud $out/bin/bolt-launcher \
+        --set XCURSOR_SIZE 24 \
+        --set XCURSOR_THEME capitaine-cursors \
+        --set _JAVA_AWT_WM_NONREPARENTING 1 \
         --add-flags ${pkgs.bolt-launcher}/bin/bolt-launcher
     '';
   };

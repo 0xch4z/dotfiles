@@ -45,7 +45,6 @@ in
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       NVIDIA_PRESERVE_VIDEO_MEMORY_ALLOCATIONS = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
       NVD_BACKEND = "direct";
     };
 
