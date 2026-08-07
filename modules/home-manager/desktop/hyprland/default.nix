@@ -4,6 +4,7 @@
   pkgs,
   lib,
   homeDir,
+  variant,
   ...
 }:
 let
@@ -19,6 +20,8 @@ let
   displayConfigurator = config.x.home.graphics.wrapPackage pkgs.wdisplays;
   whichKey = config.x.home.graphics.wrapPackage pkgs.wlr-which-key;
   hyprPersist = pkgs.x.hypr-persist;
+  systemctl =
+    if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
   yamlFormat = pkgs.formats.yaml { };
   tomlFormat = pkgs.formats.toml { };
 
@@ -80,32 +83,40 @@ let
     name = "hyprland-power-action";
     runtimeInputs = [
       pkgs.hyprland
+      pkgs.libnotify
       pkgs.systemd
     ];
     text = ''
       action="$1"
 
+      report_failure() {
+        message="$1"
+        printf '%s\n' "$message" >&2
+        systemd-cat --identifier=hyprland-power-action printf '%s\n' "$message"
+        notify-send --urgency=critical "Power action failed" "$message"
+      }
+
       run_after_save() {
         ${lib.getExe hyprPersist} save
-        systemctl --user stop hypr-persist.service
+        ${systemctl} --user stop hypr-persist.service
         if ! "$@"; then
-          systemctl --user start hypr-persist.service
+          ${systemctl} --user start hypr-persist.service
           return 1
         fi
       }
 
       case "$action" in
         logout)
-          run_after_save hyprctl dispatch exit
+          run_after_save hyprctl dispatch exit || report_failure "Hyprland logout failed"
           ;;
         sleep)
-          systemctl suspend
+          ${systemctl} suspend || report_failure "System suspend failed; check journalctl and logind permissions"
           ;;
         shutdown)
-          run_after_save systemctl poweroff
+          run_after_save ${systemctl} poweroff || report_failure "System shutdown failed"
           ;;
         reboot)
-          run_after_save systemctl reboot
+          run_after_save ${systemctl} reboot || report_failure "System reboot failed"
           ;;
         *)
           echo "Usage: hyprland-power-action {logout|sleep|shutdown|reboot}" >&2
@@ -420,7 +431,7 @@ in
                 {
                   key = "l";
                   desc = "Lock";
-                  cmd = "${lib.getExe' pkgs.systemd "loginctl"} lock-session";
+                  cmd = cfg.hypridle.lockCommand;
                 }
                 {
                   key = "q";

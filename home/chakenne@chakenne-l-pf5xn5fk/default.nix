@@ -13,6 +13,8 @@
   };
 
   x.home.desktop.hyprland = {
+    hypridle.ubuntu-hyprlock-pkg = true;
+
     keyboardOptionsByDevice.at-translated-set-2-keyboard = [
       "ctrl:nocaps"
       "altwin:swap_lalt_lwin"

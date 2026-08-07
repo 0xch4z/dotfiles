@@ -16,4 +16,4 @@ if [ -e "$state" ]; then
   rm -f "$state"
 fi
 
-systemctl suspend
+{{ SYSTEMCTL }} suspend

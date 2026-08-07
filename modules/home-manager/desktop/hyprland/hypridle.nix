@@ -4,6 +4,7 @@
   lib,
   self,
   homeDir,
+  variant,
   ...
 }:
 let
@@ -20,13 +21,46 @@ let
   font = config.x.home.theme.font.mono;
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
+  ubuntuHyprlock = pkgs.writeShellApplication {
+    name = "hyprlock";
+    runtimeInputs = [ pkgs.libnotify ];
+    text = ''
+      if [[ ! -x /usr/bin/hyprlock ]]; then
+        message="Ubuntu Hyprlock is not installed at /usr/bin/hyprlock"
+        echo "$message" >&2
+        notify-send --urgency=critical "Lock failed" "$message"
+        exit 127
+      fi
+
+      if /usr/bin/hyprlock "$@"; then
+        exit 0
+      else
+        status=$?
+        message="Ubuntu Hyprlock exited with status $status; check its terminal output or journal"
+        echo "$message" >&2
+        notify-send --urgency=critical "Lock failed" "$message"
+        exit "$status"
+      fi
+    '';
+  };
+  hyprlockPackage =
+    if cfg.ubuntu-hyprlock-pkg then
+      ubuntuHyprlock
+    else
+      config.x.home.graphics.wrapPackage pkgs.hyprlock;
+  loginctl = if variant == "linux" then "/usr/bin/loginctl" else lib.getExe' pkgs.systemd "loginctl";
+  systemctl =
+    if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
+
   suspendGuard = pkgs.writeShellApplication {
     name = "hypridle-suspend-guard";
     runtimeInputs = with pkgs; [
       coreutils
-      systemd
     ];
-    text = builtins.readFile ./hypridle-suspend-guard.sh;
+    text = self.lib.templateFile {
+      file = ./hypridle-suspend-guard.sh;
+      data.SYSTEMCTL = systemctl;
+    };
   };
 
   idleCtl = pkgs.writeShellApplication {
@@ -81,6 +115,20 @@ in
       defaultText = literalExpression "x.desktop.backend";
       description = "enable hypridle home-manager module";
     };
+
+    ubuntu-hyprlock-pkg = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Use Ubuntu's /usr/bin/hyprlock instead of the Nix package.";
+    };
+
+    lockCommand = mkOption {
+      type = types.str;
+      readOnly = true;
+      internal = true;
+      default = lib.getExe hyprlockPackage;
+      description = "Configured Hyprlock command.";
+    };
   };
 
   config = lib.mkIf (hyprlandEnabled && cfg.enable) {
@@ -88,6 +136,7 @@ in
 
     programs.hyprlock = {
       enable = true;
+      package = hyprlockPackage;
       settings = {
         general = {
           hide_cursor = true;
@@ -228,11 +277,12 @@ in
     # See: https://wiki.hyprland.org/Hypr-Ecosystem/hypridle
     services.hypridle = {
       enable = true;
+      systemdTarget = "hyprland-session.target";
 
       settings = {
         general = {
-          lock_cmd = "pidof hyprlock || ${lib.getExe pkgs.hyprlock}"; # enter hyprlock
-          before_sleep_cmd = "loginctl lock-session"; # lock before suspend
+          lock_cmd = "pidof hyprlock || ${cfg.lockCommand}"; # enter hyprlock
+          before_sleep_cmd = "${loginctl} lock-session"; # lock before suspend
           after_sleep_cmd = "hyprctl dispatch dpms on"; # turn screen on after key press
         };
 
@@ -244,7 +294,7 @@ in
           }
           {
             timeout = 300; # 5min
-            on-timeout = "loginctl lock-session"; # log out
+            on-timeout = cfg.lockCommand;
           }
           {
             timeout = 330; # 5.5min
