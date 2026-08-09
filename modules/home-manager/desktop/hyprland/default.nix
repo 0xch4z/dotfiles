@@ -79,6 +79,47 @@ let
     };
   };
 
+  screenshot = pkgs.writeShellApplication {
+    name = "hyprland-screenshot";
+    runtimeInputs = with pkgs; [
+      coreutils
+      grim
+      libnotify
+      slurp
+      wl-clipboard
+      xdg-user-dirs
+    ];
+    text = ''
+      mode="$1"
+      pictures="$(xdg-user-dir PICTURES 2>/dev/null || true)"
+      if [[ -z "$pictures" ]]; then
+        pictures="$HOME/Pictures"
+      fi
+
+      directory="$pictures/Screenshots"
+      file="$directory/Screenshot $(date '+%Y-%m-%d at %H-%M-%S').png"
+      mkdir -p "$directory"
+
+      case "$mode" in
+        full)
+          grim "$file"
+          ;;
+        region)
+          geometry="$(slurp)" || exit 0
+          [[ -n "$geometry" ]] || exit 0
+          grim -g "$geometry" "$file"
+          ;;
+        *)
+          echo "Usage: hyprland-screenshot {full|region}" >&2
+          exit 2
+          ;;
+      esac
+
+      wl-copy --type image/png < "$file"
+      notify-send "Screenshot captured" "$file"
+    '';
+  };
+
   powerAction = pkgs.writeShellApplication {
     name = "hyprland-power-action";
     runtimeInputs = [
@@ -537,6 +578,8 @@ in
           "SUPER,X,exec,${lib.getExe pkgs.wtype} -M ctrl -k x -m ctrl" # cut
           "SUPER,Z,exec,${lib.getExe pkgs.wtype} -M ctrl -k z -m ctrl" # Undo
           "SUPER SHIFT,E,exec,${lib.getExe powerAction} logout" # exit to greeter
+          "SUPER SHIFT,3,exec,${lib.getExe screenshot} full" # macOS-style full screenshot
+          "SUPER SHIFT,4,exec,${lib.getExe screenshot} region" # macOS-style selection screenshot
           "CTRL,grave,exec,${uwsmApp}${lib.getExe whichKey}" # command palette
           "ALT,F,togglefloating" # toggle tiled/floating
           "SUPER SHIFT,DELETE,exec,hyprctl dispatch dpms off" # sleep
