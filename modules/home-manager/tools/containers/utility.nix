@@ -9,6 +9,7 @@
     home.packages = with pkgs; [
       ctop
       (pkgs.callPackage ../../../../pkgs/container/container-linux-config-transpiler.nix { })
+      trivy
     ];
   };
 }

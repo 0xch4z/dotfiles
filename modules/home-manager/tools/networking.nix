@@ -20,12 +20,19 @@ in
         with pkgs;
         [
           arping
+          bandwhich
+          (lib.lowPrio bind)
           bmon
           curl
+          curl-impersonate
+          curlie
           dig
           gping
           grpcurl
           iperf3
+          iftop
+          (lib.lowPrio inetutils)
+          lsof
           mtr
           netcat
           nghttp2
@@ -33,10 +40,21 @@ in
           rsync
           socat
           trippy
+          tcpdump
           wget
+          wireshark-cli
           wrk
         ]
-        ++ (if pkgs.stdenv.hostPlatform.isDarwin then [ iproute2mac ] else [ ]);
+        ++ (if pkgs.stdenv.hostPlatform.isDarwin then [ iproute2mac ] else [ ])
+        ++ (
+          if pkgs.stdenv.hostPlatform.isLinux then
+            [
+              strace
+              traceroute
+            ]
+          else
+            [ ]
+        );
     };
   };
 }

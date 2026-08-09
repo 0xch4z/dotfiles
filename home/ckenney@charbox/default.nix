@@ -32,7 +32,7 @@ in
     monitorProfiles.g8-only.outputs = [
       {
         search = "s=H1AK500000";
-        mode = "3840x2160@119.88Hz";
+        mode = "3840x2160@239.99Hz";
         position = "0,0";
         scale = 1.0;
         workspaces = map (n: n) (range 1 9);

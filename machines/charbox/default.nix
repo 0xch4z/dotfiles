@@ -62,6 +62,10 @@
   };
 
   networking.hostName = "charbox";
+  networking.firewall.interfaces.enp12s0 = {
+    allowedTCPPorts = [ 53317 ];
+    allowedUDPPorts = [ 53317 ];
+  };
   networking.networkmanager.enable = true;
   networking.networkmanager.ensureProfiles.profiles.charbox-lan = {
     connection = {
