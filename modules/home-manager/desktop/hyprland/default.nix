@@ -235,7 +235,7 @@ in
     decoration = {
       rounding = mkOption {
         type = types.int;
-        default = 3;
+        default = 12;
         description = "Window corner rounding radius.";
       };
 

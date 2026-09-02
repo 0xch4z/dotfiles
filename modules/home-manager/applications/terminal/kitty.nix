@@ -22,11 +22,14 @@ in
       settings = {
         background_opacity = "0.9";
         dynamic_background_opacity = "yes";
-        # macos_traditional_fullscreen yes
-        font_family = "Hack";
+        font_family = config.x.home.theme.font.mono;
         disable_ligatures = "never";
-        macos_hide_titlebar = "yes";
         hide_window_decorations = "titlebar-only";
+        window_margin_width = 6;
+        window_padding_width = 4;
+        placement_strategy = "center";
+        macos_option_as_alt = "left";
+        shell = "${pkgs.fish}/bin/fish --login --interactive";
       };
     };
   };

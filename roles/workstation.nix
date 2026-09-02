@@ -28,6 +28,7 @@
       };
       development.enable = lib.mkDefault true;
       editor = {
+        emacs.enable = lib.mkDefault true;
         neovim.enable = lib.mkDefault true;
         vscode.enable = lib.mkDefault true;
       };
