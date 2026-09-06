@@ -1,0 +1,233 @@
+diff --git c/input.c w/input.c
+index 3a61ec2..643d57e 100644
+--- c/input.c
++++ w/input.c
+@@ -169,0 +170 @@ static void	input_osc_52(struct input_ctx *, const char *);
++static void	input_osc_66(struct input_ctx *, const char *);
+@@ -1377,0 +1379,2 @@ input_esc_dispatch(struct input_ctx *ictx)
++		if (ictx->wp != NULL)
++			window_pane_osc66_clear(ictx->wp);
+@@ -1669,0 +1673,2 @@ input_csi_dispatch(struct input_ctx *ictx)
++			if (ictx->wp != NULL)
++				window_pane_osc66_clear(ictx->wp);
+@@ -2585,0 +2591,5 @@ input_dcs_dispatch(struct input_ctx *ictx)
++		if (wp != NULL && len >= prefixlen + 5 &&
++		    memcmp(buf + prefixlen, "\033]66;", 5) == 0) {
++			window_pane_osc66_store(wp, sctx->s->cx, sctx->s->cy,
++			    buf + prefixlen, len - prefixlen);
++		}
+@@ -2666,0 +2677,3 @@ input_exit_osc(struct input_ctx *ictx)
++	case 66:
++		input_osc_66(ictx, p);
++		break;
+@@ -2687,0 +2701,73 @@ input_exit_osc(struct input_ctx *ictx)
++/* Calculate the cell width occupied by OSC 66 payload. */
++static u_int
++input_osc_66_width(const char *p)
++{
++	const char	*text, *errstr;
++	char		*copy, *metadata, *next, *value;
++	long long	 scale = 1, width = 0;
++	u_int		 result;
++
++	text = strchr(p, ';');
++	if (text == NULL || !utf8_isvalid(text + 1))
++		return (0);
++	copy = metadata = xstrndup(p, text - p);
++	while ((next = strsep(&metadata, ":")) != NULL) {
++		if ((value = strchr(next, '=')) == NULL)
++			continue;
++		*value++ = '\0';
++		if (strcmp(next, "s") == 0) {
++			scale = strtonum(value, 1, 7, &errstr);
++			if (errstr != NULL)
++				scale = 1;
++		} else if (strcmp(next, "w") == 0) {
++			width = strtonum(value, 0, 7, &errstr);
++			if (errstr != NULL)
++				width = 0;
++		}
++	}
++	free(copy);
++
++	if (width == 0)
++		result = utf8_cstrwidth(text + 1) * scale;
++	else
++		result = width * scale;
++	return (result);
++}
++
++/* Retain OSC 66. */
++static void
++input_osc_66(struct input_ctx *ictx, const char *p)
++{
++	struct screen_write_ctx	*sctx = &ictx->ctx;
++	struct window_pane	*wp = ictx->wp;
++	u_char			*sequence;
++	size_t			 size, end_size;
++	u_int			 width, cx;
++
++	if (wp == NULL)
++		return;
++	end_size = ictx->input_end == INPUT_END_ST ? 2 : 1;
++	size = 2 + ictx->input_len + end_size;
++	sequence = xmalloc(size);
++	sequence[0] = '\033';
++	sequence[1] = ']';
++	memcpy(sequence + 2, ictx->input_buf, ictx->input_len);
++	if (ictx->input_end == INPUT_END_ST) {
++		sequence[size - 2] = '\033';
++		sequence[size - 1] = '\\';
++	} else
++		sequence[size - 1] = '\007';
++
++	window_pane_osc66_store(wp, sctx->s->cx, sctx->s->cy, sequence, size);
++	screen_write_rawstring(sctx, sequence, size, 0);
++	free(sequence);
++
++	width = input_osc_66_width(p);
++	cx = sctx->s->cx;
++	if (width > screen_size_x(sctx->s) - cx)
++		cx = screen_size_x(sctx->s);
++	else
++		cx += width;
++	screen_write_cursormove(sctx, cx, -1, 0);
++}
++
+diff --git c/screen-redraw.c w/screen-redraw.c
+index 1c1b850..32e3e52 100644
+--- c/screen-redraw.c
++++ w/screen-redraw.c
+@@ -898 +898,3 @@ screen_redraw_draw_pane(struct screen_redraw_ctx *ctx, struct window_pane *wp)
+-	u_int			 i, j, top, x, y, width;
++	struct osc66_entry	*oe;
++	u_int			 cm_offset, cm_size, i, j, row, top, x, y, width;
++	int			 mode;
+@@ -945,0 +948,29 @@ screen_redraw_draw_pane(struct screen_redraw_ctx *ctx, struct window_pane *wp)
++
++	/*
++	 * OSC 66 text does not enter the grid, so replay it after the grid has
++	 * been redrawn.
++	 */
++	mode = window_pane_mode(wp);
++	if (s == &wp->base || mode == WINDOW_PANE_COPY_MODE) {
++		cm_offset = cm_size = 0;
++		if (mode == WINDOW_PANE_COPY_MODE &&
++		    window_copy_get_current_offset(wp, &cm_offset, &cm_size) == 0)
++			return;
++		TAILQ_FOREACH(oe, &wp->osc66_entries, entry) {
++			row = oe->y + cm_size - cm_offset;
++			if (oe->x >= wp->sx || row >= wp->sy)
++				continue;
++			if (wp->xoff + oe->x < ctx->ox ||
++			    wp->xoff + oe->x >= ctx->ox + ctx->sx ||
++			    wp->yoff + row < ctx->oy ||
++			    wp->yoff + row >= ctx->oy + ctx->sy)
++				continue;
++			x = wp->xoff + oe->x - ctx->ox;
++			y = top + wp->yoff + row - ctx->oy;
++			tty_region_off(tty);
++			tty_margin_off(tty);
++			tty_cursor(tty, x, y);
++			tty_puts(tty, oe->data);
++			tty_invalidate(tty);
++		}
++	}
+diff --git c/screen-write.c w/screen-write.c
+index a2755d3..313f473 100644
+--- c/screen-write.c
++++ w/screen-write.c
+@@ -2377,0 +2378,2 @@ screen_write_alternateon(struct screen_write_ctx *ctx, struct grid_cell *gc,
++	if (wp != NULL)
++		window_pane_osc66_clear(wp);
+@@ -2399,0 +2402,2 @@ screen_write_alternateoff(struct screen_write_ctx *ctx, struct grid_cell *gc,
++	if (wp != NULL)
++		window_pane_osc66_clear(wp);
+diff --git c/tmux.h w/tmux.h
+index dd62382..d7248d2 100644
+--- c/tmux.h
++++ w/tmux.h
+@@ -1161,0 +1162,10 @@ TAILQ_HEAD(window_pane_resizes, window_pane_resize);
++/* Opaque OSC 66 text sizing sequence retained for pane redraws. */
++struct osc66_entry {
++	u_int			 x;
++	u_int			 y;
++	char			*data;
++
++	TAILQ_ENTRY(osc66_entry) entry;
++};
++TAILQ_HEAD(osc66_entries, osc66_entry);
++
+@@ -1219,0 +1230 @@ struct window_pane {
++	struct osc66_entries osc66_entries;
+@@ -3270,0 +3282,3 @@ int		 window_pane_destroy_ready(struct window_pane *);
++void		 window_pane_osc66_store(struct window_pane *, u_int, u_int,
++		     const void *, size_t);
++void		 window_pane_osc66_clear(struct window_pane *);
+diff --git c/window-copy.c w/window-copy.c
+index 2d52849..4ed80cc 100644
+--- c/window-copy.c
++++ w/window-copy.c
+@@ -4532,0 +4533 @@ window_copy_redraw_lines(struct window_mode_entry *wme, u_int py, u_int ny)
++	struct osc66_entry		*oe;
+@@ -4534 +4535 @@ window_copy_redraw_lines(struct window_mode_entry *wme, u_int py, u_int ny)
+-	u_int				 i;
++	u_int				 i, row;
+@@ -4538,0 +4540,11 @@ window_copy_redraw_lines(struct window_mode_entry *wme, u_int py, u_int ny)
++
++	/* OSC 66 text is not in the grid, so restore entries redrawn here. */
++	TAILQ_FOREACH(oe, &wp->osc66_entries, entry) {
++		row = oe->y + data->oy;
++		if (oe->x >= wp->sx || row < py || row >= py + ny ||
++		    row >= wp->sy)
++			continue;
++		screen_write_cursormove(&ctx, oe->x, row, 0);
++		screen_write_rawstring(&ctx, (u_char *)oe->data,
++		    strlen(oe->data), 0);
++	}
+diff --git c/window.c w/window.c
+index 562fcc7..fb76370 100644
+--- c/window.c
++++ w/window.c
+@@ -945,0 +946 @@ window_pane_create(struct window *w, u_int sx, u_int sy, u_int hlimit)
++	TAILQ_INIT(&wp->osc66_entries);
+@@ -979,0 +981 @@ window_pane_destroy(struct window_pane *wp)
++	window_pane_osc66_clear(wp);
+@@ -1018,0 +1021,37 @@ window_pane_destroy(struct window_pane *wp)
++void
++window_pane_osc66_store(struct window_pane *wp, u_int x, u_int y,
++    const void *data, size_t size)
++{
++	struct osc66_entry	*oe;
++
++	if (size > 8192)
++		return;
++	TAILQ_FOREACH(oe, &wp->osc66_entries, entry) {
++		if (oe->x == x && oe->y == y)
++			break;
++	}
++	if (oe == NULL) {
++		oe = xcalloc(1, sizeof *oe);
++		oe->x = x;
++		oe->y = y;
++		TAILQ_INSERT_TAIL(&wp->osc66_entries, oe, entry);
++	}
++
++	free(oe->data);
++	oe->data = xmalloc(size + 1);
++	memcpy(oe->data, data, size);
++	oe->data[size] = '\0';
++}
++
++void
++window_pane_osc66_clear(struct window_pane *wp)
++{
++	struct osc66_entry	*oe, *oe1;
++
++	TAILQ_FOREACH_SAFE(oe, &wp->osc66_entries, entry, oe1) {
++		TAILQ_REMOVE(&wp->osc66_entries, oe, entry);
++		free(oe->data);
++		free(oe);
++	}
++}
++

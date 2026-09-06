@@ -14,6 +14,10 @@ let
     ;
 
   cfg = config.x.home.shell.tmux;
+
+  tmuxOsc66 = pkgs.tmux.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./patches/osc66-replay.patch ];
+  });
 in
 {
   options.x.home.shell.tmux = {
@@ -37,6 +41,7 @@ in
       in
       {
         enable = true;
+        package = tmuxOsc66;
         sensibleOnTop = false;
         shell = "${pkgs.fish}/bin/fish";
         terminal = "tmux-256color";
