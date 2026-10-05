@@ -20,6 +20,7 @@
       sessionPath = [ "${config.xdg.configHome}/cargo/bin" ];
       sessionVariables = {
         CARGO_HOME = "${config.xdg.configHome}/cargo";
+        CARGO_NET_GIT_FETCH_WITH_CLI = "true";
       };
     };
 
