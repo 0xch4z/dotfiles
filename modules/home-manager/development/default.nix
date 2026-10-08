@@ -15,6 +15,7 @@ in
     ./elixir.nix
     ./git.nix
     ./golang.nix
+    ./haskell.nix
     ./javascript.nix
     ./lsp.nix
     ./lua.nix

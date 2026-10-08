@@ -35,6 +35,7 @@ let
     gomod
     gosum
     gowork
+    haskell
     hcl
     ini
     javascript
