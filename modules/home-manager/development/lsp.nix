@@ -141,6 +141,18 @@ let
     };
 
   configFile = (pkgs.formats.toml { }).generate "lspmux-config.toml" cfg.lspmux.settings;
+
+  documented = lib.filterAttrs (_: srv: srv.extensionToLanguage != { }) cfg.resolved;
+
+  lspList = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
+      name: srv:
+      let
+        exts = lib.concatStringsSep ", " (lib.attrNames srv.extensionToLanguage);
+      in
+      "- **${name}**: `${srv.exe}` (${exts})"
+    ) documented
+  );
 in
 {
   options.x.home.development.lsp = {
@@ -211,6 +223,35 @@ in
         config.x.home.development.enable && cfg.enable
       ) (lib.mapAttrs (_: resolve) cfg.servers);
     }
+
+    (lib.mkIf (config.x.home.development.enable && cfg.enable) {
+      x.home.development.ai.context.sections.lsp = {
+        order = 70;
+        text = ''
+          # Language Servers
+
+          Language servers are installed by nix home-manager and multiplexed
+          through lspmux, so every agent and editor asking for the same server
+          in the same project shares one process rather than starting its own.
+          The following are configured:
+
+          ${lspList}
+
+          ## Guidelines
+          - If an LSP tool is exposed, prefer using it as it's faster and more
+            accurate than searching text.
+          - If no LSP tool is exposed, the servers above are still configured —
+            say the current agent cannot reach them rather than implying they
+            are missing, then fall back to grep/glob.
+          - Do NOT suggest installing a language server listed above.
+          - For a language with no server listed, suggest installing it via nix
+            home-manager (permanent) or `nix-shell -p <pkg>` (temporary,
+            instant).
+          - Even with an LSP tool available, use grep/glob for string literals,
+            comments, and anything else LSP cannot answer.
+        '';
+      };
+    })
 
     (lib.mkIf (config.x.home.development.enable && cfg.enable && cfg.lspmux.enable) {
       home.packages = [ cfg.lspmux.package ];

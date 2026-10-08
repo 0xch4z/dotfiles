@@ -5,6 +5,7 @@
     ./path.nix
     ./zsh.nix
     ./tmux
+    ./tuios
     ./utility.nix
   ];
 }
