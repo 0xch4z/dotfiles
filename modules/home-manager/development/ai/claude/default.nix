@@ -9,6 +9,8 @@ let
   inherit (self.lib) mkEnabledOption;
   cfg = config.x.home.development.ai.claude;
   mcpCfg = config.x.home.development.ai.mcpServers;
+  permCfg = config.x.home.development.ai.permissions;
+  ctxCfg = config.x.home.development.ai.context;
 
   notifyCmd = (
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -34,50 +36,21 @@ let
       inherit lspServers;
     }
   );
-
-  # one mcp-language-server instance per installed LSP, reusing the nix store
-  # paths from lspServers so we don't install anything new. workspace is
-  # resolved from $PWD at launch time (claude code expands ${VAR} refs).
-  lspMcpServers = lib.mapAttrs' (name: srv: {
-    name = "lsp-${name}";
-    value = {
-      type = "stdio";
-      command = "${pkgs.unstable.mcp-language-server}/bin/mcp-language-server";
-      args = [
-        "-workspace"
-        "\${PWD}"
-        "-lsp"
-        srv.command
-      ]
-      ++ lib.optionals (srv.args != [ ]) ([ "--" ] ++ srv.args);
-    };
-  }) lspServers;
-
-  # generate the LSP section of CLAUDE.md from the registry
-  lspList = lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (
-      name: srv:
-      let
-        exts = lib.concatStringsSep ", " (lib.attrNames srv.extensionToLanguage);
-      in
-      "- **${name}**: `${srv.exe}` (${exts})"
-    ) registered
-  );
 in
 {
   options.x.home.development.ai.claude = {
     enable = mkEnabledOption "enable claude code config";
     taskNotifications = mkEnabledOption "enable task notifications";
 
-    # mcpServers go in ~/.claude.json rather than settings.json because the
-    # claude cli doesn't read mcpServers from settings.json, and the
-    # home-manager `mcpServers` option requires a non-null package (we manage
-    # the cli externally). on activation, jq replaces the mcpServers key in
-    # ~/.claude.json while preserving the rest of the cli's state.
+    package = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = self.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf lib.types.anything;
       description = "MCP servers merged into ~/.claude.json on activation.";
-      default = lib.optionalAttrs mcpCfg.enable mcpCfg.servers // lspMcpServers;
+      default = lib.optionalAttrs mcpCfg.enable mcpCfg.servers;
     };
   };
 
@@ -90,25 +63,9 @@ in
 
     programs.claude-code = {
       enable = true;
-      package = self.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+      inherit (cfg) package;
 
-      context = ''
-        # Language Servers
-
-        This system uses nix home-manager to manage language servers. The following
-        LSPs are installed and available — always prefer the LSP tool (go-to-definition,
-        find-references, hover, diagnostics) over Grep/Glob for navigating code:
-
-        ${lspList}
-
-        ## Guidelines
-        - Do NOT suggest installing language servers that are already available above.
-        - For languages without an LSP installed, suggest the user install it via nix
-          home-manager (permanent) or `nix-shell -p <pkg>` (temporary, instant).
-        - Use LSP for: finding definitions, references, symbols, type info, and diagnostics.
-        - Fall back to Grep/Glob only when LSP cannot answer the query (e.g. searching
-          for string literals, comments, or across languages without an LSP).
-      '';
+      context = ctxCfg.rendered;
 
       settings = {
         defaultMode = "acceptEdits";
@@ -118,90 +75,7 @@ in
           "nix-managed-lsp" = true;
         };
 
-        permissions = {
-          allow = [
-            "Edit"
-            "Write"
-            "MultiEdit"
-            "Read"
-
-            "Bash(gh pr list:*)"
-            "Bash(gh pr view:*)"
-            "Bash(gh pr diff:*)"
-            "Bash(gh pr status:*)"
-            "Bash(gh pr checks:*)"
-            "Bash(gh issue list:*)"
-            "Bash(gh issue view:*)"
-            "Bash(gh issue status:*)"
-            "Bash(gh run list:*)"
-            "Bash(gh run view:*)"
-            "Bash(gh run watch:*)"
-            "Bash(gh workflow list:*)"
-            "Bash(gh workflow view:*)"
-            "Bash(gh release list:*)"
-            "Bash(gh release view:*)"
-            "Bash(gh repo view:*)"
-            "Bash(gh repo list:*)"
-            "Bash(gh search:*)"
-            "Bash(gh browse:*)"
-            "Bash(gh auth status)"
-
-            "Bash(git status:*)"
-            "Bash(git diff:*)"
-            "Bash(git log:*)"
-            "Bash(git show:*)"
-            "Bash(git branch:*)"
-            "Bash(git blame:*)"
-            "Bash(git fetch:*)"
-            "Bash(git remote -v)"
-            "Bash(git stash list:*)"
-
-            "Bash(go build:*)"
-            "Bash(go test:*)"
-            "Bash(go vet:*)"
-            "Bash(go mod:*)"
-            "Bash(gofmt:*)"
-            "Bash(cargo check:*)"
-            "Bash(cargo build:*)"
-            "Bash(cargo test:*)"
-            "Bash(cargo clippy:*)"
-
-            "Bash(ls:*)"
-            "Bash(rg:*)"
-            "Bash(fd:*)"
-            "Bash(jq:*)"
-            "Bash(yq:*)"
-            "Bash(cat:*)"
-            "Bash(head:*)"
-            "Bash(tail:*)"
-            "Bash(wc:*)"
-            "Bash(file:*)"
-            "Bash(which:*)"
-            "Bash(pwd)"
-            "Bash(env)"
-
-            "Bash(kubectl get:*)"
-            "Bash(kubectl describe:*)"
-            "Bash(kubectl logs:*)"
-            "Bash(kubectl explain:*)"
-            "Bash(kubectl top:*)"
-            "Bash(kubectl config get-contexts:*)"
-            "Bash(kubectl config current-context)"
-            "Bash(cilium status:*)"
-            "Bash(cilium version:*)"
-          ];
-          deny = [
-            "Bash(gh api * -X POST*)"
-            "Bash(gh api * -X DELETE*)"
-            "Bash(gh api * --method POST*)"
-            "Bash(gh api * --method DELETE*)"
-            "Read(./.env)"
-            "Read(./.env.*)"
-            "Read(./**/secrets/**)"
-            "Bash(rm -rf /*)"
-            "Bash(sudo:*)"
-          ];
-        };
+        permissions = permCfg.rendered.claude;
 
         hooks = {
           Stop = [
