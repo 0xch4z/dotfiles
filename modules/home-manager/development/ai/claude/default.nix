@@ -27,7 +27,14 @@ let
     _: srv: srv.extensionToLanguage != { }
   ) config.x.home.development.lsp.resolved;
 
-  lspServers = lib.mapAttrs (_: srv: { inherit (srv) command args extensionToLanguage; }) registered;
+  lspServers = lib.mapAttrs (
+    _: srv:
+    {
+      inherit (srv) command args extensionToLanguage;
+    }
+    // lib.optionalAttrs (srv.env != { }) { inherit (srv) env; }
+    // lib.optionalAttrs (srv.initialization != { }) { initializationOptions = srv.initialization; }
+  ) registered;
 
   lspPlugin = pkgs.writeTextDir ".claude-plugin/plugin.json" (
     builtins.toJSON {
@@ -55,8 +62,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # place custom LSP plugin with explicit nix store paths
-    home.file.".claude/plugins/nix-managed-lsp" = {
+    home.file.".claude/skills/nix-managed-lsp" = {
       source = lspPlugin;
       recursive = true;
     };
@@ -72,7 +78,9 @@ in
 
         enabledPlugins = {
           "frontend-design@claude-plugins-official" = true;
-          "nix-managed-lsp" = true;
+          "nix-managed-lsp@skills-dir" = true;
+          "rust-analyzer-lsp@claude-plugins-official" = false;
+          "gopls-lsp@claude-plugins-official" = false;
         };
 
         permissions = permCfg.rendered.claude;

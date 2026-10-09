@@ -183,8 +183,8 @@ in
 
       package = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.lspmux;
-        defaultText = lib.literalExpression "pkgs.lspmux";
+        default = pkgs.x.lspmux;
+        defaultText = lib.literalExpression "pkgs.x.lspmux";
         description = "lspmux package providing the daemon and client.";
       };
 
@@ -238,12 +238,17 @@ in
           ${lspList}
 
           ## Guidelines
-          - If an LSP tool is exposed, prefer using it as it's faster and more
-            accurate than searching text.
-          - If no LSP tool is exposed, the servers above are still configured —
-            say the current agent cannot reach them rather than implying they
-            are missing, then fall back to grep/glob.
-          - Do NOT suggest installing a language server listed above.
+          - If an LSP tool is exposed, prefer it over text search for
+            definitions, references, symbols, hover and diagnostics.
+          - These servers should always be exposed. If no LSP tool is available
+            when a task touches a listed language, say so up front: it is a
+            harness config bug, not something to quietly work around. Then fall
+            back to grep/glob.
+          - `lspmux status` lists running server instances, which shows whether
+            an agent or editor is actually connected.
+          - Do NOT suggest installing a language server listed above, including
+            a harness's own marketplace LSP plugin. That would run a second,
+            unmultiplexed copy.
           - For a language with no server listed, suggest installing it via nix
             home-manager (permanent) or `nix-shell -p <pkg>` (temporary,
             instant).

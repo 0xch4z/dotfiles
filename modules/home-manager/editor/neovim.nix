@@ -9,6 +9,7 @@
 let
   inherit (self.lib) mkEnableOption mkEnabledOption;
   cfg = config.x.home.editor.neovim;
+  dev = config.x.home.development;
 
   # lazy config in neovim will use this path
   localTreesitterPath = ".local/share/nvim/nix/nvim-treesitter";
@@ -153,6 +154,9 @@ in
       # Grammars will be installed to the following path, which is made
       # available to neovim with the below environment variable.
       LOCAL_NVIM_TREESITTER_PATH = "${homeDir}/${localTreesitterPath}";
+    }
+    // lib.optionalAttrs (dev.enable && dev.lsp.enable && dev.lsp.lspmux.enable) {
+      NVIM_USE_LSPMUX = "1";
     };
 
     # Adapted from: https://github.com/Kidsan/nixos-config/blob/466dae0d720b229f97e9ece369e661db106f41c0/home/programs/neovim/default.nix#L71
