@@ -14,6 +14,9 @@
   };
 
   x.hardware.nvidia.enable = true;
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100
+  '';
   x.hardware.audio.enable = true;
   x.hardware.keyd.enable = true;
   x.hardware.peripherals.enable = true;
