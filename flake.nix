@@ -111,7 +111,7 @@
 
     hyprcursor-phinger.url = "github:jappie3/hyprcursor-phinger";
 
-    hyprland.url = "github:hyprwm/Hyprland/v0.56.1";
+    hyprland.url = "github:hyprwm/Hyprland/v0.56.2";
 
     linodectl.url = "github:0xch4z/linodectl";
     linodectl.inputs.nixpkgs.follows = "nixpkgs";
