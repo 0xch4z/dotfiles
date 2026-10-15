@@ -295,6 +295,20 @@ let
         ];
       };
 
+      "Meta + Space" = {
+        exec = [
+          "vicinae"
+          "toggle"
+        ];
+      };
+
+      "Meta + P" = {
+        exec = [
+          "vicinae"
+          "'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'"
+        ];
+      };
+
       "Meta + Enter" = {
         exec = [
           "${lib.getExe pkgs.bash}"

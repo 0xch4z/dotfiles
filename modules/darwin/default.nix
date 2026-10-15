@@ -8,11 +8,6 @@
 {
   programs.fish.enable = true;
 
-  homebrew = {
-    enable = true;
-    casks = [ "vicinae" ];
-  };
-
   fonts = {
     packages = [ (pkgs.callPackage ../../pkgs/fonts/apple-nerdfont.nix { }) ];
   };

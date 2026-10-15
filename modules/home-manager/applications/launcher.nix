@@ -10,12 +10,11 @@ in
 {
   options.x.home.applications.launcher.enable = lib.mkEnableOption "Vicinae application launcher";
 
-  config = lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+  config = lib.mkIf (cfg.enable) {
     programs.vicinae = {
       enable = true;
-      package = config.x.home.graphics.wrapPackage pkgs.vicinae;
-      useLayerShell = true;
-      systemd = {
+      package = config.x.home.graphics.wrapPackage pkgs.unstable.vicinae;
+      service = {
         enable = true;
         autoStart = true;
       };

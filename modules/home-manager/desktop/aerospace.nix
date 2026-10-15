@@ -155,8 +155,8 @@ in
 
           alt-shift-s = "mode service";
 
-          cmd-space = "exec-and-forget /opt/homebrew/bin/vicinae toggle";
-          cmd-p = "exec-and-forget /opt/homebrew/bin/vicinae 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'";
+          cmd-space = "exec-and-forget vicinae toggle";
+          cmd-p = "exec-and-forget vicinae 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'";
 
           alt-t = "layout tiles horizontal vertical";
           alt-a = "layout accordion horizontal vertical";

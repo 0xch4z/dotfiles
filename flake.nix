@@ -23,7 +23,10 @@
 
     # community
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
+      # TODO: move back to "github:nix-community/home-manager/release-26.05"
+      # after https://github.com/nix-community/home-manager/pull/10080 is
+      # merged.
+      url = "github:0xch4z/home-manager/vicinae-darwin-support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
