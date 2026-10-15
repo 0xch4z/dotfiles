@@ -111,7 +111,8 @@
 
     hyprcursor-phinger.url = "github:jappie3/hyprcursor-phinger";
 
-    hyprland.url = "github:hyprwm/Hyprland/v0.56.2";
+    # TODO: Switch back to a release tag after v0.56.3
+    hyprland.url = "github:hyprwm/Hyprland/91f29f23bb691462f8aa6171b964069aebc37910";
 
     linodectl.url = "github:0xch4z/linodectl";
     linodectl.inputs.nixpkgs.follows = "nixpkgs";

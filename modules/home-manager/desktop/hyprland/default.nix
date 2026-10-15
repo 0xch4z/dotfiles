@@ -24,6 +24,18 @@ let
     if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
   yamlFormat = pkgs.formats.yaml { };
   tomlFormat = pkgs.formats.toml { };
+  lua = lib.generators.mkLuaInline;
+  toLua = lib.generators.toLua { };
+
+  luaBind = keys: dispatcher: flags: {
+    _args = [
+      keys
+      (lua dispatcher)
+    ]
+    ++ lib.optional (flags != { }) flags;
+  };
+
+  exec = command: "hl.dsp.exec_cmd(${toLua command})";
 
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
@@ -32,10 +44,20 @@ let
       workspace = cfg.animations.workspace;
     in
     if workspace.enabled == false then
-      "workspaces, 0"
+      {
+        leaf = "workspaces";
+        enabled = false;
+      }
     else
-      "workspaces, 1, ${toString workspace.speed}, ${workspace.curve}"
-      + lib.optionalString (workspace.style != null) ", ${workspace.style}";
+      {
+        leaf = "workspaces";
+        enabled = true;
+        speed = workspace.speed;
+        curve = workspace.curve;
+      }
+      // lib.optionalAttrs (workspace.style != null) {
+        style = workspace.style;
+      };
 
   animationRules =
     cfg.animations.rules
@@ -148,7 +170,7 @@ let
 
       case "$action" in
         logout)
-          run_after_save hyprctl dispatch exit || report_failure "Hyprland logout failed"
+          run_after_save hyprctl dispatch 'hl.dsp.exit()' || report_failure "Hyprland logout failed"
           ;;
         sleep)
           ${systemctl} suspend || report_failure "System suspend failed; check journalctl and logind permissions"
@@ -221,13 +243,38 @@ in
     };
 
     monitors = mkOption {
-      type = types.listOf types.str;
-      default = [ ",preferred,auto,1" ];
+      type = types.listOf (
+        types.attrsOf (
+          types.oneOf [
+            types.bool
+            types.int
+            types.float
+            types.str
+          ]
+        )
+      );
+      default = [
+        {
+          output = "";
+          mode = "preferred";
+          position = "auto";
+          scale = 1;
+        }
+      ];
       description = "Hyprland monitor rules.";
     };
 
     workspaces = mkOption {
-      type = types.listOf types.str;
+      type = types.listOf (
+        types.attrsOf (
+          types.oneOf [
+            types.bool
+            types.int
+            types.float
+            types.str
+          ]
+        )
+      );
       default = [ ];
       description = "Hyprland workspace rules.";
     };
@@ -310,15 +357,15 @@ in
       };
 
       bezier = mkOption {
-        type = types.listOf types.str;
+        type = types.listOf types.attrs;
         default = [ ];
-        description = "Custom Hyprland animation bezier definitions.";
+        description = "Custom Hyprland animation curve definitions.";
       };
 
       rules = mkOption {
-        type = types.listOf types.str;
+        type = types.listOf types.attrs;
         default = [ ];
-        description = "Additional raw Hyprland animation rules.";
+        description = "Additional Hyprland animation rules.";
       };
 
       workspace = {
@@ -512,7 +559,7 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
 
-      configType = "hyprlang";
+      configType = "lua";
       package = config.x.home.graphics.wrapPackage pkgs.hyprland;
 
       systemd = {
@@ -534,119 +581,156 @@ in
       xwayland.enable = cfg.xwayland.enable;
 
       settings = {
-        input = {
-          kb_layout = "us";
-          repeat_rate = 50;
-          repeat_delay = 200;
-        }
-        // lib.optionalAttrs (cfg.keyboardOptions != [ ]) {
-          kb_options = lib.concatStringsSep "," cfg.keyboardOptions;
-        };
-
         device = lib.mapAttrsToList (name: keyboardOptions: {
           inherit name;
           kb_options = lib.concatStringsSep "," keyboardOptions;
         }) cfg.keyboardOptionsByDevice;
 
-        general = {
-          "col.active_border" = "rgb(${cfg.theme.activeBorderColor})";
-          "col.inactive_border" = "rgb(${cfg.theme.inactiveBorderColor})";
-          resize_on_border = true;
+        config = {
+          input = {
+            kb_layout = "us";
+            repeat_rate = 50;
+            repeat_delay = 200;
+          }
+          // lib.optionalAttrs (cfg.keyboardOptions != [ ]) {
+            kb_options = lib.concatStringsSep "," cfg.keyboardOptions;
+          };
+
+          general = {
+            col = {
+              active_border = "rgb(${cfg.theme.activeBorderColor})";
+              inactive_border = "rgb(${cfg.theme.inactiveBorderColor})";
+            };
+            resize_on_border = true;
+          };
+
+          dwindle.preserve_split = true;
+
+          debug = lib.optionalAttrs cfg.uwsm.enable {
+            disable_logs = false;
+          };
+
+          decoration = {
+            rounding = cfg.decoration.rounding;
+            active_opacity = cfg.decoration.activeOpacity;
+            inactive_opacity = cfg.decoration.inactiveOpacity;
+            fullscreen_opacity = cfg.decoration.fullscreenOpacity;
+
+            blur = {
+              enabled = cfg.decoration.blur.enable;
+              passes = cfg.decoration.blur.passes;
+              size = cfg.decoration.blur.size;
+              new_optimizations = cfg.decoration.blur.newOptimizations;
+              xray = cfg.decoration.blur.xray;
+            };
+          };
+
+          render.new_render_scheduling = cfg.render.newRenderScheduling;
+
+          animations = {
+            enabled = cfg.animations.enable;
+            workspace_wraparound = cfg.animations.workspaceWraparound;
+          };
+
+          misc = {
+            disable_hyprland_logo = true;
+            disable_splash_rendering = true;
+            force_default_wallpaper = 0;
+          };
         };
 
-        dwindle.preserve_split = true;
-
-        debug = lib.optionalAttrs cfg.uwsm.enable {
-          disable_logs = false;
-        };
-
-        exec-once = lib.optionals cfg.lidSwitch.enable [
-          "${lib.getExe handleLidSwitch} reconcile"
+        on = lib.optionals cfg.lidSwitch.enable [
+          {
+            _args = [
+              "hyprland.start"
+              (lua ''
+                function()
+                  hl.exec_cmd(${toLua "${lib.getExe handleLidSwitch} reconcile"})
+                end
+              '')
+            ];
+          }
         ];
 
         monitor = cfg.monitors;
 
         bind = [
-          "SUPER,SPACE,exec,${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} toggle" # launcher
-          "SUPER,P,exec,${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'" # Bitwarden
-          "SUPER,RETURN,exec,${uwsmApp}alacritty" # terminal
-          "SUPER,Q,killactive" # app: quit
-          "SUPER,W,exec,${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl" # window: close
-          "SUPER,BACKSPACE,exec,${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x" # Delete to beginning of line
-          "SUPER,DELETE,exec,${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x" # Delete to beginning of line
-          "SUPER,A,exec,${lib.getExe pkgs.wtype} -M ctrl -k a -m ctrl" # select all
-          "SUPER,X,exec,${lib.getExe pkgs.wtype} -M ctrl -k x -m ctrl" # cut
-          "SUPER,Z,exec,${lib.getExe pkgs.wtype} -M ctrl -k z -m ctrl" # Undo
-          "SUPER SHIFT,E,exec,${lib.getExe powerAction} logout" # exit to greeter
-          "SUPER SHIFT,3,exec,${lib.getExe screenshot} full" # macOS-style full screenshot
-          "SUPER SHIFT,4,exec,${lib.getExe screenshot} region" # macOS-style selection screenshot
-          "CTRL,grave,exec,${uwsmApp}${lib.getExe whichKey}" # command palette
-          "ALT,F,togglefloating" # toggle tiled/floating
-          "SUPER SHIFT,DELETE,exec,hyprctl dispatch dpms off" # sleep
-          "ALT,L,cyclenext" # go to next
-          "ALT,L,alterzorder,top" # raise focused floating window
-          "ALT,H,cyclenext,prev" # go to prev
-          "ALT,H,alterzorder,top" # raise focused floating window
-          "ALT SHIFT,N,swapnext" # swap to next
-          "ALT SHIFT,P,swapnext,prev" # swap to prev
+          (luaBind "SUPER + SPACE"
+            (exec "${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} toggle")
+            { }
+          )
+          (luaBind "SUPER + P"
+            (exec "${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'")
+            { }
+          )
+          (luaBind "SUPER + RETURN" (exec "${uwsmApp}alacritty") { })
+          (luaBind "SUPER + Q" "hl.dsp.window.close()" { })
+          (luaBind "SUPER + W" (exec "${lib.getExe pkgs.wtype} -M ctrl -k w -m ctrl") { })
+          (luaBind "SUPER + BACKSPACE" (exec "${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x") { })
+          (luaBind "SUPER + DELETE" (exec "${lib.getExe pkgs.wtype} -k ctrl+shift+left ctrl+x") { })
+          (luaBind "SUPER + A" (exec "${lib.getExe pkgs.wtype} -M ctrl -k a -m ctrl") { })
+          (luaBind "SUPER + X" (exec "${lib.getExe pkgs.wtype} -M ctrl -k x -m ctrl") { })
+          (luaBind "SUPER + Z" (exec "${lib.getExe pkgs.wtype} -M ctrl -k z -m ctrl") { })
+          (luaBind "SUPER + SHIFT + E" (exec "${lib.getExe powerAction} logout") { })
+          (luaBind "SUPER + SHIFT + 3" (exec "${lib.getExe screenshot} full") { })
+          (luaBind "SUPER + SHIFT + 4" (exec "${lib.getExe screenshot} region") { })
+          (luaBind "CTRL + grave" (exec "${uwsmApp}${lib.getExe whichKey}") { })
+          (luaBind "ALT + F" "hl.dsp.window.float()" { })
+          (luaBind "SUPER + SHIFT + DELETE" (exec "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'")
+            { }
+          )
+          (luaBind "ALT + L" "hl.dsp.window.cycle_next()" { })
+          (luaBind "ALT + L" ''hl.dsp.window.alter_zorder({ mode = "top" })'' { })
+          (luaBind "ALT + H" "hl.dsp.window.cycle_next({ next = false })" { })
+          (luaBind "ALT + H" ''hl.dsp.window.alter_zorder({ mode = "top" })'' { })
+          (luaBind "ALT + SHIFT + N" "hl.dsp.window.swap({ next = true })" { })
+          (luaBind "ALT + SHIFT + P" "hl.dsp.window.swap({ prev = true })" { })
+        ]
+        ++ lib.optionals cfg.lidSwitch.enable [
+          (luaBind "switch:on:${cfg.lidSwitch.switchName}" (exec "${lib.getExe handleLidSwitch} closed") {
+            locked = true;
+          })
+          (luaBind "switch:off:${cfg.lidSwitch.switchName}" (exec "${lib.getExe handleLidSwitch} open") {
+            locked = true;
+          })
+        ]
+        ++ [
+          (luaBind "XF86AudioMute" (exec "ashell msg volume-toggle-mute") { locked = true; })
+          (luaBind "XF86AudioRaiseVolume" (exec "ashell msg volume-up") {
+            locked = true;
+            repeating = true;
+          })
+          (luaBind "XF86AudioLowerVolume" (exec "ashell msg volume-down") {
+            locked = true;
+            repeating = true;
+          })
+          (luaBind "ALT + mouse:272" "hl.dsp.window.drag()" { mouse = true; })
         ];
-
-        bindl =
-          lib.optionals cfg.lidSwitch.enable [
-            ",switch:on:${cfg.lidSwitch.switchName},exec,${lib.getExe handleLidSwitch} closed"
-            ",switch:off:${cfg.lidSwitch.switchName},exec,${lib.getExe handleLidSwitch} open"
-          ]
-          ++ [
-            ",XF86AudioMute,exec,ashell msg volume-toggle-mute"
-          ];
-
-        bindle = [
-          ",XF86AudioRaiseVolume,exec,ashell msg volume-up"
-          ",XF86AudioLowerVolume,exec,ashell msg volume-down"
-        ];
-
-        bindm = [ "ALT,mouse:272,movewindow" ];
-
-        workspace = cfg.workspaces;
-
-        decoration = {
-          rounding = cfg.decoration.rounding;
-          active_opacity = cfg.decoration.activeOpacity;
-          inactive_opacity = cfg.decoration.inactiveOpacity;
-          fullscreen_opacity = cfg.decoration.fullscreenOpacity;
-
-          blur = {
-            enabled = cfg.decoration.blur.enable;
-            passes = cfg.decoration.blur.passes;
-            size = cfg.decoration.blur.size;
-            new_optimizations = cfg.decoration.blur.newOptimizations;
-            xray = cfg.decoration.blur.xray;
-          };
-        };
-
-        render = {
-          new_render_scheduling = cfg.render.newRenderScheduling;
-        };
-
-        animations = {
-          enabled = cfg.animations.enable;
-          workspace_wraparound = cfg.animations.workspaceWraparound;
-        };
 
         env = [
-          "GDK_SCALE,${toString (cfg.scale)}"
-          "XCURSOR_SIZE,${toString (cfg.scale * 24)}"
+          {
+            _args = [
+              "GDK_SCALE"
+              (toString cfg.scale)
+            ];
+          }
+          {
+            _args = [
+              "XCURSOR_SIZE"
+              (toString (cfg.scale * 24))
+            ];
+          }
         ];
 
-        misc = {
-          # disable stupid default background
-          disable_hyprland_logo = true;
-          disable_splash_rendering = true;
-          force_default_wallpaper = 0;
-        };
+        workspace_rule = cfg.workspaces;
       }
       // lib.optionalAttrs (cfg.animations.bezier != [ ]) {
-        bezier = cfg.animations.bezier;
+        curve = map (curve: {
+          _args = [
+            curve.name
+            (removeAttrs curve [ "name" ])
+          ];
+        }) cfg.animations.bezier;
       }
       // lib.optionalAttrs (animationRules != [ ]) {
         animation = animationRules;

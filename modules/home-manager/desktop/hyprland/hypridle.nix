@@ -291,7 +291,7 @@ in
         general = {
           lock_cmd = "pidof hyprlock || ${cfg.lockCommand}"; # enter hyprlock
           before_sleep_cmd = "${loginctl} lock-session"; # lock before suspend
-          after_sleep_cmd = "hyprctl dispatch dpms on"; # turn screen on after key press
+          after_sleep_cmd = "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'"; # turn screen on after key press
         };
 
         listener = [
@@ -306,8 +306,8 @@ in
           }
           {
             timeout = 330; # 5.5min
-            on-timeout = "hyprctl dispatch dpms off"; # 5.5min
-            on-resume = "hyprctl dispatch dpms on"; # screen off
+            on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'"; # 5.5min
+            on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'"; # screen off
           }
           {
             timeout = 3600; # 60min

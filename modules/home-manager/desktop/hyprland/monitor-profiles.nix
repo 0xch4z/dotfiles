@@ -51,7 +51,7 @@ let
       existing_workspaces="$(hyprctl workspaces -j | jq -r '.[].id')"
       for workspace in "$@"; do
         if printf '%s\n' "$existing_workspaces" | grep -qxF "$workspace"; then
-          hyprctl dispatch moveworkspacetomonitor "$workspace" "$output" >/dev/null
+          hyprctl dispatch "hl.dsp.workspace.move({ workspace = \"$workspace\", monitor = \"$output\" })" >/dev/null
         fi
       done
     '';
@@ -79,14 +79,14 @@ let
       case "$action" in
         focus)
           if [ "$target_active" = true ]; then
-            hyprctl dispatch focusmonitor "$target" >/dev/null
+            hyprctl dispatch "hl.dsp.focus({ monitor = \"$target\" })" >/dev/null
           fi
-          hyprctl dispatch workspace "$workspace" >/dev/null
+          hyprctl dispatch "hl.dsp.focus({ workspace = \"$workspace\" })" >/dev/null
           ;;
         move)
-          hyprctl dispatch movetoworkspacesilent "$workspace" >/dev/null
+          hyprctl dispatch "hl.dsp.window.move({ workspace = \"$workspace\", follow = false })" >/dev/null
           if [ "$target_active" = true ]; then
-            hyprctl dispatch moveworkspacetomonitor "$workspace" "$target" >/dev/null
+            hyprctl dispatch "hl.dsp.workspace.move({ workspace = \"$workspace\", monitor = \"$target\" })" >/dev/null
           fi
           ;;
         *)
@@ -235,25 +235,46 @@ in
     };
 
     wayland.windowManager.hyprland.settings = {
-      monitor = lib.mkIf profilesEnabled (lib.mkForce [ ",preferred,auto,1" ]);
-      workspace = lib.mkIf profilesEnabled (lib.mkForce [ ]);
+      monitor = lib.mkIf profilesEnabled (
+        lib.mkForce [
+          {
+            output = "";
+            mode = "preferred";
+            position = "auto";
+            scale = 1;
+          }
+        ]
+      );
+      workspace_rule = lib.mkIf profilesEnabled (lib.mkForce [ ]);
 
       bind =
-        map (workspace: "ALT,${toString workspace},workspace,${toString workspace}") (lib.range 1 9)
-        ++ map (workspace: "ALT SHIFT,${toString workspace},movetoworkspacesilent,${toString workspace}") (
-          lib.range 1 9
-        );
+        map (workspace: {
+          _args = [
+            "ALT + ${toString workspace}"
+            (lib.generators.mkLuaInline ''hl.dsp.focus({ workspace = "${toString workspace}" })'')
+          ];
+        }) (lib.range 1 9)
+        ++ map (workspace: {
+          _args = [
+            "ALT + SHIFT + ${toString workspace}"
+            (lib.generators.mkLuaInline ''hl.dsp.window.move({ workspace = "${toString workspace}", follow = false })'')
+          ];
+        }) (lib.range 1 9);
     }
     // lib.optionalAttrs profilesEnabled {
       bind =
-        map (
-          workspace:
-          "ALT,${toString workspace},exec,${lib.getExe workspaceDispatch} focus ${toString workspace}"
-        ) (lib.range 1 9)
-        ++ map (
-          workspace:
-          "ALT SHIFT,${toString workspace},exec,${lib.getExe workspaceDispatch} move ${toString workspace}"
-        ) (lib.range 1 9);
+        map (workspace: {
+          _args = [
+            "ALT + ${toString workspace}"
+            (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${lib.getExe workspaceDispatch} focus ${toString workspace}")'')
+          ];
+        }) (lib.range 1 9)
+        ++ map (workspace: {
+          _args = [
+            "ALT + SHIFT + ${toString workspace}"
+            (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${lib.getExe workspaceDispatch} move ${toString workspace}")'')
+          ];
+        }) (lib.range 1 9);
     };
   };
 }
