@@ -8,7 +8,7 @@
 {
   config = lib.mkIf (config.x.profile.workstation && pkgs.stdenv.hostPlatform.isDarwin) {
     x.home.tools.containers.colima.enable = true;
-    x.home.desktop.backend = "aerospace";
+    x.home.desktop.backend = lib.mkDefault "rift";
     x.home.applications.utility.caffeine.enable = true;
     x.home.applications.utility.gitify.enable = true;
     x.home.fonts.apple-nerdfont.enable = true;

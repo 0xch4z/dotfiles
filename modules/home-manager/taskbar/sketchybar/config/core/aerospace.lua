@@ -49,24 +49,19 @@ local Aerospace = {}
 Aerospace.__index = Aerospace
 
 function Aerospace.new(socketPath)
-	local self = setmetatable({}, Aerospace)
-	self.socketPath = socketPath or DEFAULT_CONFIG.SOCKET_PATH
+	local path = socketPath or DEFAULT_CONFIG.SOCKET_PATH
 
 	local fd, err = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
 	if not fd then
 		error(string.format("%s: %s", ERROR_MESSAGES.SOCKET_CREATE, tostring(err)))
 	end
 
-	self.fd = fd
-
-	local addr = { family = socket.AF_UNIX, path = self.socketPath }
-
-	if socket.connect(self.fd, addr) ~= 0 then
+	if socket.connect(fd, { family = socket.AF_UNIX, path = path }) ~= 0 then
 		unistd.close(fd)
-		error(string.format(ERROR_MESSAGES.SOCKET_CONNECT, self.socketPath))
+		error(string.format(ERROR_MESSAGES.SOCKET_CONNECT, path))
 	end
 
-	return self
+	return setmetatable({ socketPath = path, fd = fd }, Aerospace)
 end
 
 function Aerospace:reconnect()
@@ -85,6 +80,7 @@ function Aerospace:reconnect()
 
 	if socket.connect(self.fd, addr) ~= 0 then
 		unistd.close(fd)
+		self.fd = nil
 		error(string.format(ERROR_MESSAGES.SOCKET_CONNECT, self.socketPath))
 	end
 end
@@ -255,6 +251,44 @@ function Aerospace:list_all_windows(callback)
 		return callback(windows)
 	end
 	return windows
+end
+
+Aerospace.backend = "aerospace"
+Aerospace.events = { "aerospace_workspace_changed" }
+
+function Aerospace:list()
+	local visible = {}
+	for _, name in ipairs(self:list_workspace_names({ "--monitor", "all", "--visible" })) do
+		visible[name] = true
+	end
+
+	local apps_by_workspace = {}
+	for _, window in ipairs(self:list_all_windows()) do
+		local apps = apps_by_workspace[window.workspace] or {}
+		apps[#apps + 1] = window["app-name"]
+		apps_by_workspace[window.workspace] = apps
+	end
+
+	local focused = self:focused_workspace()
+
+	local workspaces = {}
+	for _, listing in ipairs(self:list_workspaces({ "--all" })) do
+		local name = listing.workspace
+		workspaces[#workspaces + 1] = {
+			id = name,
+			name = name,
+			index = tonumber(name),
+			display = math.floor(listing["monitor-appkit-nsscreen-screens-id"]),
+			visible = visible[name] or false,
+			focused = name == focused,
+			apps = apps_by_workspace[name] or {},
+		}
+	end
+	return workspaces
+end
+
+function Aerospace:focus(workspace)
+	self:workspace(workspace.name)
 end
 
 Aerospace.__gc = Aerospace.close

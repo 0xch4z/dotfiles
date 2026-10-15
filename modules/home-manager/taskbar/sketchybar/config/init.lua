@@ -3,7 +3,7 @@ os.execute("(cd ./config/helpers && make)")
 sbar = require("sketchybar")
 sbar.hotload(true)
 
-require("config.aerospace")
+require("config.wm")
 
 -- Bundle the entire configuration into a single message to sketchybar
 sbar.begin_config()

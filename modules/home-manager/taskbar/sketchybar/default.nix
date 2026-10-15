@@ -7,6 +7,15 @@
 }:
 let
   cfg = config.x.home.taskbar.sketchybar;
+
+  backend = config.x.home.desktop.backend;
+
+  # binaries the lua config shells out to, by bare name
+  helpers = [
+    pkgs.sketchybar
+    pkgs.x.is-macbook-display-only
+  ]
+  ++ lib.optional (backend == "rift") pkgs.x.rift;
 in
 {
   options.x.home.taskbar.sketchybar = {
@@ -67,14 +76,6 @@ in
       executable = true;
     };
 
-    xdg.configFile."sketchybar/nix_bridge.lua".text = ''
-      return {
-        cmds = {
-          is-macbook-display-only = "${pkgs.x.is-macbook-display-only}/bin/is-macbook-display-only"
-        }
-      }
-    '';
-
     xdg.configFile.sketchybar = {
       enable = true;
       recursive = true;
@@ -90,8 +91,17 @@ in
         RunAtLoad = true;
         ProcessType = "Interactive";
         EnvironmentVariables = {
-          PATH = "${pkgs.sketchybar}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
-        };
+          PATH = lib.concatStringsSep ":" (
+            map (p: "${p}/bin") helpers
+            ++ [
+              "/usr/bin"
+              "/bin"
+              "/usr/sbin"
+              "/sbin"
+            ]
+          );
+        }
+        // lib.optionalAttrs (backend != "none") { SKETCHYBAR_WM_BACKEND = backend; };
         StandardOutPath = "${homeDir}/Library/Logs/sketchybar/stdout";
         StandardErrorPath = "${homeDir}/Library/Logs/sketchybar/stderr";
       };

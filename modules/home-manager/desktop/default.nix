@@ -20,6 +20,7 @@ in
       type = types.enum [
         "hyprland"
         "aerospace"
+        "rift"
         "none"
       ];
       default = "none";
@@ -28,6 +29,7 @@ in
 
   imports = [
     ./aerospace.nix
+    ./rift.nix
     ./hyprland
   ];
 
