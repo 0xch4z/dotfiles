@@ -78,6 +78,7 @@ in
         active_tab_foreground = "#dddddd";
         allow_remote_control = "socket-only";
         background_opacity = "0.9";
+        cursor_trail = 10;
         dynamic_background_opacity = "yes";
         enabled_layouts = "splits,stack";
         font_family = config.x.home.theme.font.mono;
