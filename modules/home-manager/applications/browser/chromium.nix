@@ -47,7 +47,8 @@ in
         "wayland"
         "x11"
       ];
-      default = "wayland";
+      default = if config.x.home.desktop.backend == "hyprland" then "wayland" else "x11";
+      defaultText = lib.literalExpression ''"wayland" under a Wayland desktop backend, otherwise "x11"'';
       description = "Chromium Ozone platform.";
     };
 

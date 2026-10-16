@@ -53,17 +53,26 @@ let
         leaf = "workspaces";
         enabled = true;
         speed = workspace.speed;
-        curve = workspace.curve;
+        bezier = workspace.curve;
       }
       // lib.optionalAttrs (workspace.style != null) {
         style = workspace.style;
       };
 
-  animationRules =
-    cfg.animations.rules
-    ++ lib.optionals (cfg.animations.workspace.enabled != null) [
-      workspaceAnimation
-    ];
+  globalAnimation = {
+    leaf = "global";
+    enabled = true;
+    speed = cfg.animations.globalSpeed;
+    bezier = cfg.animations.globalCurve;
+  };
+
+  animationRules = [
+    globalAnimation
+  ]
+  ++ cfg.animations.rules
+  ++ lib.optionals (cfg.animations.workspace.enabled != null) [
+    workspaceAnimation
+  ];
 
   applyWallpaper = pkgs.writeShellApplication {
     name = "hyprpaper-apply-wallpaper";
@@ -337,10 +346,18 @@ in
       };
     };
 
-    render.newRenderScheduling = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Enable Hyprland's new render scheduling path.";
+    render = {
+      newRenderScheduling = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable Hyprland's new render scheduling path.";
+      };
+
+      device = mkOption {
+        type = types.str;
+        default = "";
+        description = "GPU Hyprland renders on";
+      };
     };
 
     animations = {
@@ -354,6 +371,18 @@ in
         type = types.bool;
         default = false;
         description = "Enable wraparound behavior for directional workspace animations.";
+      };
+
+      globalSpeed = mkOption {
+        type = types.int;
+        default = 3;
+        description = "Base animation duration in deciseconds; every rule inherits it.";
+      };
+
+      globalCurve = mkOption {
+        type = types.str;
+        default = "default";
+        description = "Bezier curve inherited by every animation rule.";
       };
 
       bezier = mkOption {
@@ -720,7 +749,13 @@ in
               (toString (cfg.scale * 24))
             ];
           }
-        ];
+        ]
+        ++ lib.optional (cfg.render.device != "") {
+          _args = [
+            "AQ_DRM_DEVICES"
+            cfg.render.device
+          ];
+        };
 
         workspace_rule = cfg.workspaces;
       }

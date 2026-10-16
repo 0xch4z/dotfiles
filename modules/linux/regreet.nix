@@ -24,6 +24,19 @@ let
     '';
   };
 
+  failsafeSession = pkgs.writeTextFile {
+    name = "failsafe-session";
+    destination = "/share/wayland-sessions/failsafe.desktop";
+    passthru.providedSessions = [ "failsafe" ];
+    text = ''
+      [Desktop Entry]
+      Name=Failsafe shell
+      Exec=${lib.getExe pkgs.cage} -- ${lib.getExe pkgs.foot}
+      Type=Application
+      DesktopNames=Failsafe
+    '';
+  };
+
 in
 {
   options.x.desktop.wayland.greeter.enable = lib.mkOption {
@@ -147,7 +160,10 @@ in
       '';
     };
 
-    services.displayManager.sessionPackages = [ hyprlandSession ];
+    services.displayManager.sessionPackages = [
+      hyprlandSession
+      failsafeSession
+    ];
 
     services.greetd = {
       enable = true;

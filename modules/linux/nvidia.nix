@@ -48,6 +48,10 @@ in
 
     boot.blacklistedKernelModules = [ "nouveau" ];
 
+    services.udev.extraRules = ''
+      SUBSYSTEM=="drm", KERNEL=="card[0-9]*", DRIVERS=="nvidia", ENV{ID_PATH}!="*platform*", SYMLINK+="dri/nvidia"
+    '';
+
     environment.variables = {
       LIBVA_DRIVER_NAME = "nvidia";
       GBM_BACKEND = "nvidia-drm";
