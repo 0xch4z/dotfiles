@@ -18,9 +18,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.ashell = {
       enable = true;
-      package =
-        config.x.home.graphics.wrapPackage
-          self.inputs.ashell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package = self.inputs.ashell.packages.${pkgs.stdenv.hostPlatform.system}.default;
       systemd.enable = true;
       settings = {
         position = "Bottom";

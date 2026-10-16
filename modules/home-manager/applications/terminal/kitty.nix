@@ -11,7 +11,7 @@ let
   cfg = config.x.home.applications.terminal.kitty;
   kittyPackage =
     let
-      package = config.x.home.graphics.wrapPackage pkgs.kitty;
+      package = pkgs.kitty;
     in
     if pkgs.stdenv.hostPlatform.isDarwin then
       package.overrideAttrs (old: {

@@ -20,7 +20,6 @@ in
   config = mkIf (cfg.enable && !pkgs.stdenv.hostPlatform.isDarwin) {
     programs.zen-browser = {
       enable = true;
-      nixGL.enable = config.x.home.graphics.nixGL.enable;
 
       # can't install via home-manager on darwin yet :(
       # finalPackage =

@@ -13,7 +13,7 @@ in
   config = lib.mkIf (cfg.enable) {
     programs.vicinae = {
       enable = true;
-      package = config.x.home.graphics.wrapPackage pkgs.unstable.vicinae;
+      package = pkgs.unstable.vicinae;
       service = {
         enable = true;
         autoStart = true;

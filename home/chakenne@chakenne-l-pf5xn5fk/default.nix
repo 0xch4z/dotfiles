@@ -5,12 +5,7 @@
   x.profile.workstation = true;
   x.profile.work = true;
 
-  x.home.graphics.nixGL = {
-    enable = true;
-    defaultWrapper = "mesa";
-    installScripts = [ "mesa" ];
-    vulkan.enable = false;
-  };
+  targets.genericLinux.enable = true;
 
   x.home.desktop.hyprland = {
     hypridle.ubuntu-hyprlock-pkg = true;

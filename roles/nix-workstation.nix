@@ -22,7 +22,7 @@
 
     programs.fuzzel = {
       enable = lib.mkDefault true;
-      package = lib.mkDefault (config.x.home.graphics.wrapPackage pkgs.fuzzel);
+      package = lib.mkDefault pkgs.fuzzel;
     };
 
     x.home = {

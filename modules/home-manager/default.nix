@@ -16,7 +16,6 @@
     ./tools
 
     ./fonts.nix
-    ./graphics.nix
     ./secrets.nix
     ./theme.nix
   ];

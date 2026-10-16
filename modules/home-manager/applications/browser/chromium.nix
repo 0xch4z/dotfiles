@@ -73,7 +73,7 @@ in
 
     programs.chromium = {
       enable = true;
-      package = config.x.home.graphics.wrapPackage pkgs.ungoogled-chromium;
+      package = pkgs.ungoogled-chromium;
 
       commandLineArgs = [
         "--ozone-platform=${cfg.ozonePlatform}"

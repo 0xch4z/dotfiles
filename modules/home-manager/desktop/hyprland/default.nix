@@ -17,8 +17,8 @@ let
     ;
 
   uwsmApp = lib.optionalString cfg.uwsm.enable "uwsm app -- ";
-  displayConfigurator = config.x.home.graphics.wrapPackage pkgs.wdisplays;
-  whichKey = config.x.home.graphics.wrapPackage pkgs.wlr-which-key;
+  displayConfigurator = pkgs.wdisplays;
+  whichKey = pkgs.wlr-which-key;
   hyprPersist = pkgs.x.hypr-persist;
   systemctl =
     if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
@@ -589,7 +589,7 @@ in
       enable = true;
 
       configType = "lua";
-      package = config.x.home.graphics.wrapPackage pkgs.hyprland;
+      package = pkgs.hyprland;
 
       systemd = {
         # UWSM owns the graphical session and conflicts with this integration.
@@ -684,12 +684,9 @@ in
         monitor = cfg.monitors;
 
         bind = [
-          (luaBind "SUPER + SPACE"
-            (exec "${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} toggle")
-            { }
-          )
+          (luaBind "SUPER + SPACE" (exec "${uwsmApp}${lib.getExe pkgs.vicinae} toggle") { })
           (luaBind "SUPER + P"
-            (exec "${uwsmApp}${lib.getExe (config.x.home.graphics.wrapPackage pkgs.vicinae)} 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'")
+            (exec "${uwsmApp}${lib.getExe pkgs.vicinae} 'vicinae://launch/@bl4zee1g/store.vicinae.bitwarden/browse-vault?toggle=true'")
             { }
           )
           (luaBind "SUPER + RETURN" (exec "${uwsmApp}alacritty") { })

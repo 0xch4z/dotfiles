@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     programs.alacritty = {
       enable = true;
-      package = config.x.home.graphics.wrapPackage pkgs.alacritty;
+      package = pkgs.alacritty;
 
       settings = {
         terminal.shell = {

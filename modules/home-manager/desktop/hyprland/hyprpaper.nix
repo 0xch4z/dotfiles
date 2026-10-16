@@ -27,7 +27,7 @@ in
   config = mkIf (hyprlandEnabled && cfg.enable) {
     services.hyprpaper = {
       enable = true;
-      package = config.x.home.graphics.wrapPackage pkgs.hyprpaper;
+      package = pkgs.hyprpaper;
 
       settings = {
         ipc = "on";

@@ -32,14 +32,6 @@ let
         exit 127
       fi
 
-      # unset NIXGL settings
-      unset \
-        GBM_BACKENDS_PATH \
-        LIBGL_DRIVERS_PATH \
-        LIBVA_DRIVERS_PATH \
-        __EGL_VENDOR_LIBRARY_FILENAMES \
-        LD_LIBRARY_PATH
-
       if /usr/bin/hyprlock "$@"; then
         exit 0
       else
@@ -51,11 +43,7 @@ let
       fi
     '';
   };
-  hyprlockPackage =
-    if cfg.ubuntu-hyprlock-pkg then
-      ubuntuHyprlock
-    else
-      config.x.home.graphics.wrapPackage pkgs.hyprlock;
+  hyprlockPackage = if cfg.ubuntu-hyprlock-pkg then ubuntuHyprlock else pkgs.hyprlock;
   loginctl = if variant == "linux" then "/usr/bin/loginctl" else lib.getExe' pkgs.systemd "loginctl";
   systemctl =
     if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
