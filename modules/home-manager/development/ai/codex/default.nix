@@ -35,7 +35,8 @@ let
       "${config.home.homeDirectory}/.dotfiles".trust_level = "trusted";
       "${config.home.homeDirectory}/work".trust_level = "trusted";
     };
-  } // lib.optionalAttrs mcpCfg.enable {
+  }
+  // lib.optionalAttrs mcpCfg.enable {
     mcp_servers = mcpCfg.servers;
   };
 in
