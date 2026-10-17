@@ -7,9 +7,13 @@
 
   targets.genericLinux.enable = true;
 
-  x.home.desktop.hyprland = {
-    hypridle.ubuntu-hyprlock-pkg = true;
+  # TODO: before switching to niri need /run/opengl-driver (sudo non-nixos-gpu-setup)
+  # remove refresh from monitor mode
+  x.home.desktop.backend = "hyprland";
 
+  x.home.desktop.idle.ubuntu-hyprlock-pkg = true;
+
+  x.home.desktop.hyprland = {
     keyboardOptionsByDevice.at-translated-set-2-keyboard = [
       "ctrl:nocaps"
       "altwin:swap_lalt_lwin"

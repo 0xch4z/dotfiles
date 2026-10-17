@@ -163,6 +163,7 @@ in
     services.displayManager.sessionPackages = [
       hyprlandSession
       failsafeSession
+      pkgs.niri
     ];
 
     services.greetd = {

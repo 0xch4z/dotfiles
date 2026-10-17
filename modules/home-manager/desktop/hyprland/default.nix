@@ -22,7 +22,6 @@ let
   hyprPersist = pkgs.x.hypr-persist;
   systemctl =
     if variant == "linux" then "/usr/bin/systemctl" else lib.getExe' pkgs.systemd "systemctl";
-  yamlFormat = pkgs.formats.yaml { };
   tomlFormat = pkgs.formats.toml { };
   lua = lib.generators.mkLuaInline;
   toLua = lib.generators.toLua { };
@@ -83,7 +82,7 @@ let
     ];
     text = ''
       for _ in $(seq 1 60); do
-        hyprctl hyprpaper wallpaper "${cfg.wallpaperMonitor},${wallpaper}" 2>/dev/null || true
+        hyprctl hyprpaper wallpaper "${config.x.home.desktop.wallpaper.monitor},${wallpaper}" 2>/dev/null || true
         if hyprctl hyprpaper listactive 2>/dev/null | grep -qF "${wallpaper}"; then
           exit 0
         fi
@@ -198,18 +197,6 @@ let
     '';
   };
 
-  confirmPowerAction = action: [
-    {
-      key = "y";
-      desc = "Yes";
-      cmd = "${lib.getExe powerAction} ${action}";
-    }
-    {
-      key = "n";
-      desc = "No";
-      cmd = "${lib.getExe' pkgs.coreutils "true"}";
-    }
-  ];
 in
 {
   options.x.home.desktop.hyprland = {
@@ -218,12 +205,6 @@ in
       type = types.bool;
       default = false;
       description = "Run Hyprland through UWSM.";
-    };
-
-    wallpaperMonitor = mkOption {
-      type = types.str;
-      default = "";
-      description = "Monitor selector used when applying the Hyprpaper wallpaper.";
     };
 
     scale = mkOption {
@@ -481,14 +462,19 @@ in
   };
 
   imports = [
-    ./cursor.nix
     ./greetd.nix
-    ./hypridle.nix
-    ./hyprpaper.nix
     ./monitor-profiles.nix
   ];
 
   config = lib.mkIf (config.x.home.desktop.backend == "hyprland") {
+    x.home.desktop.wayland = {
+      dpmsCommand = {
+        off = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'";
+        on = "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'";
+      };
+      exitCommand = "${lib.getExe powerAction} logout";
+    };
+
     home.packages = [
       displayConfigurator
       hyprPersist
@@ -510,61 +496,6 @@ in
       ];
     };
 
-    xdg.configFile."wlr-which-key/config.yaml".source =
-      yamlFormat.generate "wlr-which-key-config.yaml"
-        {
-          font = "FiraCode Nerd Font 14";
-          background = "#1A426Eee";
-          color = "#ffffffff";
-          border = "#ff69b4ff";
-          border_width = 2;
-          corner_r = 12;
-          padding = 20;
-          column_padding = 28;
-          separator = " -> ";
-          anchor = "center";
-          inhibit_compositor_keyboard_shortcuts = true;
-          auto_kbd_layout = true;
-          menu = [
-            {
-              key = "d";
-              desc = "Displays";
-              cmd = "${uwsmApp}${lib.getExe displayConfigurator}";
-            }
-            {
-              key = "p";
-              desc = "Power";
-              submenu = [
-                {
-                  key = "o";
-                  desc = "Logout";
-                  submenu = confirmPowerAction "logout";
-                }
-                {
-                  key = "s";
-                  desc = "Sleep";
-                  submenu = confirmPowerAction "sleep";
-                }
-                {
-                  key = "l";
-                  desc = "Lock";
-                  cmd = cfg.hypridle.lockCommand;
-                }
-                {
-                  key = "q";
-                  desc = "Shutdown";
-                  submenu = confirmPowerAction "shutdown";
-                }
-                {
-                  key = "r";
-                  desc = "Reboot";
-                  submenu = confirmPowerAction "reboot";
-                }
-              ];
-            }
-          ];
-        };
-
     systemd.user.services.hypr-persist = {
       Unit = {
         Description = "Hyprland session persistence";
@@ -581,7 +512,7 @@ in
       Install.WantedBy = [ "hyprland-session.target" ];
     };
 
-    systemd.user.services.hyprpaper = lib.mkIf cfg.hyprpaper.enable {
+    systemd.user.services.hyprpaper = lib.mkIf config.x.home.desktop.wallpaper.enable {
       Service.ExecStartPost = lib.getExe applyWallpaper;
     };
 

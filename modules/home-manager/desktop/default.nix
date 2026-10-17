@@ -19,6 +19,7 @@ in
     backend = mkOption {
       type = types.enum [
         "hyprland"
+        "niri"
         "aerospace"
         "rift"
         "none"
@@ -29,8 +30,10 @@ in
 
   imports = [
     ./aerospace.nix
+    ./niri.nix
     ./rift.nix
     ./hyprland
+    ./wayland
   ];
 
   config = mkIf config.x.home.desktop.enable {

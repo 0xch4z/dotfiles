@@ -8,7 +8,7 @@ let
   cfg = config.x.home.desktop;
 in
 {
-  config = lib.mkIf (cfg.backend == "hyprland") {
+  config = lib.mkIf cfg.wayland.enable {
     home.packages = with pkgs; [
       capitaine-cursors
     ];

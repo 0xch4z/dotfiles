@@ -4,8 +4,6 @@
 }:
 let
   inherit (self.lib.lists) map range;
-
-  g8 = "desc:Samsung Electric Company Odyssey G80SD H1AK500000";
 in
 {
   imports = [
@@ -20,6 +18,19 @@ in
 
   x.home.applications.browser.chromium.nvidiaWorkarounds.enable = true;
 
+  x.home.desktop.backend = "niri";
+
+  x.home.desktop.niri = {
+    render.device = "/dev/dri/nvidia-render";
+    outputs = [
+      {
+        name = "DP-4";
+        mode = "3840x2160";
+        scale = 1.0;
+      }
+    ];
+  };
+
   x.home.desktop.hyprland = {
     render.device = "/dev/dri/nvidia";
 
@@ -31,7 +42,6 @@ in
     # Was using IDs (e.g. HDMI-A-1), but those are non-deterministic when the
     # AMD iGPU and NVIDIA dGPU load in different orders. Match the primary
     # monitor by description and keep these desktop-only rules off laptops.
-    wallpaperMonitor = g8;
     monitorProfiles.g8-only.outputs = [
       {
         search = "s=H1AK500000";

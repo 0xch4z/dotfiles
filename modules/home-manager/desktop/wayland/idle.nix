@@ -16,8 +16,9 @@ let
     ;
 
   suspendTimeout = 3600;
-  cfg = config.x.home.desktop.hyprland.hypridle;
-  hyprlandEnabled = config.x.home.desktop.backend == "hyprland";
+  cfg = config.x.home.desktop.idle;
+  waylandEnabled = config.x.home.desktop.wayland.enable;
+  dpms = config.x.home.desktop.wayland.dpmsCommand;
   font = config.x.home.theme.font.mono;
   wallpaper = "${homeDir}/.dotfiles/assets/philly-dark.jpg";
 
@@ -104,10 +105,10 @@ let
   };
 in
 {
-  options.x.home.desktop.hyprland.hypridle = {
+  options.x.home.desktop.idle = {
     enable = mkOption {
       type = types.bool;
-      default = hyprlandEnabled;
+      default = waylandEnabled;
       defaultText = literalExpression "x.desktop.backend";
       description = "enable hypridle home-manager module";
     };
@@ -127,7 +128,7 @@ in
     };
   };
 
-  config = lib.mkIf (hyprlandEnabled && cfg.enable) {
+  config = lib.mkIf (waylandEnabled && cfg.enable) {
     home.packages = [ idleCtl ];
 
     programs.hyprlock = {
@@ -279,7 +280,7 @@ in
         general = {
           lock_cmd = "pidof hyprlock || ${cfg.lockCommand}"; # enter hyprlock
           before_sleep_cmd = "${loginctl} lock-session"; # lock before suspend
-          after_sleep_cmd = "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'"; # turn screen on after key press
+          after_sleep_cmd = dpms.on; # turn screen on after key press
         };
 
         listener = [
@@ -294,8 +295,8 @@ in
           }
           {
             timeout = 330; # 5.5min
-            on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'"; # 5.5min
-            on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'"; # screen off
+            on-timeout = dpms.off; # 5.5min
+            on-resume = dpms.on; # screen off
           }
           {
             timeout = 3600; # 60min

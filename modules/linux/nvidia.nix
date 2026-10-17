@@ -50,6 +50,7 @@ in
 
     services.udev.extraRules = ''
       SUBSYSTEM=="drm", KERNEL=="card[0-9]*", DRIVERS=="nvidia", ENV{ID_PATH}!="*platform*", SYMLINK+="dri/nvidia"
+      SUBSYSTEM=="drm", KERNEL=="renderD[0-9]*", DRIVERS=="nvidia", SYMLINK+="dri/nvidia-render"
     '';
 
     environment.variables = {
