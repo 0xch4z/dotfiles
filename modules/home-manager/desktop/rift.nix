@@ -273,12 +273,24 @@ let
       };
 
       "Alt + F" = "toggle_window_floating";
-      "Alt + Shift + F" = "toggle_fullscreen";
+      "Alt + Shift + F" = "toggle_fullscreen_within_gaps";
+      "Meta + Shift + F" = "toggle_fullscreen";
       "Alt + Comma" = "toggle_stack";
       "Alt + Slash" = "toggle_orientation";
 
-      "Alt + Shift + Equal" = "resize_window_grow";
-      "Alt + Shift + Minus" = "resize_window_shrink";
+      "Alt + Equal" = {
+        resize_window_grow = "horizontal";
+      };
+      "Alt + Minus" = {
+        resize_window_shrink = "horizontal";
+      };
+      "Alt + Shift + Equal" = {
+        resize_window_grow = "vertical";
+      };
+      "Alt + Shift + Minus" = {
+        resize_window_shrink = "vertical";
+      };
+      "Alt + R" = "switch_preset_column_width";
 
       "Alt + Tab" = "switch_to_last_workspace";
       "Alt + Shift + Tab" = {

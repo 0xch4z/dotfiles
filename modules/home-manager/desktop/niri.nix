@@ -207,7 +207,15 @@ in
 
           "Alt+F".toggle-window-floating = { };
           "Alt+H".focus-column-left = { };
+          "Alt+J".focus-window-down = { };
+          "Alt+K".focus-window-up = { };
           "Alt+L".focus-column-right = { };
+          "Alt+P".focus-column-left = { };
+          "Alt+N".focus-column-right = { };
+          "Alt+Shift+H".move-column-left = { };
+          "Alt+Shift+J".move-window-down = { };
+          "Alt+Shift+K".move-window-up = { };
+          "Alt+Shift+L".move-column-right = { };
           "Alt+Shift+P".move-column-left = { };
           "Alt+Shift+N".move-column-right = { };
 
@@ -235,7 +243,14 @@ in
             window-rule = {
               geometry-corner-radius = cfg.rounding;
               clip-to-geometry = true;
+              draw-border-with-background = false;
             };
+          }
+          {
+            window-rule._children = [
+              { match._props.app-id = "^gamescope$"; }
+              { open-fullscreen = true; }
+            ];
           }
         ];
       }
