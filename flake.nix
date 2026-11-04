@@ -99,7 +99,7 @@
     # necessary for linking per-user apps to /Applications directory on MacOS
     mac-app-util.url = "github:hraban/mac-app-util";
 
-    ashell.url = "github:0xch4z/ashell/db9f96236832c73bbe77a07245709ec85178a657";
+    ashell.url = "github:MalpenZibo/ashell/0.11.0";
 
     # custom
     nixpkgs-kns-fork.url = "github:0xch4z/nixpkgs/kns-unix-support";

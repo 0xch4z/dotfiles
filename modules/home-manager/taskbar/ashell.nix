@@ -52,13 +52,11 @@ in
         };
 
         notifications = {
-          enabled = true;
           show_timestamps = true;
           show_bodies = true;
-          show_progress_bar = true;
           grouped = true;
           toast = true;
-          toast_position = "bottom_right";
+          toast_position = "BottomRight";
           toast_timeout = 2000;
           toast_limit = 5;
           toast_max_height = 150;
